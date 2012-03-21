@@ -1,0 +1,31 @@
+--- authldaplib.c.orig	2005-11-25 13:45:16.146177560 +0800
++++ authldaplib.c	2005-11-25 13:50:50.483350584 +0800
+@@ -1292,6 +1292,28 @@
+ 		}
+ 	}
+
++	/* patch to make relative mailDir works fine
++	 * patch date: 2005-11-25
++	 * patched by He zhiqiang <hzqbbc@hzqbbc.com> */
++	if (mailDir !=0 && my_ldap.mailroot != 0 && *my_ldap.mailroot)
++	{
++		char *new_mailroot=malloc(strlen(mailDir)+
++					  strlen(my_ldap.mailroot)+2);
++
++		if (!new_mailroot)
++		{
++			perror("CRIT: authldap: malloc failed");
++			rc= -1;
++		}
++		else
++		{
++			strcat(strcat(strcpy(new_mailroot, my_ldap.mailroot),
++				      "/"), mailDir);
++			free(mailDir);
++			mailDir=new_mailroot;
++		}
++	}
++
+ 	j=1;
+
+ 	for (i=0; my_ldap.auxoptions[i]; i++)

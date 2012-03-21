@@ -1,0 +1,109 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+<script type="text/javascript" src="/extman/default/manlib.js"></script>
+<script language="javascript">
+var currentNav = 'nav_alias';
+function DoDelete(id) {
+if (!confirm('<%cfm_delete%>')) {
+	return;
+}
+var url = document.location.href;
+document.location.href='alias.cgi?__mode=delete_alias&sid=<%SID%>&alias='+id+'&url='+eURL(url);
+}
+
+function DoSearch() {
+var filter = document.getElementById('keyword').value;
+
+if (filter) {
+var url = '?__mode=overview_alias&sid=<%SID%>&domain=<%DOMAIN%>';
+url += '&screen=overview_alias.html&keyword='+filter;
+document.location.href = url;
+}
+}
+//-->
+</script>
+</head>
+<body>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+	<div class="mts"><strong><%CUR_DOMAIN%></strong>
+	&nbsp;<span style="font-size: 12px">
+		<a href="/extman/cgi/overview.cgi?__mode=overview_user&sid=<%SID%>&domain=<%CUR_DOMAIN%>&screen=overview_user.html">&lt;&lt;<%list%><%user%></a><!-- IF ADMIN -->&nbsp;|&nbsp;<a href="/extman/cgi/domain.cgi?__mode=edit_domain&sid=<%SID%>&domain=<%CUR_DOMAIN%>&screen=edit_domain.html"><%edit%><%domain%></a><!-- END ADMIN -->
+	</span></div>
+	<div class="mbs">
+	<!-- IF LOOP_DOMAIN -->
+	<select name="domain" id="domain" onChange="document.location.href='?__mode=overview_alias&sid=<%SID%>&screen=overview_alias.html&domain='+this[this.selectedIndex].text;">
+	<!-- BEGIN LOOP_DOMAIN -->
+	<option><%DOMAIN%></option>
+	<!-- END LOOP_DOMAIN -->
+	</select>
+
+	<script language="javascript">
+	highlight_Sel('domain');
+	</script>
+	<!-- END LOOP_DOMAIN -->
+	<img style="height: 15px" src="/extman/default/images/add.gif">&nbsp;
+	<a href="alias.cgi?__mode=add_alias&sid=<%SID%>&screen=edit_alias.html&domain=<%CUR_DOMAIN%>"><%add_alias%></a>
+	&nbsp;| <%TOTAL_ALIAS%>
+	</div>
+</div>
+<table width="100%" cellpadding="2" cellspacing="0" align="center"><tr><td width="20px"></td><td style="border:1px solid #333;">
+<table width=100% border="0" cellspacing="0">
+<tr class="listop">
+<td colspan=5>
+	<%search%>
+	<input id=keyword name=keyword value="<%KEYWORD%>" size=20>
+	<input type=button onclick="DoSearch()" value="<%dosearch%>">
+</td>
+</tr>
+<tr class="listhd">
+	<td>&nbsp;</td><td><%alias%></td><td><%goto%></td>
+	<td><%active%></td><td><%operation%></td>
+</tr>
+<!-- IF HAVE_ALIAS -->
+<!-- BEGIN LOOP_ALIAS -->
+<tr class="listco">
+	<td>&nbsp;</td>
+	<td><img src="/extman/default/images/alias.gif">
+	<a href="alias.cgi?__mode=edit_alias&sid=<%SID%>&alias=<%ALIAS%>&screen=edit_alias.html">
+	<%ALIAS%></a></td>
+	<td><%GOTO%></td>
+	<td><!-- IF ACTIVE --><%yes%><!-- ELSE ACTIVE --><%no%><!-- END ACTIVE --></td>
+	<td><a href="alias.cgi?__mode=edit_alias&sid=<%SID%>&alias=<%ALIAS%>&screen=edit_alias.html">
+	<img src="/extman/default/images/edit.gif"></a>&nbsp;&nbsp;<a href="javascript:DoDelete('<%ALIAS%>')" title="<%delete%>"><img src="/extman/default/images/del.gif"></a></td>
+</tr>
+<!-- END LOOP_ALIAS -->
+<tr class="listbt">
+	<td colspan=5>
+	<!-- IF HAVE_PREV -->
+	<a href="?__mode=overview_alias&sid=<%SID%>&domain=<%DOMAIN%>&screen=overview_alias.html&page=<%PREV%>&keyword=<%KEYWORD%>">&lt;&lt;<%prev%></a>
+	<!-- END HAVE_PREV -->&nbsp;&nbsp;
+	<!-- IF HAVE_NEXT -->
+	<a href="?__mode=overview_alias&sid=<%SID%>&domain=<%DOMAIN%>&screen=overview_alias.html&page=<%NEXT%>&keyword=<%KEYWORD%>"><%next%>&gt;&gt;</a>
+	<!-- END HAVE_NEXT -->
+	<!-- INCLUDE 'jumpto.inc' -->
+	</td>
+</tr>
+<!-- ELSE HAVE_ALIAS -->
+<tr class="listno">
+<td colspan=5><%err_listnull_alias%></td>
+</tr>
+<!-- END HAVE_ALIAS -->
+</table>
+</td><td width="20px"></td></tr></table>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

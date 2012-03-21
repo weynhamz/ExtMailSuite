@@ -1,0 +1,98 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%sysinfo%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+<script type="text/javascript" src="/extman/default/manlib.js"></script>
+<script language="javascript">
+var currentNav = 'nav_system';
+</script>
+</head>
+<body>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+	<div class="mts"><strong><%sysinfo%></strong></div>
+	<div class="mbs">&nbsp;</div>
+	<!-- IF ERROR --><span class="error"><%ERROR%></span><!-- END ERROR --><!-- IF SUCCESS --><span class="success"><%SUCCESS%></span><!-- END SUCCESS --></div>
+</div>
+
+<div id="main">
+<table width="100%" cellpadding="2" cellspacing="0" align="center">
+<tr><td width="20px"></td><td style="border:1px solid #333;">
+
+<script type="text/javascript">
+	var version = '<%NVERSION%>';
+	var software = 'extman';
+	var userlang = '<%LANG%>';
+</script>
+<script type="text/javascript" src="/extman/plugins/phprpc_client.js"></script>
+<script type="text/javascript" src="/extman/plugins/rpc_init.js"></script>
+<script type="text/javascript" src="/extman/plugins/chkupdate/chkupdate.js"></script>
+
+<table width=100% border=0 cellspacing=2 cellpadding=2>
+<tr><td width=50% valign=top>
+<!-- LEFT tab -->
+<table width=100% border="0" cellspacing="2">
+<tr class="listhb"><td colspan=2><%tab_software%></td>
+</tr>
+<tr><td class="listlu"><%info_software%></td><td class="listru"><%SOFTNAME%></td></tr>
+<tr><td class="listlu"><%info_softver%></td><td class="listru"><%SOFTVER%></td></tr>
+<tr><td class="listlu"><%info_license%></td><td class="listru"><%LICENSE%></td></tr>
+<tr><td class="listlu"><%info_url%></td><td class="listru"><a href="http://www.extmail.org" target=_blank>http://www.extmail.org</a></td></tr>
+<tr><td class="listlu"><%info_update%></td><td class="listru"><div style="display:none;color: #ff0000;font-weight: bold" id="chkupdate_container"></div></td></tr>
+<script type="text/javascript">
+	rpc_chklng();
+	chkupdate_init(version, software);
+</script>
+</table>
+</td>
+<td width=50% valign=top>
+<!-- RIGHT tab -->
+<table width=100% border="0" cellspacing="2">
+<tr class="listhb"><td colspan=2><%tab_sysconfig%></td>
+</tr>
+<tr><td class="listlu"><%info_dbtype%></td><td class="listru"><%DBTYPE%></td></tr>
+<tr><td class="listlu"><%info_lang%></td><td class="listru"><%SYSLANG%></td></tr>
+<tr><td class="listlu"><%info_crypt%></td><td class="listru"><%CRYPT%></td></tr>
+<tr><td class="listlu"><%info_username%></td><td class="listru"><%CUR_USERNAME%></td></tr>
+<tr><td class="listlu"><%info_usertype%></td><td class="listru"><%CUR_USERTYPE%></td></tr>
+</table>
+</td>
+</tr>
+
+<!-- SECOND tab -->
+<tr><td width=50% valign=top>
+<!-- left tab -->
+<table width=100% border="0" cellspacing="2">
+<tr class="listhb"><td colspan=2><%tab_sysinfo%></td>
+</tr>
+<tr><td class="listlu"><%info_ostype%></td><td class="listru"><%OSTYPE%></td></tr>
+<tr><td class="listlu"><%info_kernel%></td><td class="listru"><%KERNEL%></td></tr>
+<tr><td class="listlu"><%info_hostname%></td><td class="listru"><%HOSTNAME%></td></tr>
+<tr><td class="listlu"><%info_cpu%></td><td class="listru"><%CPU%></td></tr>
+<tr><td class="listlu"><%info_load%></td><td class="listru"><%SYSLOAD%></td></tr>
+<tr><td class="listlu"><%info_uptime%></td><td class="listru"><%UPTIME%></td></tr>
+<tr><td class="listlu"><%info_logusers%></td><td class="listru"><%LOGONUSERS%></td></tr>
+</table>
+</td>
+<td width=50% valign=top>
+<!-- right tab -->
+</td>
+</tr>
+</table>
+
+</td><td width="20px"></td></tr></table>
+</div>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

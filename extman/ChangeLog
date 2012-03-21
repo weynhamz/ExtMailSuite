@@ -1,0 +1,562 @@
+1.1
+
+Sun 25 Dec 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix parsing bug in Session.pm to support IPV6 address
+	* Fix bad javascript UTF8 escape bug, add UTF8.inc js functions
+	+ Add freebsd-cmd to cmdserver plugin
+	* Update Cmdtools to the latest version, rewrite help output
+	* Fix bug in setid.pl, now support IBM AIX
+	* Change x.y.z version defination to x.y, eg: x.y-beta1 etc..
+	* Improve reportusage.pl, change color to different quota stage,
+	  blue means quota is betwwen 85% and 95%, red means >= 95%, grey
+	  means maildirsize not found or maildir not used
+
+1.0.1
+
+Sat 7 Nov 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bad cookie expire value bug, thanks: charley
+	* html code cleanup, add FOOTER.html
+	* Change runtime to %5.2f, only contain sys + user
+	- Remove old navigation bar and HTML layout
+	+ Merge webmail navigation bar and header layout
+	* Redesign navigation link and operation flow, easier to use
+	+ Add cookie handle and highlight_Sel functions to manlib.js
+	+ Add cookie / URL based domain auto recall function, which will
+	  greatly simplify accounts management, we no longer need to
+	  switch domain in waves between users, alias or domains tab
+	* Cleanup edit_user.html, edit_alias.html, overview_*.html
+	+ Add cookie code to overview_* functions in Overview.pm
+	* Update signup.html changepwd.html forgetpwd.html
+
+1.0.1-rel
+
+Mon 9 Mar 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	+ Add gohome link in edit_alias.html
+	* Merge new CGI.pm from Webmail, this module is rewritten base
+	  on perl buildin CGI, say good bye to old lite version CGI.
+	- Remove mshack() the stupid function
+	* Change login/logout auto redirect timeout from 1s to 0s
+	- Remove queue_* and qmonitor-init in addon/mailgraph_ext
+	* Integrate mailgraph_ext.pl, qmonitor.pl startup script into
+	  one - mailgraph-init
+	* Update addon/mailgraph_ext/README.ext and programe(s) VERSION
+	* Fix broken link in edit_user/edit_alias under NEWADD mode
+	+ Add system information module, currently the module can show
+	  software name/ver, OS type, kernel version, hostname, uptime
+	  and system load.
+	+ Add system service control center module, via this great
+	  module, system administrator can easily restart/stop Postfix
+	  ldap or other system service in web!
+	- Remove chkupdate_init() js function in navbar.html, move it
+	  to sysinfo.html and become a sub unit of sysinfo module
+	* Fix a lot of bugs in Sysinfo/Sysctrl modules
+	* Merge config parameters from cmdserver to webman.cf
+	* Merge webman.cf to config template file: webman.cf.default
+	* Update i18N %lang_sys to all locale
+	- Fix bug in Login.pm, calling modify_manager with a bad owdomain
+	  parameters, api need ARRAY ref but feed a string. Thanks: 7bao
+
+1.0.0
+
+Thu 6 Mar 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in adddomain(), thanks: wwhero (xiaoming)
+	* Fix undefined Array bug in reportusage.pl
+	* Add gohome link in edit_user.html
+	* Fix bug in change_passwd() in MySQL.pm if we enable
+	  clearpwd and the postmaster change it's password.
+	* New release from 1.0.0
+
+0.2.5
+
+Sat 12 Apr 2008 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a stupid bug in Ext::Lang
+	* Do some html template CRLF cleanup, remove win32 \r :-)
+	* Add gohome link to forgetpwd.html, changepwd.html and
+	  signup.html
+	* Add "Status: 301 Moved Permanantly" to redirect(), this will
+	  fix redirect problem with nginx web server.
+	* Fix regexp problem in *_paging(), both MySQL and LDAP, this
+	  fix will prevent regexp compile error if user enter '*' or
+	  other bad string
+	* Add already login support to login page, this will advoid
+	  stupid login logic comfuse user.
+	* Fix domain quota bug which can't handle quota/ndquota = 0S
+	+ ----------------------------------------------------------
+	* Fix SQL injection hole for MySQL driver, via placeholder,
+	  thanks fengyong's help
+	* Fix domain_paging() regexp bug that can't handle '*' or
+	  other bad string
+	* Fix wrong display when setting maxquota and maxndquota to '0'
+	  it should be 'unlimited', or translate to locale info
+	* Optimize some i18n translation code, add some new translation
+	* Add 'edit domain' quick to overview screen
+	* Update RFC822.pm, Utils.pm, CGI.pm
+	* Add nginx FCGI support doc to README.fcgi
+	* Cmdtools code cleanup is done.
+	* Fix expireusers.pl bug that can't handle unlimit expiredate
+	* Add contrib directory to contain tools and scripts contributed
+	  by third-party or developers
+	* Fix bug that missing Ext::Unicode::Iconv package
+
+0.2.4
+
+Fri 14 Mar 2008 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Remove GroupMail open2() facility, which will corrupt
+	  FCGI I/O environment, thanks: chenny123
+	* Add forgetpwd.cgi and ForgetPwd.pm
+	* Add question and answer field to mailbox table (MySQL)
+	* Add forgetpassword capability to mailbox user
+	* Fix signup verify code case sensitive bug
+	* Change captcha character color to brighter one:)
+	* Add auxiliary tools links on login page
+	* Add verify code hint message to info user that it's case
+	  insensitive
+	* Remove expiredate support from alias module
+	* New expire procedure design, remove hour/minute/second
+	  support, simplify user operation
+	* Add expire date quick setting capability, javascript only:)
+	* Remove alias expire support.
+	* Add completely purge user mailbox/maildir data capability
+	* Fix password checks bug in User.pm
+	* Update i18n translation
+	* Add ChangePwd.pm and related cgi/html i18n files, module
+	  author: chifeng <chifeng@gmail.com>
+	* Limit length of alias goto address list to 45 bytes on
+	  alias overview, thanks: raykingecs
+	* Completely rewrite tools/*.pl base on CmdTools.pm, this
+	  new vpopmail like tools give you the powerful to do admin
+	  job under command line, author: chifeng <chifeng@gmail.com>
+	* Add "YYYY-MM-DD" support to time2epoch(), thanks: raykingecs
+	* Improve paging design, add jumpto xxx page function
+	* Do a lot of html and templates cleanup
+	* Fix a global symbol error in LDAP.pm modify_user()
+	* Fix extmail.sql bug, thanks: chris
+	* Fix expireusers.pl time stamp bug, thanks: raykingecs
+	* Fix a serious security hole in ForgetPwd.pm, thanks: fengyong
+
+0.2.3
+
+Sat 11 Aug 2007 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add experimental FCGI support for extman, derive from
+	  the extmail webmail code.
+	* Fix a lot of FCGI bugs in extman MgrApp.pm, it use global
+	  varible to store CGI data, but this is not suitable under
+	  FCGI or other persistent environment
+	* Change capcha feature to accept case insensitive input.
+	* Add FCGI support document - README.fcgi
+	* Rewrite tools/*.pl base on new CmdTools.pm module, this new
+	  module will hide all database connection and initial works.
+
+0.2.2
+
+Wed 28 Feb 2007 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add domain base default account setting templates:
+	  default quota/netdiskquota/expire and disable* attributes
+	  for new account.
+	* Add new feature for manager: password recovery question
+	  and answer, disable password modification support, it's
+	  very useful for demo.
+	* Add new feature support code to MySQL/LDAP backends
+	* Fix bug that return scalar instead of array ref in LDAP
+	* Add new feature support html code to html templates.
+	* Update i18n and translation
+	* Update extmail.sql and extmail.schema
+	* Fix defination bug in extmail.schema that cause errors
+	  when question or answer is writting to ldap server
+	* Fix login checking bug that missing action
+	* Fix bug in init.sql that missing clearpwd attribute
+	* Add SYS_USER_DEFAULT_* parameters and update MgrApp/*
+	* Fix bug in MySQL add_user() that handle active wrong.
+	* Add default charset=UTF-8 to template engine, thansk: atao
+	* Fix bad searching js code, escape to UCS4 now.
+	* Add chkupdate PHP rpc plugin, this is great for automatically
+	  version checking, update every 1 hour:)
+	* Add Captcha and GD module to buildpkg.sh
+	* Add captcha verify img/code to ExtMan, add SYS_CAPTCHA_* to
+	  webman.cf to config whether enable captcha feature or not
+	* Add sender login maps for postfix, thanks: zhdfdn (云中帆)
+	* Fix ChkMailTo() bug when doing groupmail to all domain
+
+0.2.1
+
+Tue 20 Feb 2007 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix reportusage.pl bug that missing some perl modules.
+	* Add NVERSION template in order to call the javascript
+	  chkupdate rpc plugin.
+	* Upgrade addon/README and ChangeLog
+	* Update Version and fix password bug in docs/init.*
+	* Disable verbose for mailgraph-init, less log now :)
+	* Fix docs/mysql_virtual_domain_maps.cf bug that using
+	  description instead of domain field, it's stupid
+
+0.2.0 release
+
+Sun 21 Jan 2007 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Port extmail new session design to extman
+	* Fix cookie bug in MgrApp.pm
+	* Fix all recipients expose bug in GroupMail.pm
+	* Add Complete ISP mode support, HashDir support
+	* Fix some i18n bugs and translation
+	* Add Rich Text Format Editor to groupmail
+	* Fix bugs in Groupmail.pm that missing attach
+	* Fix groupmail bugs that missing recipients if total
+	  recipients is larger than per mail limit.
+	* Add webmail login RRD graph to GraphLog.pm
+	* Add webmail login RRD graph to ViewLog.pm
+	* Update view_all template to display webmail login
+	* Fix user/alias/domain case bugs.
+	* Add buildpkg.sh to replace buildlink.sh, copy modules
+	  from extmail source tree instead linking, since 0.2.0
+	* Add webmail loggin capability to mailgraph_ext,
+	  upgrade version from 1.12_ext to 1.2_ext
+	* Update INSTALL, merge from extmail
+
+0.2RC1
+
+Thu 14 Dec 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Update Ext::DateTime, add time2epoch() and epoch2time()
+	* Fix cvt2expire() daytime calculation bugs.
+	* Fix init.* bugs in docs/
+	* Redesign authentication and password mantainence, via
+	  Ext::Password to support multiple password schemes:
+	  crypt|cleartext|plain|md5|plain-md5|ldap-md5|sha|sha1
+	* Fix passsword scheme bug in LDAP.pm
+	* Update docs/init*.* to use MD5 (crypted) password by
+	  default :-)
+	* Add Crypt/PasswdMD5.pm
+	* Fix Groupmail charset bugs, set to UTF-8 now
+
+0.2beta3
+
+Sun 3 Dec 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add simple sorting capability for users/domains/aliases
+	  and managers listing, update MySQL.pm and LDAP.pm
+	* merge new template to standard, nick design and will
+	  maintain this official template.
+	* Rewrite owning domain selecting method, nick change the
+	  legacy drop down list to js add/remove + autocomplete,
+	  excellent design :)
+	* Fix some template bugs, do some locale cleanup
+	* Begin ExtMail ISP version desgin, add an experimental
+	  mail routing capability, disable by default
+	* Finish basic per user mail routing code for MySQL/LDAP
+	* Add per user mail routing info display on edit_user.html
+	* Add total user/domain/alias/managers counting code
+	* Remove all utf8 encoding/decoding support, swith to pure
+	  UTF-8 enviroment.
+
+0.2beta2
+
+Fri 24 Nov 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Complete full service disable/enable feature for
+	  the LDAP module
+	* fix false return code bug for LDAP module
+	* Re-design web ui and feel - by nick
+	* Update extmail.schema and init.ldif
+
+0.2beta1
+
+Thu 09 Nov 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* New version come out, 0.16-pre1 will be the last 0.1x release.
+	* Update extmail.sql and extmail.schema to add support
+	  service disable/enable setting, thanks all!
+	* Add full service disable/enable support to extman :)
+	  currently only MySQL module supported.
+	* update related postfix setting
+
+0.16-pre1
+
+Mon 10 Jul 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix netdisk quota calculation bug in get_domain_usage()
+	  this bug is terrible and it's a security hole, thanks:
+	  pc51ceo <pc51ceo@pc51.net>
+	* Fix reading maxnetdiskquota bug for MySQL.pm
+	* Add maxndquota and maxquota info to overview
+	* Update overview_user.html and overview.html
+	* Make index.html i18n and some i18n cleanup for edit_domain
+	* Add donate link to index.html and navbar.html
+	* Fix edit_*.html missing i18n tag
+
+0.15-20060519
+
+Fri 19 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Remove password prepend {crypt_type} header for MySQL
+	* Fix clear password bug for MySQL
+	* Add courier-authlib-ldap.patch to addon, it change
+	  authldap module maildir attribute, see addon/README
+
+0.15
+
+Thu 18 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* upgrade version 0.14 to 0.15
+	* Cleanup addon/mailgraph_ext, rewrite queue_*.sh and
+	  will not compatible with old rrd format. ouch :-(
+	* Update README in mailgraph_ext
+	* Fix bugs in queue_*.sh and qmonitor-init, thanks:
+	  ken <ken@kenbaby.org>
+
+0.14-20060517
+
+Wed 17 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Lots of mailgraph_ext.pl bug fix
+	* Newly write qmonitor to watch queue and generate rrd
+	  files for mailgraph_ext
+
+0.14-20060503
+
+Wed 03 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Cleanup mailgraph.pl
+	* Integrate couriergraph into mailgraph_ext distribution
+	* Add courier login graph into ViewLog.pm
+
+0.14-20060502
+
+Tue 02 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Continue new queue stat algorithm design, according to maillog
+	  parsing, we can get active and deferred queue information
+	* Add mail traffic graph monitoring to GraphLog.pm and mailgraph.pl
+	* Fix some caculation bugs of mail traffic
+
+0.14-20060501
+
+Mon 01 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Re-design queue rrdtool relate code
+	* Redefined queue CDEF and add current data gprint.
+	* Modifed queue_mkrrd.sh and queue_stat.sh
+	* New queue stat algorithm designing.
+
+0.14-20060429
+
+Sat 29 Apr 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Enable auto charset detection by lang auto detect.
+	* Remove default charset assignment
+
+0.14-20060428
+
+Fri 28 Apr 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in get_*_list functions, cause MgrApp/*.pm can't delete
+	  or remove entries, thanks:
+	  raykingecs <ray.jin@fbsmfg.com>
+	* Fix groupmail bad sender bug, thanks:
+	  sxqw <sxqw@21cn.com>
+	* Add Open2 support to get sendmail error, more verbose while there
+	  is something wrong.
+	* Fix groupmail incomplete sender bug which makes amavisd crazy!
+
+0.14-20060426
+
+Wed 26 Apr 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in manager name validation, add sanity_manager()
+	* Fix wrong USERTYPE indentification and wrong get_domains_list()
+	  parameter bug in groupmail module, thanks:
+	  sxqw <sxqw@21cn.com>
+	* Fix bad domain name detection bug, add more check to sanity_*()
+
+0.14-20060425
+
+Tue 25 Apr 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in image output in ViewLog.pm, $tpl->{noprint} must
+	  be set to 1 to disable tpl header, or will cause corruption
+	  thanks pc51 <webmaster@pc51.net> report
+	* Fix default expire day bug, thanks: veryi
+	* Add sanity_username() to validate username, thanks: ken
+	* Add addon/README and two addon, passwd2ext.pl and cleanup.sql
+
+0.14-pre3
+
+Mon 24 Apr 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Integrade and rewrite mailgraph into extman, add GraphLog.pm
+	  and ViewLog.pm, and SYS_RRD* parameters to webman.cf
+	* Add i18n support for mailgraph relate modules
+	* RRD relate code cleanup
+	* Merge auto language detection capability from new Lang.pm
+	* Add the addon directory and integrate mailgraph and queuegraph
+	  as mailgraph_ext
+	* Disable SYS_LANG and SYS_CHARSET, let language auto detection
+	  code to guess the lang
+
+0.14-pre2
+
+Sun 23 Apr 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add searching capability for domain, admin accounts
+	  aliases and users
+	* Bug fix searching function
+	* Experimental HashDir implemention, but only for test purpose
+
+0.14-pre1
+
+Sat 22 Apr 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a lot of bugs
+	* Add paging function for domain, admin accounts
+	* Add paging function for alias and mail accounts
+	* Rewrite paging function, dump all first then paging
+
+0.13-20060419
+
+Wed 19 Apr 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in User.pm and Alias.pm to call get_domain_usage()
+	  without enough parameters, the bug cause the domain admin
+	  can add unlimited users into the system.
+
+0.13-20060320
+
+Mon 20 Mar 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix groupmail bug while sending to all domains, thanks:
+	  pc51 <webmaster@pc51.net>
+	* Do some code cleanup
+
+0.13-20060120
+
+Fri 20 Jan 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add cleanup sql into extmail.sql, useful for multiple
+	  times importion, thanks: Qufo <qufo2004@163.com>
+
+0.13-20060102
+
+Mon 01 Jan 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a big bug in template mechanism, add true multi
+	  templates support, thanks xiaofei <syj19@tom.com>
+	* Add SYS_TEMPLATE_NAME to provide the ability to
+	  choose which template will be used
+
+0.12-20051216
+
+Fri 16 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in docs/README.postfix, the sequence of ldap
+	  and mysql is false
+	* Add virtual_mailbox_limit_maps config simple HOWTO,
+	  and fix some minor mistake in docs/README.postfix,
+	  thanks Wang ming da <wangmd0217@hotmail.com>
+
+0.12
+
+Thu 15 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in standard/index.html, the remembered
+	  login username will conflict with extmail
+	* Add no_utf8 flag for mysql, support for customize
+	  complied mysql to use gb2312 or other language as
+	  default charset
+	* complete mysql-*.cf and ldap-*.cf, active the active
+	  attribute, include virtual limit maps
+
+0.11beta
+
+Fri 25 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add sha support into Mgr.pm, MySQL.pm and LDAP.pm
+	* Fix bug in modify_user() in LDAP.pm
+	* do some cleanup for LDAP.pm
+	* Add num2quota/quota2num convertion routine to support
+	  VDA (eg: 102400) / courier (eg: 102400S) style quota
+	  string, please refer to SYS_QUOTA_TYPE
+
+0.11alpha
+
+Mon 21 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in pre_backend() of MgrApp.com, without
+	  pass the socket parameter to MySQL.pm.
+
+0.10
+
+Tue 15 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in Groupmail,admin can now send groupmail
+	* html/css cleanup and modify edit_groupmail.html
+	* Fix a bug in buildlink.sh, add RFC822 link
+
+0.10beta2
+
+Sun 13 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Urgent bug in LDAP, after 0.10alpha add_user()
+	  change the api, but not reflect to the LDAP
+	  backend, sucks :(
+	* Add GroupMail.pm to enable sending groupmail
+	* Bug fix a redundant varible bug, many thanks to:
+	  Ethan <voonchong@gmail.com>
+	* Fix a bug in MySQL.pm, not update maxalias,
+	  thanks to windowsXP <boydong520@163.com>
+
+0.10beta
+
+Fri 11 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* move mshack() defination to Mgr.pm
+	* Complete the modify_manager() of MySQL.pm
+	* Bug fix add_manager(), new manager added to the
+	  mysql won't get active, thanks tspine
+	* Add experimental zh_CN locale, do some cleanup
+	  to it, and thanks the zh_CN translator:
+	  Fengyong <fengyongchang@hotmail.com>
+	* Standard template cleanup
+
+0.10alpha
+
+Thu 10 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Bug fix get_xxx_list() functions, check the $arr
+	  and count it, return NULL unless it has members
+	* Bug fix name/description read/write encode/decode
+	* Cheers for Linux world 2005 (guangzhou) :-)
+	* Fix bug in extmail.sql, the int(10) cause quota
+	  and netdiskquota could not reach over 2GB, this
+	  due to the limit of 32bit int, change to varchar
+
+0.09
+
+Wed 09 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Complete most of mysql relate functions
+	* Fix several bugs in Overview.pm and Domain.pm
+
+0.08
+
+Tue 08 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Begin the MySQL implemention and design
+	* Fix some bug in MgrApp/*.pm
+
+0.07
+
+Sun 06 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Unify the API parameters of backend <=> App layer, so
+	  support new backend is much easier than before, eg: Oracle
+	* Add SYS_DEFAULT_* parameters to webman.cf, setting some
+	  system default value
+
+0.06
+
+Mon 31 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Complete the basic function for user/alias/domain/manager,
+	  eg: add/modify/delete.
+	* Add permission validation check, postmaster can only access
+	  restricted resource and functions except admin.
+	* Add sample.ldif and ldap_virtual_*.cf postfix configuration
+	  files to docs directory.
+
+0.05
+
+Sun 30 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add mshack() to resolve strange problem while using multiple
+	  select field, the CGI post data will contain 0 line break.
+	* Add manager add/modify/delete function
+
+0.04
+
+Sat 29 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Implement user/domain/alias modify
+	* use simple procedure to handle multi-values attribute,
+	  eg: delete it first, then add new value, efficient enough
+
+0.03
+
+Thu 27 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Work at template
+	* Add postmaster handle func*
+	* Implement user/domain/alias add functions
+
+0.02
+
+Tue 25 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Implement user/domain/alias list functions
+	* Fix some bug in schema
+
+0.01
+
+Sat 22 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Begin this software, first implement LDAP :-)
+	* Use ext/webmail framework, including some CORE module
+	  and session validation frameworks.

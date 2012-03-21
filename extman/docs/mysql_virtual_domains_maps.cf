@@ -1,0 +1,8 @@
+user = extmail
+password = extmail
+hosts = localhost
+dbname = extmail
+table = domain
+select_field = domain
+where_field = domain
+additional_conditions = AND active = '1'

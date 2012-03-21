@@ -1,0 +1,303 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+<link rel="stylesheet" href="/extman/default/tab.css" type="text/css">
+<link rel="stylesheet" href="/extman/default/autocomplete.css" type="text/css">
+<script src="/extman/default/js/tab.js" type="text/javascript"></script>
+</head>
+<body>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+<div class="mts"><strong><%meta_title%></strong>
+<!-- IF ERROR --><span class="error"><%ERROR%></span><!-- END ERROR -->
+<!-- IF SUCCESS --><span class="success"><%SUCCESS%></span><!-- END SUCCESS -->
+</div>
+
+<div class="mbs"></div>
+</div>
+
+<script language="javascript">
+var currentNav = 'nav_manager';
+function SelectDate(form)
+{
+	year = form.selectdate.value;
+	if(year == 0){
+		return false;
+	}
+	if(year == -1){
+		form.expire.value = '0000-00-00';
+		return false;
+	}
+	nowdate = form.nowdate.value;
+	form.expire.value =  parseInt(nowdate.substr(0,4))+ parseInt(year) + '-' +
+		nowdate.substr(5,2)+ '-' + nowdate.substr(8,2);
+	return true;
+}
+</script>
+
+<div id="container" style="width: 90%; padding-left: 25px">
+<!-- IF HAVE_MANAGER -->
+<form name="edit_manager" method=post action="manager.cgi" onsubmit=frmchk()>
+<input type=hidden name=__mode value="save_manager">
+<input type=hidden name=sid value=<%SID%>>
+<input type=hidden name=screen value="edit_manager.html">
+<!-- IF NEWADD -->
+<input type=hidden name=newadd value="newadd">
+<!-- END NEWADD -->
+<table width=100% cellspacing=0 cellpadding=0>
+<tr><td>
+	<table cellspacing=0 cellpadding=0 width=100%>
+	<tr>
+	<td class="tab-selected b2" id="tab1" onclick="SelectTab('3','1');"><%tab_basic%></td>
+	<td class="tab b1" id="tab2" onclick="SelectTab('3','2');"><%tab_pwd%></td>
+	<td class="tab b1" id="tab3" onclick="SelectTab('3','3');"><%tab_domain%></td>
+	<td class="b1" width=100%>&nbsp;</td>
+	<div class="cleard"></div>
+	</tr>
+	</table>
+</td></tr>
+<tr><td>
+
+<div class="content" id="tbContent1">
+<table cellspacing=0 cellpadding=5 border=0 class=etb>
+<tr>
+	<td width=150><%username%></td>
+	<td>
+	<!-- IF NEWADD -->
+	<input type=text name=manager size=30>
+	<!-- ELSE NEWADD -->
+	<b><%USERNAME%></b>
+	<input type=hidden name=manager value="<%USERNAME%>">
+	<!-- END NEWADD -->
+	</td>
+</tr>
+<td><%name%></td><td><input type=text name=cn size=30 value="<%NAME%>"></td>
+</tr>
+<tr>
+<td><%type%></td><td><!-- IF NEWADD -->postmaster<!-- ELSE NEWADD --><%TYPE%><!-- END NEWADD --></td>
+</tr>
+<tr>
+	<input type=hidden name=nowdate value="<%NOWDATE%>">
+        <td><%expire%></td><td><input type=text size=15 name=expire value="<%EXPIRE%>">
+	<select name="selectdate" onChange="SelectDate(this.form);return false">
+		<OPTION value="0"><%tsel_msg1%></OPTION>
+		<OPTION value="1"><%tsel_msg2%></OPTION>
+		<OPTION value="2"><%tsel_msg3%></OPTION>
+		<OPTION value="3"><%tsel_msg4%></OPTION>
+		<OPTION value="-1"><%tsel_msg5%></OPTION>
+	</SELECT>
+	</td>
+</tr>
+<tr>
+<td><%active%></td><td><input name=active type=checkbox <!-- IF ACTIVE -->checked<!-- END ACTIVE-->></td>
+</tr>
+</table>
+</div>
+
+<div class="content" id="tbContent2" style="display: none">
+<table cellspacing=0 cellpadding=5 border=0 class=etb>
+<tr>
+        <td><%passwd%></td><td><input type=password size=30 name=passwd1></td>
+</tr>
+<tr>
+        <td><%passwd2%></td><td><input type=password size=30 name=passwd2></td>
+</tr>
+<tr>
+	<td><%pwd_question%></td><td><input type=text size=30 name=question value="<%QUESTION%>"></td>
+</tr>
+<tr>
+	<td><%pwd_answer%></td><td><input type=text size=30 name=answer value="<%ANSWER%>"></td>
+</tr>
+<tr>
+	<td><%pwd_nochange%></td><td><input type=checkbox name=disablepwdchange <!-- IF DISABLEPWDCHANGE -->checked<!-- END DISABLEPWDCHANGE -->></td>
+</tr>
+</table>
+</div>
+
+<div class="content" id="tbContent3" style="display: none">
+<table cellspacing=0 cellpadding=5 border=0 class=etb>
+<tr>
+	<td><%owndomain%></td><td>
+		<table><tr>
+		<td valign=top align=right>
+		<input type=text name=istdomain id=istdomain style=width:150px class="ACtype">
+		<input type=button value='<%add%>' style=width:70px onclick=adddomain()>
+		<br>
+		<input type=button value='<%del%>' style=width:70px onclick=removedomain()>
+		<br>
+		<p><%hint_ac%></p>
+		</td>
+		<td>
+			<select name="owndomain" id=owndomain multiple="multiple" size="10" style=width:150px>
+				<!-- BEGIN LOOP_DOMAIN -->
+				<!-- IF CHECK --><option value="<%VDOMAIN%>" selected="selected"><%VDOMAIN%></option><!-- END CHECK -->
+				<!-- END LOOP_DOMAIN -->
+			</select>
+		</td>
+		</tr></table>
+	</td>
+	</tr>
+</table>
+</div>
+
+<div style="padding-top: 20px">
+<input type=submit name=save value="<%save%>">
+<input type=button name=cancel onclick="document.location.href='/extman/cgi/overview.cgi?sid=<%SID%>';" value="<%cancel%>">
+</div>
+<td>
+</tr>
+</table>
+</form>
+<!-- ELSE HAVE_MANAGER -->
+<!-- UNLESS ERROR -->
+<%no_such_manager%>
+<!-- END ERROR -->
+<!-- END HAVE_MANAGER -->
+</div>
+
+<!-- INCLUDE FOOTER.html -->
+
+<script language=javascript>
+
+var destList = document.getElementById("owndomain");
+function frmchk()
+{
+	for (var i=0; i<destList.options.length;i++)
+	{
+		//alert(i);
+		destList.options[i].selected =true;
+	}
+	return true;
+}
+
+function adddomain()
+{
+	var cs = collection.join(",")+',';
+	var ss = seldomain.join(",")+',';
+	var dv = document.getElementById("istdomain").value;
+	var dva =dv.split(",");
+	for (var i=0;i<dva.length;i++)
+	{
+		if (dva[i]=="")
+			continue;
+
+		if (cs.indexOf(dva[i]+',')!=-1)
+		{
+			var v1 = ss.indexOf(','+dva[i]+',');
+			var v2 = ss.indexOf(dva[i]+',');
+			if ((v1==-1 || v2>0) && v2!=0)
+			{
+				destList.options[destList.length] =  new Option(dva[i],dva[i]);
+				renewdm();
+			}
+			else
+			{
+				alert(dva[i]+' exist!');
+			}
+		}
+		else
+		{
+			alert(dva[i]+' not found!');
+		}
+	}
+	document.getElementById("istdomain").value = '';
+	return false;
+}
+
+function removedomain()
+{
+	while (destList.selectedIndex>=0)
+	{
+		destList.options[destList.selectedIndex] = null;
+	}
+	renewdm();
+}
+
+function renewdm()
+{
+	seldomain = new Array();
+	for (var i=0; i<destList.options.length;i++)
+	{
+		//alert(i);
+		seldomain[i]=destList.options[i].value;
+	}
+	//alert(seldomain.join(","));
+}
+
+var seldomain = [''<!-- BEGIN LOOP_DOMAIN --><!-- IF CHECK -->,'<%VDOMAIN%>'<!-- END CHECK --><!-- END LOOP_DOMAIN -->];
+var collection = [<!-- BEGIN LOOP_DOMAIN -->'<%VDOMAIN%>',<!-- END LOOP_DOMAIN -->''];
+
+function fE(e){
+	if(e.preventDefault)e.preventDefault();e.returnValue=false;e.cancelBubble=true;
+	if(e.stopPropagation)e.stopPropagation();return false;
+}
+function iWN(e,i,c,t,obj){answer=false;te=e;while(te && !answer){if((te.id &&(te.id==i))||(te.className &&(te.className==i+"Class"))||(!t && c && te.className &&(te.className==c))||(!t && c && te.className &&(te.className.indexOf(c)!=-1))||(t && te.tagName &&(te.tagName.toLowerCase()==t))||(obj &&(te==obj))){answer=te;} else {te=te.parentNode;}}return te;}
+function gE(event){return(event ? event : window.event);}
+function gEE(e){return(e.srcElement ? e.srcElement:(e.target ? e.target : e.currentTarget));}
+function fEPosX(obj){curleft=0;if(obj.offsetParent){while(obj.offsetParent){curleft +=obj.offsetLeft;obj=obj.offsetParent;}}else if(obj.x)curleft +=obj.x;return curleft;}
+function fEPosY(obj){curtop=0;if(obj.offsetParent){while(obj.offsetParent){curtop +=obj.offsetTop;obj=obj.offsetParent;}}else if(obj.y)curtop +=obj.y;return curtop;}
+function handleKeyPress(event){e=gE(event);eL=gEE(e);upEl=iWN(eL,null,"ACtype",null,null);kc=e["keyCode"];if(siw &&((kc==13)||(kc==9))){siw.selected=true;if(siw.isSafari)siw.inputBox.blur();siw.inputBox.focus();siw.inputBox.value=siw.inputBox.value.replace(/[ \r\n\t\f\s]+$/gi,' ');hideSIF();} else if(upEl &&(kc !=38)&&(kc !=40)&&(kc !=37)&&(kc !=39)&&(kc !=13)&&(kc !=27)){if(!siw ||(siw && !siw.selected)){procSI(upEl);}} else if(siw && siw.inputBox){siw.inputBox.focus();}}
+function handleKeyDown(event){e=gE(event);eL=gEE(e);
+if ((!siw)&&(kc=e["keyCode"])) { if (kc==13) {adddomain();return false;}}
+if(siw &&(kc=e["keyCode"])){ if(kc==40){siw.selected=true;fE(e);if(siw.isGecko)siw.inputBox.blur();sNSIMI();} else if(kc==38){siw.selected=true;fE(e);if(siw.isGecko)siw.inputBox.blur();sPSIMI();} else if((kc==13)||(kc==9)){siw.selected=true;atcurSIM();fE(e);} else if(kc==27){hideSIF();fE(e);} else {siw.selected=false;}}}
+function handleFocus(event){e=gE(event);eL=gEE(e);if(focEl=iWN(eL,null,"ACtype",null,null)){if(!siw ||(siw && !siw.selected))procSI(focEl);}}
+function handleBlur(event){e=gE(event);eL=gEE(e);if(blurEl=iWN(eL,null,"ACtype",null,null)){if(siw && !siw.selected)HideSIF();}}
+function handleClick(event){e2=gE(event);eL2=gEE(e2);if(siw && siw.selected){selectFromMouseClick();}}
+function handleMouseOver(event){e=gE(event);eL=gEE(e);if(siw &&(mEl=iWN(eL,null,"mcit",null,null))){siw.selected=true;selectFromMouseOver(mEl);} else if(iWN(eL,null,"siwCredit",null,null)){siw.selected=true;}else if(siw){siw.selected=false;}}
+function showSIF(){if(!siw.floater.style.display ||(siw.floater.style.display=="none")){if(!siw.customFloater){x=fEPosX(siw.inputBox);y=fEPosY(siw.inputBox)+ siw.inputBox.offsetHeight;if(!siw.isGecko && !siw.isWinIE)x +=8;if(!siw.isGecko && !siw.isWinIE)y +=10;siw.floater.style.left=x;siw.floater.style.top=y;} else { }siw.floater.style.display="block";siw.floater.style.visibility="visible";}}
+function hideSIF(){if(siw){siw.floater.style.display="none";siw.floater.style.visibility="hidden";siw=null;}}
+function procSI(inputBox){if(!siw)siw=new smartInputWindow();siw.inputBox=inputBox;classData=inputBox.className.split(" ");siwDirectives=null;for(i=0;(!siwDirectives && classData[i]);i++){if(classData[i].indexOf("ACtype")!=-1)siwDirectives=classData[i];}if(siwDirectives &&(siwDirectives.indexOf(":")!=-1)){siw.customFloater=true;newFloaterId=siwDirectives.split(":")[1];siw.floater=document.getElementById(newFloaterId);siw.floaterContent=siw.floater.getElementsByTagName("div")[0];}sSID();if(siw.mCl &&(siw.mCl.length > 0))sSIMI(0);content=gSIBC();if(content){mdSIBC(content);showSIF();} else hideSIF();}
+function sIM(cleanValue, value){this.cleanValue=cleanValue;this.value=value;this.isSelected=false;}
+function simplify(s){return s.toLowerCase().replace(/^[ \s\f\t\n\r]+/,'').replace(/[ \s\f\t\n\r]+$/,'');}
+function getUITM(s){a=s;fields=s.split(",");if(fields.length > 0)a=fields[fields.length - 1];return a;}
+function getUIB(){s=siw.inputBox.value;a=s;if((lastComma=s.lastIndexOf(","))!=-1){a=a.replace(/^(.*\,[ \r\n\t\f\s]*).*$/i,'$1');}else a="";return a;}
+function runMatch(uI, standalone){uI=simplify(uI);uifc=uI.charAt(0).toLowerCase();showAll=(uifc==' '?1:0);if(uifc=='"')uifc=(n=uI.charAt(1))? n.toLowerCase(): "z";if(standalone)uI=uifc;if(siw)siw.mCl=new Array();ptr=collection;if(siw && siw.rvCl &&(siw.rvCl.length > 0)&& siw.lastUserInput &&(uI.indexOf(siw.lastUserInput)==0)){ptr=siw.rvCl;} else if(cIndex[uI] &&(cIndex[uI].length > 0)){ptr=cIndex[uI];} else if(cIndex[uifc] &&(cIndex[uifc].length > 0)){ptr=cIndex[uifc];} else if(siw &&(uI.length==1)&&(!cIndex[uifc])){siw.buildIndex=true;} else if(siw){siw.buildIndex=false;}tmpcl=new Array();re1m=new RegExp("^([ \"\>\<\-]*)("+uI.replace(/\./,'\\.')+")","i");re2m=new RegExp("([ \"\>\<\-]+)("+uI.replace(/\./,'\\.')+")","i");re1=new RegExp("^([ \"\}\{\-]*)("+uI.replace(/\./,'\\.')+")","gi");re2=new RegExp("([ \"\}\{\-]+)("+uI.replace(/\./,'\\.')+")","gi");for(i=0,j=0;(i<ptr.length);i++){displayMatches=((!standalone)&&(j < siw.MAX_MATCHES));entry=ptr[i];mEntry=simplify(entry);if(showAll){tmpcl[j]=entry;j++;}else if(!standalone &&(mEntry.indexOf(uI)==0)){uI=uI.replace(/\>/gi,'\\}').replace(/\< ?/gi,'\\{');re=new RegExp("(" + uI + ")","i");if(displayMatches){siw.mCl[j]=new sIM(entry, mEntry.replace(/\>/gi,'}').replace(/\< ?/gi,'{').replace(re,"<b>$1</b>"));}tmpcl[j]=entry;j++;} else if(mEntry.match(re1m)|| mEntry.match(re2m)){if(!standalone && displayMatches){siw.mCl[j]=new sIM(entry, mEntry.replace(/\>/gi,'}').replace(/\</gi,'{').replace(re1,"$1<b>$2</b>").replace(re2,"$1<b>$2</b>"));}tmpcl[j]=entry;j++;}}if(siw){siw.lastUserInput=uI;siw.rvCl=tmpcl.join(",").split(",");cIndex[uI]=tmpcl.join(",").split(",");}if(standalone || siw.buildIndex){cIndex[uifc]=tmpcl.join(",").split(",");if(siw)siw.buildIndex=false;}}
+function sSID(){if(siw){ouI=siw.inputBox.value;ouI=getUITM(ouI);uI=ouI.toLowerCase().replace(/[\r\n\t\f\s]+/gi,' ').replace(/ +/gi,' ').replace(/\\/gi,'').replace(/\[/gi,'').replace(/\(/gi,'').replace(/\./gi,'\.').replace(/\?/gi,'');if(uI &&(uI !="")&&(uI !='"')){runMatch(uI);}else {siw.mCl=null;}}}
+function gSIBC(){a=null;if(siw && siw.mCl &&(siw.mCl.length > 0)){a='';for(i=0;i < siw.mCl.length;i++){selectedString=siw.mCl[i].isSelected ? ' slipit' : '';a +='<p class="mcit' + selectedString + '">' + siw.mCl[i].value.replace(/\{ */gi,"&lt;").replace(/\} */gi,"&gt;")+ '</p>';}}return a;}
+function mdSIBC(content){siw.floaterContent.innerHTML='<div id="sinRs">' + content + '</div>';siw.matchListDisplay=document.getElementById("sinRs");}
+function selectFromMouseOver(o){currentIndex=gCurSSIT();if(currentIndex !=null)dSSIMI(currentIndex);newIndex=gIfE(o);sSIMI(newIndex);mdSIBC(gSIBC());}function selectFromMouseClick(){atcurSIM();siw.inputBox.focus();hideSIF();}function gIfE(o){index=0;while(o=o.previousSibling){index++;}return index;}function gCurSSIT(){answer=null;for(i=0;((i < siw.mCl.length)&& !answer);i++){if(siw.mCl[i].isSelected)answer=i;}return answer;}function sSIMI(index){siw.mCl[index].isSelected=true;}function dSSIMI(index){siw.mCl[index].isSelected=false;}function sNSIMI(){currentIndex=gCurSSIT();if(currentIndex !=null){dSSIMI(currentIndex);if((currentIndex + 1)< siw.mCl.length)sSIMI(currentIndex + 1);else sSIMI(0);} else {sSIMI(0);}mdSIBC(gSIBC());}function sPSIMI(){currentIndex=gCurSSIT();if(currentIndex !=null){dSSIMI(currentIndex);if((currentIndex - 1)>=0)sSIMI(currentIndex - 1);else sSIMI(siw.mCl.length - 1);} else {sSIMI(siw.mCl.length - 1);}mdSIBC(gSIBC());}function atcurSIM(){baseValue=getUIB();if((selIndex=gCurSSIT())!=null){addedValue=siw.mCl[selIndex].cleanValue;theString=(baseValue ? baseValue : "")+ addedValue + ",";siw.inputBox.value=theString;runMatch(addedValue, true);}}function smartInputWindow(){this.customFloater=false;this.floater=document.getElementById("sipF");this.floaterContent=document.getElementById("sipFC");this.slipit=null;this.MAX_MATCHES=15;this.isGecko=(navigator.userAgent.indexOf("Gecko/200")!=-1);this.isSafari=(navigator.userAgent.indexOf("Safari")!=-1);this.isWinIE=((navigator.userAgent.indexOf("Win")!=-1)&&(navigator.userAgent.indexOf("MSIE")!=-1));}
+function regSIL(){
+	inputs=document.getElementsByTagName("input");
+	texts=document.getElementsByTagName("textarea");
+	allinputs=new Array();z=0;y=0;
+	while(inputs[z]){allinputs[z]=inputs[z];z++;}
+	while(texts[y]){allinputs[z]=texts[y];z++;y++;}
+	for(i=0;i < allinputs.length;i++){
+		if((c=allinputs[i].className)&&(c=="ACtype")){
+			allinputs[i].setAttribute("autocomplete","OFF");
+			allinputs[i].onfocus=handleFocus;
+			allinputs[i].onblur=handleBlur;
+			allinputs[i].onkeydown=handleKeyDown;allinputs[i].onkeyup=handleKeyPress;
+		}
+	}
+}
+siw=null;
+if(document.addEventListener){
+	document.addEventListener("keydown", handleKeyDown, false);
+	document.addEventListener("keyup", handleKeyPress, false);
+	document.addEventListener("mouseup", handleClick, false);
+	document.addEventListener("mouseover", handleMouseOver, false);
+} else {
+	document.onkeydown=handleKeyDown;
+	document.onkeyup=handleKeyPress;
+	document.onmouseup=handleClick;
+	document.onmouseover=handleMouseOver;
+}
+regSIL();
+document.write('<table id="sipF" class="floater" cellpadding="0" cellspacing="0"><tr><td id="sipFC" nowrap="nowrap">'+'<\/td><\/tr><\/table>');
+for(x=0;x<collection.length;x++){collection[x]=collection[x].replace(/\,/gi,'');}
+cIndex=new Array();
+
+</script>
+</body>
+</html>

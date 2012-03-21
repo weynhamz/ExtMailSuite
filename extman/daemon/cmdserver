@@ -1,0 +1,88 @@
+#!/usr/bin/perl -w
+# vim: set ci et ts=4 sw=4:
+
+use vars qw($DIR $VERSION);
+BEGIN {
+    my $path = $0;
+    if ($path =~ s/daemon\/([^\/]+)$//) {
+        if ($path !~ /^\//) {
+            $DIR = "./$path";
+        } else {
+            $DIR = $path;
+        }
+    } else {
+        $DIR = '../';
+    }
+    unshift @INC, $DIR .'libs';
+};
+
+$VERSION = '1.0';
+
+use Ext::Config;
+use Getopt::Long;
+use Ext::Cmd::Server;
+
+my $obj = Ext::Config->new(file => $DIR . '/webman.cf');
+my %opt = ();
+my $cfg = $obj->{cfg};
+
+$SIG{PIPE} = sub { warn "PERROR: $!\n" and return 'IGNORE' };
+
+sub usage
+{
+	print "usage: cmdserver [*options*]\n\n";
+    print "  -h, --help            display this help and exit\n";
+    print "  -v, --verbose         be verbose about what you do\n";
+    print "  -V, --version         output version information and exit\n";
+    print "  -d, --daemon          start in the background\n";
+    print "  --daemon-pid=FILE     write PID to FILE instead of /var/run/cmdserver.pid\n";
+    print "  --daemon-log=FILE     write log to FILE instead of /var/log/cmdserver.log\n";
+    print "  --listen=path         listen socket path, eg: /var/run/extmail/cmdserver.sock\n";
+
+    exit;
+}
+
+Getopt::Long::Configure('no_ignore_case');
+GetOptions(\%opt, 'help|h', 'version|V',
+    'verbose|v+', 'daemon|d!', 'daemon_pid|daemon-pid=s',
+    'daemon_log|daemon-log=s', 'listen|l=s',
+) or exit(1);
+usage if $opt{help};
+
+$opt{listen} ||= $cfg->{SYS_CMDSERVER_SOCK} || '/var/run/extmail/cmdserver.sock';
+$opt{daemon_pid} ||= $cfg->{SYS_CMDSERVER_PID} || '/var/run/cmdserver.sock';
+$opt{daemon_log} ||= $cfg->{SYS_CMDSERVER_LOG} || '/var/log/cmdserver.log';
+$opt{max_conn} ||= $cfg->{SYS_CMDSERVER_MAXCONN} || '5';
+$opt{auth_code} ||= $cfg->{SYS_CMDSERVER_AUTHCODE} || 'eExXtTMmAaiIlL';
+
+my $srv = Ext::Cmd::Server->new(
+    auth_code => $opt{auth_code},
+    max_conn => $opt{max_conn},
+    listen => "unix:$opt{listen}",
+    pidfile => $opt{daemon_pid},
+    logfile => $opt{daemon_log},
+    verbose => $opt{verbose},
+);
+
+unlink $opt{listen};
+
+my $os = '';
+
+if ($^O =~ /freebsd/i) {
+    $os = 'freebsd';
+} elsif ($^O =~ /linux/i) {
+    $os = 'linux';
+} else {
+    $os = 'linux';
+}
+
+require "$DIR/daemon/cmd_plugin/$os-cmd";
+
+$srv->start;
+
+$srv->daemonize if $opt{daemon};
+
+use Data::Dumper;
+print Dumper(\%cmd);
+
+$srv->main_loop(\%cmd);

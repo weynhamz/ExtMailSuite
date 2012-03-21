@@ -1,0 +1,118 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+</head>
+<body>
+<script language="javascript">
+function setFoucs(obj) {
+	document.getElementById(obj).focus();
+}
+<!-- IF CAPTCHA_ON -->
+function rplCaptcha()
+{
+	var img = document.getElementById("verifyImg");
+	img.src = "/extman/cgi/captcha.cgi?" + Math.random();
+	var ctrl = document.getElementById("vcode");
+	if (ctrl != null)
+	{
+		ctrl.focus();
+	}
+}
+<!-- END CAPTCHA_ON -->
+</script>
+
+<div id="TopBan">
+	<TABLE width=100% height=50px cellpadding=0 cellspacing=0 border=0>
+	<TR>
+	<TD style=padding-left:10px;><IMG src="/extman/default/images/logo.gif" border=0></TD>
+	</TR>
+	</TABLE>
+</div>
+
+<div id="TopNav">
+	<div class="h5px"></div>
+	<div id="Tmenu">
+		<ul id=navmenu>
+			<li></li>
+			<li class=tl1 style="margin-left: 100px"><a href="#"><%meta_title%></a></li>
+		</ul>
+	</div>
+	<div id="topinfo"><a href="http://www.extmail.org" target="_blank"><%about%></a>&nbsp;|&nbsp;<a href="http://www.extmail.org/donate/" target="_blank"><%donate%></a></div>
+</div>
+
+<div id="maintit">
+	<div class="mts"><strong><a href="/extman/cgi/index.cgi">&lt;&lt;<%gohome%></a></strong><!-- IF ERROR --><span class="error"><%ERROR%></span><!-- END ERROR --><!-- IF SUCCESS --><span class="success"><%SUCCESS%></span><!-- END SUCCESS --></div>
+	<div class="mbs"></div>
+</div>
+<table width="100%" cellpadding="2" cellspacing="0" align="center">
+<tr><td width="20px"></td>
+<td style="border:1px solid #333;padding:10px;" align="center">
+<!-- IF STEP1 -->
+<form method=post action="changepwd.cgi">
+	<input type=hidden name=__mode value="step2">
+	<table cellspacing=0 cellpadding=2 border=0 width=80% class=etb>
+		<tr>
+	        <td width=150><%username%></td><td>
+	        <input type=text size=30 name=username>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2>
+			<input type=submit name=save value="<%save%>">
+			<input type=button name=cancel onclick="document.location.href='/';" value="<%cancel%>">
+		</td>
+	</tr>
+	</table>
+</form>
+<!-- END STEP1 -->
+<!-- IF STEP2 -->
+<form name="dosave" method=post action="changepwd.cgi">
+<input type=hidden name=__mode value="dosave">
+<input type=hidden name=username value="<%USERNAME%>">
+<table cellspacing=0 cellpadding=2 border=0 width=80% class=etb>
+<tr>
+	<td width=150><%username%></td><td>
+	<b><%USERNAME%></b>
+	</td>
+</tr>
+<!-- IF CAPTCHA_ON -->
+<tr>
+	<td><%vcode%></td><td><input type=text size=10 id=vcode name=vcode>
+		&nbsp;<img id=verifyImg style="vertical-align: top;" src="/extman/cgi/captcha.cgi">
+		&nbsp;<a href="javascript:rplCaptcha()"><%rplvcode%></a>
+	</td>
+</tr>
+<!-- END CAPTCHA_ON -->
+<tr>
+	<td><%oldpasswd%></td><td><input type=password size=30 name=oldpasswd></td>
+</tr>
+<tr>
+	<td><%newpasswd%></td><td><input type=password size=30 name=passwd1></td>
+</tr>
+<tr>
+	<td><%newpasswd2%></td><td><input type=password size=30 name=passwd2></td>
+</tr>
+<tr class="etbbt">
+	<td>&nbsp;</td>
+	<td>
+		<input type=submit name=save value="<%save%>">
+		<input type=button name=cancel onclick="document.location.href='/';" value="<%cancel%>">
+	</td>
+</tr>
+</table>
+</form>
+<!-- END STEP2 -->
+<!-- IF STEP3 -->
+<div style="text-align: center; font-size: 24px; color: #336699">
+	<a href="/extmail/"><h2><%hint_ok%></h2></a>
+</div>
+<!-- END STEP3 -->
+</td><td width="20px"></td></tr>
+</table>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

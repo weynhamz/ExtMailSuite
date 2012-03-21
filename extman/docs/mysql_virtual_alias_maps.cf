@@ -1,0 +1,8 @@
+user = extmail
+password = extmail
+hosts = localhost
+dbname = extmail
+table = alias
+select_field = goto
+where_field = address
+additional_conditions = AND active = '1'

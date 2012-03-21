@@ -1,0 +1,131 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+<script type="text/javascript" src="/extman/default/manlib.js"></script>
+<script language="javascript">
+var currentNav = 'nav_ovdomain';
+function DoDelete(id) {
+if (!confirm('<%cfm_delete%>')) {
+	return;
+}
+var url = document.location.href;
+document.location.href = 'domain.cgi?__mode=delete_domain&sid=<%SID%>&domain='+id+'&url='+eURL(url);
+}
+
+<!-- INCLUDE UTF8.inc -->
+
+function DoSearch() {
+var filter = document.getElementById('keyword').value;
+var ftype = document.getElementById('ftype');
+var stype;
+
+for(i=0;i<ftype.length;i++) {
+if (ftype[i].selected) {
+stype = ftype[i].value;
+break;
+}
+}
+
+if (filter) {
+	filter = escape(utf8_encode(filter)); // must escape to UCS4 or IE will be crazy
+	var url = '?__mode=overview&sid=<%SID%>&keyword='+filter+'&ftype='+stype;
+	document.location.href = url;
+}
+}
+</script>
+</head>
+<body>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+	<div class="mts"><strong><%list_domain%></strong></div>
+	<div class="mbs">
+	<!-- IF ADMIN -->
+	<img style="height: 15px" src="/extman/default/images/add.gif">&nbsp;<a href="/extman/cgi/domain.cgi?__mode=add_domain&sid=<%SID%>&screen=edit_domain.html"><%add_domain%></a>&nbsp;|
+	<!-- END ADMIN -->
+	<%TOTAL_DOMAIN%></div>
+</div>
+
+<div id="main">
+<table width="100%" cellpadding="2" cellspacing="0" align="center"><tr><td width="20px"></td><td style="border:1px solid #333;">
+<table width=100% border="0" cellspacing="0">
+<tr class="listop">
+<td colspan=7>
+	<%search%>
+	<input id=keyword name=keyword value="<%KEYWORD%>" size=20>
+	<select id=ftype name=ftype>
+	<option value="domain" <!-- IF CHECK_DOMAIN -->selected<!-- END CHECK_DOMAIN -->><%domain%></option>
+	<option value="description" <!-- UNLESS CHECK_DOMAIN -->selected<!-- END CHECK_DOMAIN -->><%description%></option>
+	</select>
+	<input type=button onclick="DoSearch()" value="<%dosearch%>">
+</td>
+</tr>
+<tr class="listhd">
+	<td>&nbsp;</td>
+	<td><%domain%></td><td><%user%></td>
+	<td><%alias%></td><td><%quota%></td>
+	<td><%ndquota%></td><td><%operation%></td>
+</tr>
+<!-- IF HAVE_VDOMAIN -->
+<!-- BEGIN LOOP_VDOMAIN -->
+<tr class="listco">
+	<td>&nbsp;</td>
+	<td><img src="/extman/default/images/domain.gif">
+	<!-- IF ADMIN -->
+	<a title="<%edit%> <%VDOMAIN%>" href="domain.cgi?__mode=edit_domain&sid=<%SID%>&domain=<%VDOMAIN%>&screen=edit_domain.html"><%VDOMAIN%></a>
+	<!-- ELSE ADMIN -->
+	<%VDOMAIN%>
+	<!-- END ADMIN -->
+	</td>
+	<td class=tdlink><img src="/extman/default/images/user.gif">
+	<a title="<%list%><%user%>" href="overview.cgi?__mode=overview_user&sid=<%SID%>&domain=<%VDOMAIN%>&screen=overview_user.html"><%DOMAIN_MAXUSERS%>/<%DOMAIN_CURUSERS%></a></td>
+	<td class=tdlink><img src="/extman/default/images/alias.gif">
+	<a title="<%list%><%alias%>" href="overview.cgi?__mode=overview_alias&sid=<%SID%>&domain=<%VDOMAIN%>&screen=overview_alias.html"><%DOMAIN_MAXALIAS%>/<%DOMAIN_CURALIAS%></a></td>
+	<td><%DOMAIN_MAXQUOTA%>/<%DOMAIN_CURQUOTA%></td>
+	<td><%DOMAIN_MAXNDQUOTA%>/<%DOMAIN_CURNDQUOTA%></td>
+	<td>
+	<!-- IF ADMIN -->
+		<a href="domain.cgi?__mode=edit_domain&sid=<%SID%>&domain=<%VDOMAIN%>&screen=edit_domain.html">
+		<img src="/extman/default/images/edit.gif" alt="<%edit%> <%VDOMAIN%>"></a>
+	<!-- END ADMIN -->
+	&nbsp;
+	<!-- IF ADMIN -->
+		<a title="<%delete%> <%VDOMAIN%>" href="javascript:DoDelete('<%VDOMAIN%>')">
+		<img src="/extman/default/images/del.gif"></a>
+	<!-- END ADMIN -->
+	</td>
+</tr>
+<!-- END LOOP_VDOMAIN -->
+<tr class="listbt">
+	<td colspan=7>
+	<!-- IF HAVE_PREV -->
+	<a href="?__mode=overview&sid=<%SID%>&page=<%PREV%>&keyword=<%KEYWORD%>&ftype=<%FTYPE%>">&lt;&lt;<%prev%></a>
+	<!-- END HAVE_PREV -->&nbsp;&nbsp;
+	<!-- IF HAVE_NEXT -->
+	<a href="?__mode=overview&sid=<%SID%>&page=<%NEXT%>&keyword=<%KEYWORD%>&ftype=<%FTYPE%>"><%next%>&gt;&gt;</a>
+	<!-- END HAVE_NEXT -->
+	<!-- INCLUDE 'jumpto.inc' -->
+	</td>
+</tr>
+<!-- ELSE HAVE_VDOMAIN -->
+<tr class="listno">
+<td colspan=7><%err_listnull_domain%></td>
+</tr>
+<!-- END HAVE_VDOMAIN -->
+</table>
+</td><td width="20px"></td></tr></table>
+</div>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

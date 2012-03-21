@@ -1,0 +1,42 @@
+main.cf configuration
+=====================
+
+#################
+# LDAP support  #
+#################
+put the following lines in main.cf:
+
+# extmail config here
+virtual_alias_maps = ldap:/etc/postfix/ldap_virtual_alias_maps.cf
+virtual_mailbox_domains = ldap:/etc/postfix/ldap_virtual_domains_maps.cf
+virtual_mailbox_maps = ldap:/etc/postfix/ldap_virtual_mailbox_maps.cf
+
+If you applied VDA patch, and want enforce quota over user, put the
+following line in main.cf:
+
+virtual_mailbox_limit_maps = ldap:/etc/postfix/ldap_virtual_limit_maps.cf
+
+#################
+# MySQL support #
+#################
+put the following lines in main.cf:
+
+# extmail config here
+virtual_alias_maps = mysql:/etc/postfix/mysql_virtual_alias_maps.cf
+virtual_mailbox_domains = mysql:/etc/postfix/mysql_virtual_domains_maps.cf
+virtual_mailbox_maps = mysql:/etc/postfix/mysql_virtual_mailbox_maps.cf
+
+If you applied VDA patch, and want to enforce quota over user, put the
+following line in main.cf:
+
+virtual_mailbox_limit_maps = mysql:/etc/postfix/mysql_virtual_limit_maps.cf
+
+Final step
+=============
+
+After modified main.cf and save it, copy these configruation files
+to /etc/postfix, if you are using BSD ports, the path should be
+/usr/local/etc/postfix, change to whatever it should be.
+
+Then reload postfix and test it, check mail log if something mistake
+happen.

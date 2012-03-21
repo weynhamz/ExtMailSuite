@@ -1,0 +1,54 @@
+MySQL
+=====
+
+sub get_domains_count {
+    my $self = shift;
+    my $SQL = "SELECT count(*) as count from domain";
+    my $rs = $self->get_entries($SQL);
+
+    return 0 unless ref $rs;
+    return $rs->[0]->{count};
+}
+
+sub get_users_count {
+    my $self = shift;
+    my $SQL = "SELECT count(*) as count from mailbox where domain='$_[0]'";
+    my $rs = $self->get_entries($SQL);
+
+    return 0 unless ref $rs;
+    return $rs->[0]->{count};
+}
+
+sub get_aliases_count {
+    my $self = shift;
+    my $SQL = "SELECT count(*) as count from alias where domain='$_[0]'";
+    my $rs = $self->get_entries($SQL);
+
+    return 0 unless ref $rs;
+    return $rs->[0]->{count};
+}
+
+sub get_quota_count {
+    my $self = shift;
+    my $SQL = "SELECT quota from mailbox where domain='$_[0]'";
+    my $rs = $self->get_entries($SQL);
+
+    my $total = 0;
+    foreach my $ref (@$rs) {
+        $ref->{quota} =~ s/^(\d+).*/$1/;
+        $total += $ref->{quota};
+    }
+    $total;
+}
+
+sub get_netdisk_count {
+    my $self = shift;
+    my $SQL = "SELECT netdiskquota from mailbox where domain='$_[0]'";
+    my $rs = $self->get_entries($SQL);
+
+    my $total = 0;
+    foreach my $ref (@$rs) {
+        $total += $ref->{netdiskquota};
+    }
+    $total;
+}

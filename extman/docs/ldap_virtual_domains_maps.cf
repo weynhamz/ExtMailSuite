@@ -1,0 +1,7 @@
+server_host = localhost
+search_base = o=extmailAccount,dc=extmail.org
+query_filter = (&(objectClass=extmailDomain)(virtualDomain=%s)(active=1))
+result_attribute = virtualDomain
+cache = no
+bind = no
+scope = sub

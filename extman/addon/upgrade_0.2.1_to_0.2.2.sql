@@ -1,0 +1,15 @@
+use extmail;
+ALTER TABLE `mailbox` ADD `disablepwdchange` smallint(1) AFTER `active`;
+ALTER TABLE `domain` ADD `can_signup` tinyint(1) NOT NULL default '0' AFTER `transport`;
+ALTER TABLE `domain` ADD `default_quota` varchar(255) default NULL AFTER `can_signup`;
+ALTER TABLE `domain` ADD `default_netdiskquota` varchar(255) default NULL AFTER `default_quota`;
+ALTER TABLE `domain` ADD `default_expire` varchar(12) default NULL AFTER `default_netdiskquota`;
+ALTER TABLE `domain` ADD `disablesmtpd` smallint(1) AFTER `default_expire`;
+ALTER TABLE `domain` ADD `disablesmtp` smallint(1) AFTER `disablesmtpd`;
+ALTER TABLE `domain` ADD `disablewebmail` smallint(1) AFTER `disablesmtp`;
+ALTER TABLE `domain` ADD `disablenetdisk` smallint(1) AFTER `disablewebmail`;
+ALTER TABLE `domain` ADD `disableimap` smallint(1) AFTER `disablenetdisk`;
+ALTER TABLE `domain` ADD `disablepop3` smallint(1) AFTER `disableimap`;
+ALTER TABLE `manager` ADD `question` text NOT NULL default '' AFTER `name`;
+ALTER TABLE `manager` ADD `answer` text NOT NULL default '' AFTER `question`;
+ALTER TABLE `manager` ADD `disablepwdchange` smallint(1) AFTER `answer`;

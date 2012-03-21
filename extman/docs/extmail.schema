@@ -1,0 +1,363 @@
+# $Id$
+# old Id: postfix-ldap.schema,v 1.1.1.7 2003/01/04 14:44:59 hzqbbc Exp $
+#
+# ExtMail - OSS, the OpenSource Mail Solution to Enterprise
+#
+# extmail.schema
+# by He zhiqiang <hzqbbc@hzqbbc.com>
+# Copyright (c) 1998-2005 hzqbbc.com
+#
+# This is the openLDAP schema derive from the old jagmail project,
+# originally designed for postfix-ldap, since Jun 2002
+#
+# Dependence of this schema:
+#	core.schema
+#	cosine.schema
+#	nis.schema
+# Please include them before this schema
+#
+# OID prefix: 1.3.6.1.4.1.12461
+#
+# Attributes: 1.3.6.1.4.1.12461.1.1
+#
+# ObjectClass: 1.3.6.1.4.1.12461.1.2
+
+#
+# ldap tree assignment:
+#
+# users/domain: o=extmailAccount, dc=extmail.org
+# aliases: o=extmailAlias, dc=extmail.org
+# manager: o=extmailManager, dc=extmail.org
+#
+# so we have four kinds of objectclasses
+
+#
+#######################################
+# Common shared attributes defination #
+#######################################
+#
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.1
+	NAME ( 'active' )
+	DESC 'The status of an account: 0 for in-active, 1 for active'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.2
+	NAME ( 'delete' )
+	DESC 'Whether an account is to be deleted or not, 0/1'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.3
+	NAME ( 'expireDate' )
+	DESC 'A date time to indicated the expire date / time'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{128}
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.4
+	NAME ( 'createDate' )
+	DESC 'The date time of adding an new entry'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{128}
+	SINGLE-VALUE )
+
+#########################################################################
+# Domain related attributes defination                                  #
+#########################################################################
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.5
+	NAME ( 'Transport' )
+	DESC 'A string directing postfix which transport to use'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.6
+	NAME ( 'virtualDomain' )
+	DESC 'A virtual domain use by postfix lookup'
+	EQUALITY caseIgnoreIA5Match
+	SUBSTR caseIgnoreIA5SubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.7
+	NAME ( 'domainMaxAlias' )
+	DESC 'A string to indicated how many aliases a domain can has'
+	EQUALITY caseIgnoreIA5Match
+	SUBSTR caseIgnoreIA5SubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+# If you want catchall, please refer to LDAP_README for detail.
+attributetype ( 1.3.6.1.4.1.12461.1.1.8
+	NAME ( 'catchAllAddress' )
+	DESC 'A string for catchall email address for a domain'
+	EQUALITY caseIgnoreIA5Match
+	SUBSTR caseIgnoreIA5SubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.9
+	NAME ( 'domainMaxQuota' )
+	DESC 'A string to indicate how much capacity a domain can has'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.10
+	NAME ( 'domainMaxUsers' )
+	DESC 'A string to indicated how many mailboxes a domain can has'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.11
+	NAME ( 'domainMaxNetStore' )
+	DESC 'A string to indicate how much netdisk store can a domain has'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+#
+# can_signup
+# default_netdiskquota
+# default_quota
+# default_expire
+#
+attributetype ( 1.3.6.1.4.1.12461.1.1.12
+	NAME ( 'canSignup' )
+	DESC 'A numeric 0/1 to tell whether a domain can provide signup service'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.13
+	NAME ( 'defaultQuota' )
+	DESC 'A string to indicate how much default quota can a user has'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.14
+	NAME ( 'defaultNetStore' )
+	DESC 'A string to indicate how much default netdisk store can a user has'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.15
+	NAME ( 'defaultExpire' )
+	DESC 'A string to indicate how long will a user will be expire by default'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.16
+	NAME ( 'hashDirPath' )
+	DESC 'A string that indicated default hashDirPath for a domain'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+#
+###################################################
+# Mailbox/Users attribute(s) definition section   #
+###################################################
+#
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.21
+	NAME ( 'mailHost' )
+	DESC 'routing infomation for this recipient, like smtp:mx1.extmail.org'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	)
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.22
+	NAME ( 'mailLocalAddress' )
+	DESC 'RFC822 email address of this recipient, can contain @domain.tld value'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.23
+	NAME ( 'rfc822MailAlias' )
+	DESC 'alternate RFC822 email address for user or distribution list'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256} )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.24
+	NAME ( 'mailRoutingAddress' )
+	DESC 'RFC822 routing address of this recipient'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{256}
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.25
+	NAME ( 'userName' )
+	DESC 'The name of user. may localpart only or email address'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.26
+	NAME ( 'mailMessageStore' 'maildir')
+	DESC 'File system location of the maildir/mbox for a user'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.27
+	NAME ( 'mailQuota' 'quota' )
+	DESC 'Maximum size of a mailbox can store for a user'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.28
+	NAME ( 'netdiskQuota' )
+	DESC 'Maximum size of a netdisk can store for a user'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.29
+	NAME ( 'clearPassword' )
+	DESC 'Clear password field for a user, do not enable it if you care security'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.30
+	NAME ( 'disablePasswdChange' )
+	DESC 'Disable Password modification for user or not (0|1)'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+        SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.31
+	NAME ( 'question' )
+	DESC 'The question for password recovery'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024}
+	SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.12461.1.1.32
+	NAME ( 'answer' )
+	DESC 'The answer to the password recovery question'
+	EQUALITY caseIgnoreMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024}
+	SINGLE-VALUE )
+#
+##########################################
+# Postmaster/Admin attributes defination #
+##########################################
+#
+
+attribute ( 1.3.6.1.4.1.12461.1.1.40
+	NAME ( 'managerType' )
+	DESC 'Domain postmaster or system admin (root)'
+	EQUALITY caseExactIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+
+#
+##########################################
+# Service disable or enable defination   #
+##########################################
+#
+
+attribute ( 1.3.6.1.4.1.12461.1.1.41
+	NAME ( 'disablesmtpd' )
+	DESC 'Disable SMTP SASL authencation or not (0|1)'
+	EQUALITY caseExactIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+        SINGLE-VALUE )
+
+attribute ( 1.3.6.1.4.1.12461.1.1.42
+        NAME ( 'disablesmtp' )
+        DESC 'Disable SMTP receive capability (0|1)'
+        EQUALITY caseExactIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+        SINGLE-VALUE )
+
+attribute ( 1.3.6.1.4.1.12461.1.1.43
+        NAME ( 'disablewebmail' )
+        DESC 'Disable webmail access capabiliy or not (0|1)'
+        EQUALITY caseExactIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+        SINGLE-VALUE )
+
+attribute ( 1.3.6.1.4.1.12461.1.1.44
+        NAME ( 'disablenetdisk' )
+        DESC 'Disable web netdisk service or not (0|1)'
+        EQUALITY caseExactIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+        SINGLE-VALUE )
+
+attribute ( 1.3.6.1.4.1.12461.1.1.45
+        NAME ( 'disableimap' )
+        DESC 'Disable IMAP service or not (0|1)'
+        EQUALITY caseExactIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+        SINGLE-VALUE )
+
+attribute ( 1.3.6.1.4.1.12461.1.1.46
+        NAME ( 'disablepop3' )
+        DESC 'Disable POP3 service or not (0|1)'
+        EQUALITY caseExactIA5Match
+        SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+        SINGLE-VALUE )
+
+# objectclass for Mailboxes/Accounts
+
+objectclass ( 1.3.6.1.4.1.12461.1.2.1
+	NAME ( 'extmailUser' )
+	SUP top STRUCTURAL
+	DESC 'objectclass for internet email user'
+	MUST ( mail $ homeDirectory $ userPassword $ active )
+	MAY ( cn $ uid $ virtualDomain $ expireDate $
+	userName $ mailMessageStore $ mailQuota $ Transport $
+	uidNumber $ gidNumber $ createDate $ active $
+	mailHost $ netdiskQuota $ disablesmtpd $
+	disablesmtp $ disablewebmail $ disablenetdisk $
+	disableimap $ disablepop3 $ clearPassword $
+	question $ answer $ disablePasswdChange ) )
+
+# objectclass for Mailboxes/Domains Alias or Forward
+
+objectclass ( 1.3.6.1.4.1.12461.1.2.2
+	NAME ( 'extmailRouting' )
+	SUP top AUXILIARY
+	DESC 'objectclass for internet email routing use'
+	MUST ( mail $ mailRoutingAddress $ virtualDomain )
+	)
+
+objectclass ( 1.3.6.1.4.1.12461.1.2.3
+	NAME ( 'extmailAlias' )
+	SUP top STRUCTURAL
+	DESC 'objectclass for internet email/domain aliases'
+	MUST ( mailLocalAddress $ active $ virtualDomain )
+	MAY ( mail $ rfc822MailAlias $ catchAllAddress $
+	expireDate $ createDate ) )
+
+#
+# objectclass for Domain
+
+objectclass ( 1.3.6.1.4.1.12461.1.2.4
+	NAME ( 'extmailDomain' )
+	SUP top STRUCTURAL
+	DESC 'Virtual Domain entry to be used with postfix transport maps'
+	MUST ( virtualDomain $ active )
+	MAY ( Transport $ expireDate $ hashDirPath $ description $ active $
+	createDate $ domainMaxQuota $ domainMaxUsers $ domainMaxAlias $
+	domainMaxNetStore $ canSignup $ defaultQuota $ defaultNetStore $
+	catchAllAddress $ defaultExpire $ disablesmtpd $ disablesmtp $
+	disablewebmail $ disableimap $ disablepop3 $ disablenetdisk ) )
+
+#
+# objectclass for Postmaster/Admin
+
+objectclass ( 1.3.6.1.4.1.12461.1.2.6
+	NAME ( 'extmailManager' )
+	SUP top STRUCTURAL
+	DESC 'Virtual Domain or System Administrator'
+	MUST ( mail $ userPassword $ active )
+	MAY ( userName $ uid $ cn $ virtualDomain $ createDate $
+	managerType $ expireDate $ question $ answer $ disablePasswdChange ) )

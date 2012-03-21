@@ -1,0 +1,8 @@
+user = extmail
+password = extmail
+hosts = localhost
+dbname = extmail
+table = mailbox
+select_field = quota
+where_field = username
+additional_conditions = AND active = '1'

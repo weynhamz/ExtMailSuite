@@ -1,0 +1,109 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+<script type="text/javascript" src="/extman/default/manlib.js"></script>
+<script language="javascript">
+var currentNav = 'nav_manager';
+function DoDelete(id) {
+if (!confirm('<%cfm_delete%>')) {
+	return;
+}
+var url = document.location.href;
+document.location.href='manager.cgi?__mode=delete_manager&sid=<%SID%>&manager='+id+'&url='+eURL(url);
+}
+
+<!-- INCLUDE UTF8.inc -->
+
+function DoSearch() {
+var filter = document.getElementById('keyword').value;
+var ftype = document.getElementById('ftype');
+var stype;
+
+for(i=0;i<ftype.length;i++) {
+if (ftype[i].selected) {
+stype = ftype[i].value;
+break;
+}
+}
+
+if (filter) {
+	filter = escape(utf8_encode(filter)); // must escape to UCS4
+	var url = '?__mode=overview_manager&sid=<%SID%>';
+	url += '&screen=overview_manager.html&keyword='+filter+'&ftype='+stype;
+	document.location.href = url;
+}
+}
+//-->
+</script>
+</head>
+<body>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+	<div class="mts"><strong><%title_manager%></strong></div>
+	<div class="mbs"><img style="height: 15px" src="/extman/default/images/add.gif">&nbsp;<a href="manager.cgi?__mode=add_manager&sid=<%SID%>&screen=edit_manager.html"><%add_manager%></a>&nbsp;| <%TOTAL_MANAGER%></div>
+</div>
+<table width="100%" cellpadding="2" cellspacing="0" align="center"><tr><td width="20px"></td><td style="border:1px solid #333;">
+<table width=100% border="0" cellspacing="0">
+<tr class="listop">
+<td colspan=7>
+	<%search%>
+	<input id=keyword name=keyword value="<%KEYWORD%>" size=20>
+	<select id=ftype name=ftype>
+		<option value="admin" <!-- IF CHECK_ADMIN -->selected<!-- END CHECK_ADMIN -->><%type%> admin</option>
+		<option value="postmaster" <!-- UNLESS CHECK_ADMIN -->selected<!-- END CHECK_ADMIN -->><%type%> postmaster</option>
+	</select>
+	<input type=button onclick="DoSearch()" value="<%dosearch%>">
+</td>
+</tr>
+<tr class="listhd">
+	<td>&nbsp;</td><td><%user%></td><td><%name%></td><td><%type%></td>
+	<td><%expire%></td><td><%active%></td><td><%operation%></td>
+</tr>
+<!-- IF HAVE_MANAGER -->
+<!-- BEGIN LOOP_MANAGER -->
+<tr class="listco">
+	<td>&nbsp;</td>
+	<td><img src="/extman/default/images/user.gif">
+	<a href="manager.cgi?__mode=edit_manager&sid=<%SID%>&manager=<%USERNAME%>&screen=edit_manager.html">
+	<%USERNAME%></a></td>
+	<td><%NAME%></td>
+	<td><%TYPE%></td>
+	<td><%EXPIRE%></td>
+	<td><!-- IF ACTIVE --><%yes%><!-- ELSE ACTIVE --><%no%><!-- END ACTIVE --></td>
+	<td><a href="manager.cgi?__mode=edit_manager&sid=<%SID%>&manager=<%USERNAME%>&screen=edit_manager.html">
+	<img src="/extman/default/images/edit.gif"></a>&nbsp;&nbsp;<a href="javascript:DoDelete('<%USERNAME%>')" title="<%delete%>"><img src="/extman/default/images/del.gif"></a></td>
+</tr>
+<!-- END LOOP_MANAGER -->
+<tr class="listbt">
+	<td colspan=7>
+	<!-- IF HAVE_PREV -->
+	<a href="?__mode=overview_manager&sid=<%SID%>&screen=overview_manager.html&page=<%PREV%>&keyword=<%KEYWORD%>&ftype=<%FTYPE%>">&lt;&lt;<%prev%></a>
+	<!-- END HAVE_PREV -->&nbsp;&nbsp;
+	<!-- IF HAVE_NEXT -->
+	<a href="?__mode=overview_manager&sid=<%SID%>&screen=overview_manager.html&page=<%NEXT%>&keyword=<%KEYWORD%>&ftype=<%FTYPE%>"><%next%>&gt;&gt;</a>
+	<!-- END HAVE_NEXT -->
+	<!-- INCLUDE 'jumpto.inc' -->
+	</td>
+</tr>
+<!-- ELSE HAVE_MANAGER -->
+<tr class="listno">
+<td colspan=7><%err_listnull_manager%></td>
+</tr>
+<!-- END HAVE_MANAGER -->
+</table>
+</td><td width="20px"></td></tr></table>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

@@ -1,0 +1,171 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+<link rel="stylesheet" href="/extman/default/tab.css" type="text/css">
+<script src="/extman/default/js/tab.js" type="text/javascript"></script>
+</head>
+<body>
+<script language="javascript">
+var currentNav = 'nav_ovdomain';
+</script>
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+<div class="mts"><strong><%meta_title%></strong>
+<!-- UNLESS NEWADD -->
+<span style="padding-left: 20px">| <a href="/extman/cgi/overview.cgi?__mode=overview_user&sid=<%SID%>&domain=<%VDOMAIN%>&screen=overview_user.html"><%list%><%user%></a></span>
+<span>| <a href="/extman/cgi/overview.cgi?__mode=overview_alias&sid=<%SID%>&domain=<%VDOMAIN%>&screen=overview_alias.html"><%list%><%alias%></a></span>
+<!-- END NEWADD -->
+<!-- IF ERROR --><span class="error"><%ERROR%></span><!-- END ERROR -->
+<!-- IF SUCCESS --><span class="success"><%SUCCESS%></span><!-- END SUCCESS -->
+</div>
+<div class="mbs"></div>
+</div>
+
+<script language="javascript">
+function SelectDate(form)
+{
+	year = form.selectdate.value;
+	if(year == 0){
+		return false;
+	}
+	if(year == -1){
+		form.expire.value = '0000-00-00';
+		return false;
+	}
+	nowdate = form.nowdate.value;
+	form.expire.value =  parseInt(nowdate.substr(0,4))+ parseInt(year) + '-' +
+		nowdate.substr(5,2)+ '-' + nowdate.substr(8,2);
+	return true;
+}
+</script>
+
+<div id="container" style="width: 90%; padding-left: 25px">
+<!-- IF HAVE_DOMAIN -->
+<form name="edit_domain" method=post action="domain.cgi">
+<input type=hidden name=__mode value="save_domain">
+<input type=hidden name=sid value="<%SID%>">
+<input type=hidden name=screen value="edit_domain.html">
+<!-- IF NEWADD -->
+<input type=hidden name=newadd value="newadd">
+<!-- END NEWADD -->
+
+<table width=100% cellspacing=0 cellpadding=0>
+<tr><td>
+	<table cellspacing=0 cellpadding=0 width=100% id=tabBar>
+	<tr>
+	<td class="tab-selected b2" id="tab1" onclick="SelectTab('2','1');"><%tab_basic%></td>
+	<td class="tab b1" id="tab2" onclick="SelectTab('2','2');"><%tab_tpl%></td>
+	<td class="b1" width=100%>&nbsp;</td>
+	<div class="cleard"></div>
+	</tr>
+	</table>
+</td></tr>
+<tr><td>
+
+<div class="content" id="tbContent1">
+<table cellspacing=0 cellpadding=5 border=0 class=etb>
+<tr>
+	<td width=30%><%domain%></td>
+	<td>
+	<!-- IF NEWADD -->
+	<input type=text name=domain size=30>
+	<!-- ELSE NEWADD -->
+	<input type=hidden name=domain value="<%VDOMAIN%>">
+	<b><%VDOMAIN%></b>
+	<!-- END NEWADD -->
+	</td>
+</tr>
+	<td><%description%></td><td><input type=text name=description size=50 value="<%DESCRIPTION%>"></td>
+</tr>
+<tr>
+	<td><%maxusers%></td><td><input type=text name=maxusers value="<%MAXUSERS%>"></td>
+</tr>
+<tr>
+	<td><%maxalias%></td><td><input type=text name=maxalias value="<%MAXALIAS%>"></td>
+</tr>
+<tr>
+	<td><%maxquota%></td><td><input type=text name=maxquota value="<%MAXQUOTA%>"></td>
+</tr>
+<tr>
+	<td><%maxndquota%></td><td><input type=text name=maxndquota value="<%MAXNDQUOTA%>"></td>
+</tr>
+<tr>
+	<td><%transport%></td><td><input type=text name=transport value="<%TRANSPORT%>"></td>
+</tr>
+<tr>
+	<td><%can_signup%></td><td><input name=cansignup type=checkbox <!-- IF CANSIGNUP -->checked<!-- END CANSIGNUP -->></td>
+</tr>
+<tr>
+	<td>&nbsp;</td><td><input name=active type=checkbox <!-- IF ACTIVE -->checked<!-- END ACTIVE-->><%active%></td>
+</tr>
+<tr>
+	<input type=hidden name=nowdate value="<%NOWDATE%>">
+	<td><%expire%></td><td><input type=text size=15 name=expire value="<%EXPIRE%>">
+		<select name="selectdate" onChange="SelectDate(this.form);return false">
+			<OPTION value="0"><%tsel_msg1%></OPTION>
+			<OPTION value="1"><%tsel_msg2%></OPTION>
+			<OPTION value="2"><%tsel_msg3%></OPTION>
+			<OPTION value="3"><%tsel_msg4%></OPTION>
+			<OPTION value="-1"><%tsel_msg5%></OPTION>
+		</SELECT>
+	</td>
+</tr>
+</table>
+</div>
+
+<div class="content" id="tbContent2" style="display: none">
+<table cellspacing=0 cellpadding=5 border=0 class=etb>
+<tr>
+	<td><%default_quota%></td><td><input type=text name=defaultquota value="<%DEFAULT_QUOTA%>"></td>
+</tr>
+<tr>
+	<td><%default_ndquota%></td><td><input type=text name=defaultndquota value="<%DEFAULT_NDQUOTA%>"></td>
+</tr>
+<tr>
+	<td><%default_expire%></td><td><input type=text name=defaultexpire value="<%DEFAULT_EXPIRE%>"> <%hint_default_expire%></td>
+</tr>
+<tr>
+	<td><%default_service%></td>
+	<td>
+	<ul>
+	<li><input type=checkbox name=SERVICES_webmail <!-- IF SERVICES_webmail -->checked<!-- END SERVICES_webmail -->>webmail</li>
+	<li><input type=checkbox name=SERVICES_smtp <!-- IF SERVICES_smtp -->checked<!-- END SERVICES_smtp -->>smtp recv</li>
+	<li><input type=checkbox name=SERVICES_smtpd <!-- IF SERVICES_smtpd -->checked<!-- END SERVICES_smtpd -->>SASL auth</li>
+	<li><input type=checkbox name=SERVICES_pop3 <!-- IF SERVICES_pop3 -->checked<!-- END SERVICES_pop3 -->>pop3</li>
+	<li><input type=checkbox name=SERVICES_imap <!-- IF SERVICES_imap -->checked<!-- END SERVICES_imap -->>imap</li>
+	<li><input type=checkbox name=SERVICES_netdisk <!-- IF SERVICES_netdisk -->checked<!-- END SERVICES_netdisk -->>netdisk</li>
+	</ul>
+	</td>
+</tr>
+</table>
+</div>
+
+<div style="padding-top: 20px">
+<input type=submit name=save value="<%save%>">
+<input type=button name=cancel onclick="document.location.href='/extman/cgi/overview.cgi?sid=<%SID%>';" value="<%cancel%>">
+</div>
+</td>
+</tr>
+</table>
+</form>
+<!-- ELSE HAVE_DOMAIN -->
+<!-- UNLESS ERROR -->
+<%no_such_domain%>
+<!-- END ERROR -->
+
+<!-- END HAVE_DOMAIN -->
+</div>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

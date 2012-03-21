@@ -1,0 +1,203 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><!-- IF NEWADD --><%add_user%><!-- ELSE NEWADD --><%meta_title%><!-- END NEWADD --></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+<link rel="stylesheet" href="/extman/default/tab.css" type="text/css">
+<script src="/extman/default/js/tab.js" type="text/javascript"></script>
+<script src="/extman/default/manlib.js" type="text/javascript"></script>
+</head>
+<body>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+<div class="mts"><strong><!-- IF NEWADD --><%add_user%><!-- ELSE NEWADD --><%meta_title%><!-- END NEWADD --></strong>
+<!-- UNLESS NEWADD --><span style="padding-left: 20px"><a href="/extman/cgi/overview.cgi?__mode=overview_user&sid=<%SID%>&domain=<%DOMAIN%>&screen=overview_user.html"><strong><%gohome%></strong></a></span><!-- END NEWADD -->
+<!-- IF ERROR --><span class="error"><%ERROR%></span><!-- END ERROR --><!-- IF SUCCESS --><span class="success"><%SUCCESS%></span><!-- END SUCCESS --></div>
+<div class="mbs"></div>
+</div>
+
+<script language="javascript">
+var currentNav = 'nav_user';
+function SelectDate(form)
+{
+	year = form.selectdate.value;
+	if(year == 0){
+		return false;
+	}
+	if(year == -1){
+		form.expire.value = '0000-00-00';
+		return false;
+	}
+	nowdate = form.nowdate.value;
+	form.expire.value =  parseInt(nowdate.substr(0,4))+ parseInt(year) + '-' +
+		nowdate.substr(5,2)+ '-' + nowdate.substr(8,2);
+	return true;
+}
+</script>
+
+<div id="container" style="width: 90%; padding-left: 25px">
+<!-- IF HAVE_USER -->
+<form name="edit_user" method=post action="user.cgi">
+<input type=hidden name=__mode value="save_user">
+<input type=hidden name=sid value=<%SID%>>
+<input type=hidden name=screen value="edit_user.html">
+<!-- IF NEWADD --><input type=hidden name=newadd value="newadd"><!-- END NEWADD -->
+<table width=100% cellspacing=0 cellpadding=0>
+<tr><td>
+	<table cellspacing=0 cellpadding=0 width=100%>
+	<tr>
+	<td class="tab-selected b2" id="tab1" onclick="SelectTab('3','1');"><%tab_basic%></td>
+	<td class="tab b1" id="tab2" onclick="SelectTab('3','2');"><%tab_pwd%></td>
+	<td class="tab b1" id="tab3" onclick="SelectTab('3','3');"><%tab_service%></td>
+	<td class="b1" width=100%>&nbsp;</td>
+	<div class="cleard"></div>
+	</tr>
+	</table>
+</td></tr>
+<tr><td>
+
+<div class="content" id="tbContent1">
+<table cellspacing=0 cellpadding=5 border=0 class=etb>
+<tr>
+	<td width=150><%username%></td><td>
+		<!-- IF NEWADD -->
+		<input type=text size=30 name=username> @
+		<select onChange="document.location.href='?__mode=add_user&sid=<%SID%>&domain='+this[this.selectedIndex].value;" name=domain id=domain>
+		<!-- BEGIN LOOP_DOMAIN -->
+		<option value="<%DOMAIN%>" <!-- IF DOMAIN_CHK -->selected<!-- END DOMAIN_CHK -->><%DOMAIN%></option>
+		<!-- END LOOP_DOMAIN -->
+		</select>
+		<script language="javascript">
+		highlight_Sel('domain');
+		</script>
+		<!-- ELSE -->
+		<b><%MAIL%></b>
+		<input type=hidden name=username value="<%UNAME%>">
+		<input type=hidden name=domain value="<%DOMAIN%>">
+		<!-- END NEWADD -->
+	</td>
+</tr>
+<tr>
+	<td><%name%></td><td><input type=text size=15 name=cn value="<%NAME%>"></td>
+</tr>
+<tr>
+	<td><%quota%></td><td><input type=text size=30 name=quota value="<%QUOTA%>"></td>
+</tr>
+<tr>
+	<td><%netdiskquota%></td><td><input type=text size=30 name=netdiskquota value="<%NDQUOTA%>"></td>
+</tr>
+<tr>
+	<input type=hidden name=nowdate value="<%NOWDATE%>">
+	<td><%expire%></td><td><input type=text size=15 name=expire value="<%EXPIRE%>">
+		<select name="selectdate" onChange="SelectDate(this.form);return false">
+		<OPTION value="0"><%tsel_msg1%></OPTION>
+		<OPTION value="1"><%tsel_msg2%></OPTION>
+		<OPTION value="2"><%tsel_msg3%></OPTION>
+		<OPTION value="3"><%tsel_msg4%></OPTION>
+		<OPTION value="-1"><%tsel_msg5%></OPTION>
+		</SELECT>
+	</td>
+</tr>
+<tr>
+	<td><%active%></td><td><input name=active type=checkbox <!-- IF ACTIVE -->checked<!-- END ACTIVE-->></td>
+</tr>
+</table>
+</div>
+
+<div class="content" id="tbContent2" style="display: none">
+<table cellspacing=0 cellpadding=5 border=0 class=etb>
+<tr>
+	<td><%passwd%></td><td><input type=password size=30 name=passwd1></td>
+</tr>
+<tr>
+	<td><%passwd2%></td><td><input type=password size=30 name=passwd2></td>
+</tr>
+<tr>
+	<td><%pwd_question%></td><td><input type=text size=40 name=question value="<%QUESTION%>"></td>
+</tr>
+<tr>
+	<td><%pwd_answer%></td><td><input type=text size=40 name=answer value="<%ANSWER%>"></td>
+</tr>
+<tr>
+	<td><%pwd_nochange%></td><td><input name=disablepwdchange type=checkbox <!-- IF DISABLEPWDCHANGE -->checked<!-- END DISABLEPWDCHANGE -->></td>
+</tr>
+<!-- IF CAN_VIEW_CLEARPWD -->
+<tr>
+	<td><%clearpw%></td><td><b><%CLEARPWD%></b></td>
+</tr>
+<!-- END CAN_VIEW_CLEARPWD -->
+</table>
+</div>
+
+<div class="content" id="tbContent3" style="display: none">
+<table cellspacing=0 cellpadding=5 border=0 class=etb>
+<!-- IF NEWADD -->
+<!-- IF LOOP_ROUTING_LIST -->
+<tr>
+	<td><%mailhost%></td><td>
+		<select name="mailhost">
+			<!-- BEGIN LOOP_ROUTING_LIST -->
+			<option><%MAILHOST%></option>
+			<!-- END LOOP_ROUTING_LIST -->
+		</select>
+	</td>
+</tr>
+<!-- END LOOP_ROUTING_LIST -->
+<!-- ELSE NEWADD -->
+<!-- IF MAILHOST -->
+<tr>
+	<td><%mailhost%></td><td><b><%MAILHOST%></b></td></td>
+</tr>
+<!-- END MAILHOST -->
+<!-- END NEWADD -->
+
+<tr>
+	<td><%uid%></td><td><input type=text size=15 name=uid value="<%UID%>"></td>
+</tr>
+<tr>
+	<td><%gid%></td><td><input type=text size=15 name=gid value="<%GID%>"></td>
+</tr>
+<tr>
+	<td><%services%></td>
+	<td>
+	<ul>
+	<li><input type=checkbox name=SERVICES_webmail <!-- IF NOCHK_webmail -->disabled<!-- END NOCHK_webmail --> <!-- IF SERVICES_webmail -->checked<!-- END SERVICES_webmail -->>webmail</li>
+	<li><input type=checkbox name=SERVICES_smtp <!-- IF NOCHK_smtp -->disabled<!-- END NOCHK_smtp --> <!-- IF SERVICES_smtp -->checked<!-- END SERVICES_smtp -->>smtp recv</li>
+	<li><input type=checkbox name=SERVICES_smtpd <!-- IF NOCHK_smtpd -->disabled<!-- END NOCHK_smtpd --> <!-- IF SERVICES_smtpd -->checked<!-- END SERVICES_smtpd -->>SASL auth</li>
+	<li><input type=checkbox name=SERVICES_pop3 <!-- IF NOCHK_pop3 -->disabled<!-- END NOCHK_pop3 --> <!-- IF SERVICES_pop3 -->checked<!-- END SERVICES_pop3 -->>pop3</li>
+	<li><input type=checkbox name=SERVICES_imap <!-- IF NOCHK_imap -->disabled<!-- END NOCHK_imap --> <!-- IF SERVICES_imap -->checked<!-- END SERVICES_imap -->>imap</li>
+	<li><input type=checkbox name=SERVICES_netdisk <!-- IF NOCHK_netdisk -->disabled<!-- END NOCHK_netdisk --> <!-- IF SERVICES_netdisk -->checked<!-- END SERVICES_netdisk -->>netdisk</li>
+	</ul>
+	</td>
+</tr>
+</table>
+</div>
+
+<div style="padding-top: 20px">
+<input type=submit name=save value="<%save%>">
+<input type=button name=cancel onclick="document.location.href='/extman/cgi/overview.cgi?sid=<%SID%>';" value="<%cancel%>">
+</div>
+</td>
+</tr>
+</table>
+</form>
+<!-- ELSE HAVE_USER -->
+<!-- IF NOPERM -->NO permission or no domain assign
+<!-- ELSE NOPERM -->
+<%no_such_user%>
+<!-- END NOPERM -->
+<!-- END HAVE_USER -->
+</div>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

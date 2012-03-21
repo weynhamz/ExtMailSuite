@@ -1,0 +1,75 @@
+********************************************************
+* Caution: the mailgraph_ext can only work with Extman *
+********************************************************
+
+About mailgraph_ext
+===================
+
+The mailgraph_ext is an enhanced version of mailgraph, developed by the
+ExtMail team. Mailgraph was written by David Schweikert <dws@ee.ethz.ch>
+
+Author: He zhiqiang <hzqbbc@hzqbbc.com>
+
+mailgraph_ext is an addon for the web management interface for the high
+performance mail server software - ExtMail iServer
+
+Prerequisites:
+==============
+
+- Perl 5.6+ (5.8+ is recommand)
+
+- rrdtool and it's perl module (RRDs)
+  -> http://people.ee.ethz.ch/~oetiker/webtools/rrdtool/
+
+- File::Tail (which requires Time::HiRes)
+  -> get it from CPAN
+
+- gcc and make
+
+Install
+=======
+
+You must install rrdtools first, or mailgraph_ext will not work correctly.
+
+Please refer to INSTALL of mailgraph for detail, here we only describe how
+to install and run mailgraph_ext in a simple way.
+
+1) su to root
+
+# mkdir /usr/local/mailgraph_ext
+
+2) copy all files
+
+# cd extman
+# cp addon/mailgraph_ext/* /usr/local/mailgraph_ext/*
+
+3) Confiugre qmonitor.pl
+
+If your postfix queue directory is not /var/spool/postfix, you must edit
+qmonitor.pl, modify the specification of spool dir, eg:
+
+# default path
+$spool = '/var/spool/postfix';
+
+# customize path
+$spool = '/path/to/postfix/queue/dir';
+
+4) startup all mailgraph_ext component
+
+Run the following comand as root:
+
+# /usr/local/mailgraph_ext/mailgraph-init start
+
+This command will bring mailgraph_ext.pl and qmonitor.pl all up together
+
+Usage
+=====
+
+Login our web console as admin account, click Graph Log, after several minutes,
+you will see some lines in the graph if your mail server has traffic.
+
+That's all.
+
+2006-04-24 by hzqbbc
+
+Update at: 2009-05-03

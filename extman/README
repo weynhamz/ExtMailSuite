@@ -1,0 +1,78 @@
+ExtMan - Web interface to manage Virtual Accounts
+=================================================
+
+It was written in pure perl, support account store in mysql/ldap, can easily
+customize accroding html template, other backend support will be available
+soon :-)
+
+Feature:
+========
+
+  o LDAP/MySQL backend support, with extmail offical schema/SQL
+
+  o Security enhanced via usertype permission check
+
+  o Support Netdisk quota management
+
+  o Support domain, user quota management, need maildrop/VDA support
+
+  o Aliases management, including catchall and domain alias support
+
+  o Group Email with string template and RTF editor/attachment support
+
+  o Multi-language and template support, easy customization
+
+  o Small code size and tidy, use perl OO design
+
+  o Builtin graphical log - base on mailgraph_ext
+
+  o Per user webmail/smtp/pop3/imap/netdisk service on/off
+
+Offical Sites
+=============
+
+  http://www.extmail.org
+
+  o Community of extmail - http://www.extmail.org/forum/
+
+  o Development Blog - http://blog.extmail.org/
+
+  o Download Source - http://www.extmail.org/download/
+
+Prerequisites:
+==============
+
+  perl 5.006 or above, 5.008 is recommended
+
+  A working web server with CGI support, apache is recommended
+
+Optional modules:
+=================
+
+  Net::LDAP - need this if ldap management activated
+  DBI and DBD::mysql - need this if mysql management activated
+  RRDs and rrdtool - need this if you want graph log
+  GD and freetype/jpeg/png support if you want captcha activated
+
+Recommand software
+==================
+
+For reducing effort, we highly recommand that use pre-complied software,
+such as RPM or BSD pkgs, including perl, apache, and mysql or ldap etc..
+
+Linux - RPM/deb is prefer
+FreeBSD - pkg is prefer
+
+Directory
+=========
+
+  html  - the template directory, every theme should have a sub directory
+  cgi   - the cgi scripts directory
+  libs  - the extmail lib and related packages
+  lang  - I18n locale directory, translator may want to look at it :)
+  tools - contain maintenance scripts, eg: reportusage, expireusers
+
+INSTALL
+=======
+
+See INSTALL in the latest distribution

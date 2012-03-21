@@ -1,0 +1,64 @@
+#!/bin/sh
+
+# example init script for mailgraph_ext
+#
+# chkconfig: 2345 82 28
+# description: mailgraph_ext postfix log grapher.
+#
+# processname: mailgraph_ext.pl  qmonitor.pl
+# pidfile: /var/run/mailgraph.pid  /var/run/qmonitor.pid
+#
+# mailgraph_ext - by hzqbbc <hzqbbc@hzqbbc.com>
+
+PATH=/bin:/usr/bin
+BASEDIR=/usr/local/mailgraph_ext
+MAILGRAPH_PL=$BASEDIR/mailgraph_ext.pl
+QMONITOR_PL=$BASEDIR/qmonitor.pl
+MAIL_LOG=/var/log/maillog
+MAILGRAPH_PID=/var/run/mailgraph.pid
+QMONITOR_PID=/var/run/qmonitor.pid
+RRD_DIR=/var/lib
+
+case "$1" in
+'start')
+	# startup for mailgraph
+	echo "Starting mail statistics grapher: mailgraph_ext";
+	nice -19 $MAILGRAPH_PL -l $MAIL_LOG -d \
+		--daemon-pid=$MAILGRAPH_PID --daemon-rrd=$RRD_DIR
+
+	# startup for qmonitor
+	echo "Starting queue statistics grapher: qmonitor";
+	nice -19 $QMONITOR_PL -d --daemon-pid=$QMONITOR_PID \
+		--daemon-rrd=$RRD_DIR
+	;;
+
+'stop')
+	echo "Stopping mail statistics grapher: mailgraph_ext";
+	if [ -f $MAILGRAPH_PID ]; then
+		kill `cat $MAILGRAPH_PID`
+		rm $MAILGRAPH_PID
+	else
+		echo "mailgraph_ext not running";
+	fi
+
+	echo "Stopping queue statistics grapher: qmonitor";
+	if [ -f $QMONITOR_PID ]; then
+		kill `cat $QMONITOR_PID`
+		rm $QMONITOR_PID
+	else
+		echo "qmonitor not running";
+	fi
+	;;
+
+'restart')
+	$0 stop
+	$0 start
+	;;
+
+*)
+	echo "Usage: $0 { start | restart | stop }"
+	exit 1
+	;;
+
+esac
+exit 0

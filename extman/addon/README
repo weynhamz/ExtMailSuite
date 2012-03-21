@@ -1,0 +1,37 @@
+About addon
+===========
+
+This directory contain addon software of tools for extmail project,
+please read this document carefully and follow the instructions
+
+Addon detail
+============
+
+MailGraph_ext
+-------------
+
+A RRDtool frontend for Postfix/Sendmail Statistics, originally written
+by David Schweikert <dws@ee.ethz.ch>, now we develop a individial
+queue monitor programe to generate queue graph.
+
+Furthermore, we rewrite the web frontend and integrate into ExtMan.
+Please read README.ext in the source directory for detail.
+
+cleanup.sql
+-----------
+
+A sql script to destroy extmail MySQL data, use it as your own risk, it
+will delete all data and your accounts will be lost!!
+
+upgrade_a.b.c_to_x.y.z.sql
+----------------------------
+A series sql script to update extman SQL structure.
+
+font.ttf
+-----------
+
+True Type Font (TTF) for captcha capability, this font is useful for
+generating rotating captcha string in png/jpeg format using GD module.
+
+The default font.ttf is Courier New (bold), you can upload your prefer
+ttf font and like them as font.ttf

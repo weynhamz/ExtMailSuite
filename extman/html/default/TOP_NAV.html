@@ -1,0 +1,44 @@
+<div class="h5px"></div>
+<div id="Tmenu">
+	<ul id=navmenu>
+		<!-- IF ADMIN -->
+		<li class=tl2 id="nav_system"><a href="sysinfo.cgi?sid=<%SID%>"><%system%></a></li>
+		<li class=tl2 id="nav_ovdomain"><a href="overview.cgi?sid=<%SID%>"><%list_domain%></a></li>
+		<!-- ELSE ADMIN -->
+		<li class=tl2 id="nav_ovdomain"><a href="overview.cgi?sid=<%SID%>"><%index%></a></li>
+		<!-- END ADMIN -->
+		<li class=tl2 id="nav_user"><a href="overview.cgi?__mode=overview_user&sid=<%SID%>&screen=overview_user.html"><%users%></a></li>
+		<li class=tl2 id="nav_alias"><a href="overview.cgi?__mode=overview_alias&sid=<%SID%>&screen=overview_alias.html"><%alias%></a></li>
+		<!-- IF ADMIN -->
+		<li class=tl2 id="nav_manager"><a href="overview.cgi?__mode=overview_manager&sid=<%SID%>&screen=overview_manager.html"><%manager%></a></li>
+		<li class=tl2 id="nav_groupmail"><a href="groupmail.cgi?__mode=edit_mail&sid=<%SID%>"><%groupmail%></a></li>
+		<!-- ELSE ADMIN -->
+		<li class=tl2 id="nav_groupmail"><a href="groupmail.cgi?__mode=edit_mail&sid=<%SID%>"><%groupmail%></a></li>
+		<li class=tl2 id="nav_chpwd"><a href="index.cgi?__mode=change_passwd&sid=<%SID%>&username=<%USER%>&screen=passwd.html"><%change_pwd%></a></li>
+		<!-- END ADMIN -->
+	</ul>
+</div>
+
+<!-- SUB MENU -->
+<div class=tl3 id="sub_system" style="display: none">
+<a href="sysinfo.cgi?sid=<%SID%>"><%sysinfo%></a> |
+<a href="sysctrl.cgi?sid=<%SID%>"><%sysctrl%></a> |
+<a href="overview.cgi?__mode=overview_manager&sid=<%SID%>&screen=overview_manager.html"><%manager%></a> |
+<a href="viewlog.cgi?__mode=view_all&sid=<%SID%>"><%graphlog%></a>
+</div>
+<!-- END SUB MENU -->
+
+<script language=javascript>
+window.onload = function () {
+	function HightLightNav(id)
+	{
+		//alert(id);
+		document.getElementById(id).className = "tl1";
+	}
+	try{
+		HightLightNav(currentNav);
+		if (currentNav == 'nav_system')
+			document.getElementById('sub_system').style.display = '';
+	} catch(e){};
+}
+</script>

@@ -1,0 +1,67 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%change_passwd%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+</head>
+<script language="javascript">
+var currentNav = 'nav_chpwd';
+</script>
+<body>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<p></p>
+<div align="center" style="margin-top: 20px">
+<h4><img src="/extman/default/images/passwd.gif"><%change_passwd%></h4>
+<form name=change_passwd method=post action="index.cgi">
+<!-- IF CHGPWD_OK --><div class="ok" style="width: 50%" align=center><%CHGPWD_OK%></div><!-- END CHGPWD_OK -->
+<!-- IF CHGPWD_FAIL --><div class="fail" style="width: 50%" align=center><%CHGPWD_FAIL%></div><!-- END CHGPWD_FAIL -->
+<br />
+<table class="change_passwd" cellspacing=1 cellpadding=0 align=center>
+	<tr>
+		<td class="change_passwd_key" rowspan="3"><%change_passwd%></td>
+		<td><%change_passwd_oldpw%></td>
+		<td><input name="oldpw" type=password size=30></td>
+	</tr>
+	<tr>
+		<td><%change_passwd_newpw1%></td>
+		<td><input name="newpw1" type=password size=30></td>
+	</tr>
+	<tr>
+		<td><%change_passwd_newpw2%></td>
+		<td><input name="newpw2" type=password size=30></td>
+	</tr>
+	<tr>
+		<td rowspan="2"><%pwd_recover%></td>
+		<td><%pwd_question%></td>
+		<td><input type=text size=30 name=question value="<%QUESTION%>"></td>
+	</tr>
+	<tr>
+		<td><%pwd_answer%></td>
+		<td><input type=text size=30 name=answer value="<%ANSWER%>"></td>
+	</tr>
+</table>
+<p></p>
+<input type=submit value="<%save%>"> &nbsp;
+<!-- IF ADMIN -->
+<input type=button value="<%cancel%>" onclick="location.href='overview.cgi?__mode=overview_manager&sid=<%SID%>&screen=overview_manager.html'">
+<!-- ELSE ADMIN -->
+<input type=button value="<%cancel%>" onclick="location.href='overview.cgi?sid=<%SID%>'">
+<!-- END ADMIN -->
+<input type=hidden name="__mode" value="change_passwd">
+<input type=hidden name="screen" value="passwd.html">
+<input type=hidden name="sid" value="<%SID%>">
+</form>
+</div>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

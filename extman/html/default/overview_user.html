@@ -1,0 +1,148 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+<script type="text/javascript" src="/extman/default/manlib.js"></script>
+<script language="javascript">
+var currentNav = 'nav_user';
+
+function DoDelete(id) {
+var purge = document.getElementById('purge');
+var pdelete = false;
+
+if (purge.checked) {
+	if(!confirm("<%cfm_purge%>")) {
+		return;
+	}
+	pdelete = true;
+} else {
+
+	if (!confirm("<%cfm_del%>")) {
+		return;
+	}
+}
+
+var url = document.location.href;
+url = 'user.cgi?__mode=delete_user&sid=<%SID%>&user='+id+'&url='+eURL(url);
+if (pdelete) {
+	url = url + '&purge=1';
+}
+document.location.href = url;
+}
+
+<!-- INCLUDE UTF8.inc -->
+
+function DoSearch() {
+var filter = document.getElementById('keyword').value;
+var ftype = document.getElementById('ftype');
+var stype;
+
+for(i=0;i<ftype.length;i++) {
+if (ftype[i].selected) {
+stype = ftype[i].value;
+break;
+}
+}
+
+if (filter) {
+	filter = escape(utf8_encode(filter)); // must escape to UCS4 or IE will be crazy
+	var url = '?__mode=overview_user&sid=<%SID%>&domain=<%DOMAIN%>';
+	url += '&screen=overview_user.html&keyword='+filter+'&ftype='+stype;
+	document.location.href = url;
+}
+}
+//-->
+</script>
+</head>
+<body>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+	<div class="mts"><strong><%CUR_DOMAIN%></strong>
+	&nbsp;<span style="font-size: 12px">
+		<a href="/extman/cgi/overview.cgi?__mode=overview_alias&sid=<%SID%>&domain=<%CUR_DOMAIN%>&screen=overview_alias.html">&lt;&lt;<%list%><%alias%></a><!-- IF ADMIN -->&nbsp;|&nbsp;<a href="/extman/cgi/domain.cgi?__mode=edit_domain&sid=<%SID%>&domain=<%CUR_DOMAIN%>&screen=edit_domain.html"><%edit%><%domain%></a><!-- END ADMIN -->
+	</span></div>
+	<div class="mbs">
+	<!-- IF LOOP_DOMAIN -->
+        <select name="domain" id="domain" onChange="document.location.href='?__mode=overview_user&sid=<%SID%>&screen=overview_user.html&domain='+this[this.selectedIndex].text;">
+	<!-- BEGIN LOOP_DOMAIN -->
+	<option><%DOMAIN%></option>
+	<!-- END LOOP_DOMAIN -->
+	</select>
+
+	<script language="javascript">
+	highlight_Sel('domain');
+	</script>
+	<!-- END LOOP_DOMAIN -->
+	<img style="height: 15px" src="/extman/default/images/add.gif">&nbsp;
+	<a href="user.cgi?__mode=add_user&sid=<%SID%>&screen=edit_user.html"><%add_user%></a>
+	&nbsp;| <%TOTAL_USER%>
+	</div>
+</div>
+<table width="100%" cellpadding="2" cellspacing="0" align="center"><tr><td width="20px"></td><td style="border:1px solid #333;">
+<table width=100% border="0" cellspacing="0">
+<tr class="listop">
+<td>&nbsp;</td>
+<td colspan=2><div align=left><input type=checkbox name=purge id=purge <!-- IF PURGE_DATA -->checked<!-- END PURGE_DATA -->> <%hint_purge%></div></td>
+<td colspan=5>
+	<%search%>
+	<input id=keyword name=keyword value="<%KEYWORD%>" size=20>
+	<select id=ftype name=ftype>
+		<option value="mail" <!-- IF CHECK_MAIL -->selected<!-- END CHECK_MAIL -->><%user%></option>
+		<option value="cn" <!-- UNLESS CHECK_MAIL -->selected<!-- END CHECK_MAIL -->><%name%></option>
+	</select>
+	<input type=button onclick="DoSearch()" value="<%dosearch%>">
+</td>
+</tr>
+<tr class="listhd">
+	<td>&nbsp;</td><td><%user%></td><td><%name%></td>
+	<td><%quota%></td><td><%ndquota%></td><td><%expire%></td>
+	<td><%active%></td><td><%operation%></td>
+</tr>
+<!-- IF HAVE_USERS -->
+<!-- BEGIN LOOP_USER -->
+<tr class="listco">
+	<td>&nbsp;</td>
+	<td><img src="/extman/default/images/user.gif">
+	<a href="user.cgi?__mode=edit_user&sid=<%SID%>&user=<%MAIL%>&screen=edit_user.html">
+	<%MAIL%></a></td>
+	<td><%NAME%></td>
+	<td><%QUOTA%></td>
+	<td><%NDQUOTA%></td>
+	<td><%EXPIRE%></td>
+	<td><!-- IF ACTIVE --><%yes%><!-- ELSE ACTIVE --><%no%><!-- END ACTIVE --></td>
+	<td><a href="user.cgi?__mode=edit_user&sid=<%SID%>&user=<%MAIL%>&screen=edit_user.html">
+	<img src="/extman/default/images/edit.gif"></a>&nbsp;&nbsp;<a href="javascript:DoDelete('<%MAIL%>')" title="<%delete%>"><img src="/extman/default/images/del.gif"></a></td>
+</tr>
+<!-- END LOOP_USER -->
+<tr class="listbt">
+	<td colspan=8>
+	<!-- IF HAVE_PREV -->
+	<a href="?__mode=overview_user&sid=<%SID%>&domain=<%DOMAIN%>&screen=overview_user.html&page=<%PREV%>&keyword=<%KEYWORD%>&ftype=<%FTYPE%>">&lt;&lt;<%prev%></a>
+	<!-- END HAVE_PREV -->&nbsp;&nbsp;
+	<!-- IF HAVE_NEXT -->
+	<a href="?__mode=overview_user&sid=<%SID%>&domain=<%DOMAIN%>&screen=overview_user.html&page=<%NEXT%>&keyword=<%KEYWORD%>&ftype=<%FTYPE%>"><%next%>&gt;&gt;</a>
+	<!-- END HAVE_NEXT -->
+	<!-- INCLUDE 'jumpto.inc' -->
+	</td>
+</tr>
+<!-- ELSE HAVE_USERS -->
+<tr class="listno">
+<td colspan=8><%err_listnull_user%></td>
+</tr>
+<!-- END HAVE_USERS -->
+</table>
+</td><td width="20px"></td></tr></table>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

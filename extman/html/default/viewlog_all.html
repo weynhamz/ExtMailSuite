@@ -1,0 +1,89 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+</head>
+<script language="javascript">
+var currentNav = 'nav_system';
+</script>
+<body>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+	<div class="mts"><strong><%TITLE%></strong><!-- IF ERROR --><span class="error"><%ERROR%></span><!-- END ERROR --><!-- IF SUCCESS --><span class="success"><%SUCCESS%></span><!-- END SUCCESS --></div>
+	<div class="mbs"></div>
+</div>
+<table width="100%" cellpadding="2" cellspacing="0" align="center"><tr><td width="20px"></td><td style="border:1px solid #333;padding:10px;" align="center">
+<!-- begin the main screen -->
+<table cellspacing=0 cellpadding=2 border=0 width=80% class=etb>
+	<!-- IF VIEW_ALL -->
+	<tr><td><div style="line-height: 150%; padding:2px;padding-left: 5px">
+		&gt;&gt;&nbsp;
+		<span><a href="#success">[<b><%statistic_success%></b>]</a></span>
+		<span><a href="#errors">[<b><%statistic_errors%></b>]</a></span>
+		<span><a href="#bytes">[<b><%statistic_bytes%></b>]</a></span>
+		</div>
+		<div style="line-height: 150%; padding:2px;padding-left: 5px">
+		&gt;&gt;&nbsp;
+		<span><a href="#courier">[<b><%statistic_courier%></b>]</a></span>
+		<!-- IF QUEUE_ON -->
+			<span><a href="#queue">[<b><%statistic_queue%></b>]</a></span>
+		<!-- END QUEUE_ON -->
+		<span><a href="#webmail">[<b><%statistic_webmail%></b>]</a></span>
+	</div></td></tr>
+	<tr><td>
+		<div><h4><a name="success"><%statistic_success%></h4></div>
+		<a href="?sid=<%SID%>&mode=normal&view=success">
+		<img border=0 src="?sid=<%SID%>&mode=thumb&filename=mailgraph_0.png" alt="OK"></a></td>
+	</tr>
+	<tr><td>
+		<div><h4><a name="errors"><%statistic_errors%></h4></div>
+		<a href="?sid=<%SID%>&mode=normal&view=errors">
+		<img border=0 src="?sid=<%SID%>&mode=thumb&filename=mailgraph_0_err.png" alt="FAIL"></a></td>
+	</tr>
+	<tr><td>
+		<div><h4><a name="bytes"><%statistic_bytes%></h4></div>
+		<a href="?sid=<%SID%>&mode=normal&view=bytes">
+		<img border=0 src="?sid=<%SID%>&mode=thumb&filename=mailgraph_0_bytes.png" alt="Bytes"></a></td>
+	</tr>
+	<tr><td>
+		<div><h4><a name="courier"><%statistic_courier%></h4></div>
+		<a href="?sid=<%SID%>&mode=normal&view=courier">
+		<img border=0 src="?sid=<%SID%>&mode=thumb&filename=mailgraph_0_courier.png" alt="IMAP_POP3"></a></td>
+	</tr>
+	<!-- IF QUEUE_ON -->
+	<tr><td>
+		<div><h4><a name="queue"><%statistic_queue%></h4></div>
+		<a href="?sid=<%SID%>&mode=normal&view=queue">
+		<img border=0 src="?sid=<%SID%>&mode=thumb&filename=mailgraph_0_queue.png" alt="QUEUE"></a></td>
+	</tr>
+	<!-- END QUEUE_ON -->
+	<tr><td>
+		<div><h4><a name="webmail"><%statistic_webmail%></h4></div>
+		<a href="?sid=<%SID%>&mode=normal&view=webmail">
+		<img border=0 src="?sid=<%SID%>&mode=thumb&filename=mailgraph_0_webmail.png" alt="WebMail"></a></td>
+	</tr>
+	<!-- ELSE VIEW_ALL -->
+	<!-- BEGIN LOOP_GRAPH_DETAIL -->
+	<tr><td><div><h4><%GRAPH_TITLE%></h4></div>
+		<img border=0 src="?sid=<%SID%>&mode=normal&filename=mailgraph_<%GRAPH_NUM%><!-- IF GRAPH_TYPE -->_<%GRAPH_TYPE%><!-- END GRAPH_TYPE -->.png" alt="<%GRAPH_TYPE%>">
+	</td>
+	</tr>
+	<!-- END LOOP_GRAPH_DETAIL -->
+	<!-- END VIEW_ALL -->
+</table>
+<!-- end of main screen -->
+</td><td width="20px"></td></tr></table>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

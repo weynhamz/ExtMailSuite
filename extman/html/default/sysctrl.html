@@ -1,0 +1,80 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%sysctrl%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+<script type="text/javascript" src="/extman/default/manlib.js"></script>
+<script language="javascript">
+var currentNav = 'nav_system';
+function restart(service) {
+	var frm = document.getElementById('server_form');
+	frm.srvname.value = service;
+	frm.action.value = 'restart';
+	frm.submit();
+}
+
+function stop(service) {
+	var frm = document.getElementById('server_form');
+	frm.srvname.value = service;
+	frm.action.value = 'stop';
+	frm.submit();
+}
+</script>
+</head>
+<body>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+	<div class="mts"><strong><%sysctrl%></strong></div>
+	<div class="mbs"><%srvcount%> <%TOTAL_SERVER%></div>
+	<!-- IF ERROR --><span class="error"><%ERROR%></span><!-- END ERROR --><!-- IF SUCCESS --><span class="success"><%SUCCESS%></span><!-- END SUCCESS --></div>
+</div>
+
+<div id="main">
+<table width="100%" cellpadding="2" cellspacing="0" align="center">
+<tr><td width="20px"></td><td style="border:1px solid #333;">
+<form id="server_form" name="service_form" action="" method="post">
+<input type=hidden name=srvname value="">
+<input type=hidden name=action value="">
+<input type=hidden name=__mode value="srvctrl">
+<table width=100% border="0" cellspacing="0">
+<tr class="listop">
+</tr>
+<tr class="listhd">
+	<td>&nbsp;</td>
+	<td><%srvname%></td><td><%status%></td>
+	<td>&nbsp;</td>
+	<td style="padding-left: 100px"><%action%></td>
+</tr>
+<!-- BEGIN LOOP_SRVCTRL -->
+<tr class="listco">
+	<td>&nbsp;</td>
+	<td><span title="<%SRVNAME%>"><%SRVDESC%></span></td>
+	<td><!-- IF SRVOK --><img src="/extman/default/images/srv_running.gif" alt="<%running%>"><!-- ELSE SRVOK --><img src="/extman/default/images/srv_stopped.gif" alt="<%stopped%>"><!-- END SRVOK --></td>
+	<td>&nbsp;</td>
+	<td style="padding-left: 100px">
+	<!-- IF IGNORE -->
+	N/A
+	<!-- ELSE IGNORE -->
+	<img src="/extman/default/images/start.gif">&nbsp;<a href="javascript:restart('<%SRVSYMBOL%>')"><%restart%></a>
+	&nbsp;&nbsp;<img src="/extman/default/images/stop.gif">&nbsp;<a href="javascript:stop('<%SRVSYMBOL%>')"><%stop%></a>
+	<!-- END IGNORE -->
+	</td>
+</tr>
+<!-- END LOOP_SRVCTRL -->
+</table>
+</form>
+</td><td width="20px"></td></tr></table>
+</div>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

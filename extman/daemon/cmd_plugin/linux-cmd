@@ -1,0 +1,266 @@
+#!perl
+# vim: set ci et ts=4 sw=4:
+
+print "loaded ok\n";
+%cmd = (
+    web_status => \&web_status,
+    web_restart => \&web_restart,
+    web_stop => \&web_stop,
+    mta_status => \&mta_status,
+    mta_restart => \&mta_restart,
+    mta_stop => \&mta_stop,
+    fcgi_status => \&fcgi_status,
+    fcgi_restart => \&fcgi_restart,
+    fcgi_stop => \&fcgi_stop,
+    slockd_status => \&slockd_status,
+    slockd_restart => \&slockd_restart,
+    slockd_stop => \&slockd_stop,
+    dspam_status => \&dspam_status,
+    dspam_restart => \&dspam_restart,
+    dspam_stop => \&dspam_stop,
+    mysql_status => \&mysql_status,
+    mysql_restart => \&mysql_restart,
+    mysql_stop => \&mysql_stop,
+    ldap_status => \&ldap_status,
+    ldap_restart => \&ldap_restart,
+    ldap_stop => \&ldap_stop,
+
+    # ---------- Operation related --------- #
+
+    os_info => \&os_info,
+    sysload => \&sysload,
+);
+
+my $web_init = '/etc/init.d/httpd';
+my $mta_init = '/etc/init.d/postfix';
+my $fcgi_init = '/var/www/extsuite/extmail/dispatch-init';
+my $slockd_init = '/usr/local/slockd/slockd-init';
+my $dspam_init = '/etc/init.d/dspamd';
+my $mysql_init = '/etc/init.d/mysqld';
+my $ldap_init = '/etc/init.d/ldap';
+
+#####################
+# Web server        #
+#####################
+
+sub web_status {
+    my $ctx = shift;
+    my $rc = qx/$web_init status/;
+    if ($rc =~ /running/) {
+        $ctx->set_reply('250', 'up');
+    } else {
+        $ctx->set_reply('503', 'down');
+    }
+}
+
+sub web_restart {
+    my $ctx = shift;
+    my $rc = qx/$web_init restart/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+sub web_stop {
+    my $ctx = shift;
+    my $rc = qx/$web_init stop/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+####################
+# Mta server       #
+####################
+
+sub mta_status {
+    my $ctx = shift;
+    my $rc = qx/$mta_init status/;
+    if ($rc =~ /running/) {
+        $ctx->set_reply('250', 'up');
+    } else {
+        $ctx->set_reply('503', 'down');
+    }
+}
+
+sub mta_restart {
+    my $ctx = shift;
+    my $rc = qx/$mta_init restart/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+sub mta_stop {
+    my $ctx = shift;
+    my $rc = qx/$mta_init stop/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+####################
+# FastCGI server   #
+####################
+
+sub fcgi_status {
+    my $ctx = shift;
+    my $rc = qx/ps ax|grep dispatch.fcgi|grep -v grep/;
+    if ($rc =~ /dispatch\.fcgi \(master\)/) {
+        $ctx->set_reply('250', 'up');
+    } else {
+        $ctx->set_reply('503', 'down');
+    }
+}
+
+sub fcgi_restart {
+    my $ctx = shift;
+    my $rc = qx/$fcgi_init restart/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+sub fcgi_stop {
+    my $ctx = shift;
+    my $rc = qx/$fcgi_init stop/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+####################
+# Slockd server    #
+####################
+
+sub slockd_status {
+    my $ctx = shift;
+    my $rc = qx/$slockd_init status/;
+    if ($rc =~ /is running/) {
+        $ctx->set_reply('250', 'up');
+    } else {
+        $ctx->set_reply('503', 'down');
+    }
+}
+
+sub slockd_restart {
+    my $ctx = shift;
+    my $rc = qx/$slockd_init restart/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+sub slockd_stop {
+    my $ctx = shift;
+    my $rc = qx/$slockd_init stop/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+####################
+# Dspam daemon     #
+####################
+
+sub dspam_status {
+    my $ctx = shift;
+    my $rc = qx/$dspam_init status/;
+    if ($rc =~ /is running/) {
+        $ctx->set_reply('250', 'up');
+    } else {
+        $ctx->set_reply('503', 'down');
+    }
+}
+
+sub dspam_restart {
+    my $ctx = shift;
+    my $rc = qx/$dspam_init restart/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+sub dspam_stop {
+    my $ctx = shift;
+    my $rc = qx/$dspam_init stop/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+####################
+# MySQL server     #
+####################
+
+sub mysql_status {
+    my $ctx = shift;
+    my $rc = qx/$mysql_init status/;
+    if ($rc =~ /running/) {
+        $ctx->set_reply('250', 'up');
+    } else {
+        $ctx->set_reply('503', 'down');
+    }
+}
+
+sub mysql_restart {
+    my $ctx = shift;
+    my $rc = qx/$mysql_init restart/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+sub mysql_stop {
+    my $ctx = shift;
+    my $rc = qx/$mysql_init stop/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+####################
+# openLDAP sever   #
+####################
+
+sub ldap_status {
+    my $ctx = shift;
+    my $rc = qx/$ldap_init status/;
+    if ($rc =~ /running/) {
+        $ctx->set_reply('250', 'up');
+    } else {
+        $ctx->set_reply('503', 'down');
+    }
+}
+
+sub ldap_restart {
+    my $ctx = shift;
+    my $rc = qx/$ldap_init restart/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+sub ldap_stop {
+    my $ctx = shift;
+    my $rc = qx/$ldap_init stop/;
+    $ctx->set_reply('250', 'Exec done');
+}
+
+####################
+# OS related       #
+####################
+
+sub os_info {
+    my $ctx = shift;
+    my $param = shift;
+    my $rc;
+
+    if ($param) {
+        if ($param eq 'os') {
+            $rc = qx/uname -o/;
+        }
+        if ($param eq 'hostname') {
+            $rc = qx/uname -n/;
+        }
+        if ($param eq 'kernel') {
+            $rc = qx/uname -r/;
+        }
+        if ($param eq 'cpu') {
+            $rc = qx/uname -p/;
+        }
+    } else {
+        $rc = qx/uname/;
+    }
+    if (not $rc) {
+        $ctx->set_reply('450', 'Temp failed');
+        return;
+    }
+    $rc =~ s/\r?\n//g;
+    $ctx->set_reply('250', $rc);
+}
+
+sub sysload {
+    my $ctx = shift;
+    my $param = shift;
+    my $rc = qx(/usr/bin/uptime);
+
+    $rc =~ s/\r?\n//g;
+    $ctx->set_reply('250', $rc);
+}
+
+1;

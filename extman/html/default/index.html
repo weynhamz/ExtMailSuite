@@ -1,0 +1,238 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+<style>
+</style>
+<script type="text/javascript" language="javascript">
+<!--
+function setCookie (name, value, expires, path, domain, secure) {
+    var curCookie = name + "=" + escape(value) + (expires ? "; expires=" + expires : "") + (path ? "; path=" + path : "") + (domain ? "; domain=" + domain : "") + (secure ? "secure" : "");
+    document.cookie = curCookie;
+}
+
+function getCookie (name) {
+    var prefix = name + '=';
+    var c = document.cookie;
+    var nullstring = '';
+    var cookieStartIndex = c.indexOf(prefix);
+    if (cookieStartIndex == -1)
+        return nullstring;
+    var cookieEndIndex = c.indexOf(";", cookieStartIndex + prefix.length);
+    if (cookieEndIndex == -1)
+        cookieEndIndex = c.length;
+    return unescape(c.substring(cookieStartIndex + prefix.length, cookieEndIndex));
+}
+
+function deleteCookie (name, path, domain) {
+    if (getCookie(name))
+        document.cookie = name + "=" + ((path) ? "; path=" + path : "") + ((domain) ? "; domain=" + domain : "") + "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+}
+
+function fixDate (date) {
+    var base = new Date(0);
+    var skew = base.getTime();
+    if (skew > 0)
+        date.setTime(date.getTime() - skew);
+}
+
+function genNowTime() {
+    var now = new Date();
+    fixDate(now);
+    now.setTime(now.getTime() + 365 * 24 * 60 * 60 * 1000);
+    now = now.toGMTString();
+    return now;
+}
+
+function rememberMe (f) {
+    var now = genNowTime();
+    if (f.username != undefined)
+       setCookie('extman_username', f.username.value, now, '/', '', '');
+}
+
+function forgetMe (f) {
+    deleteCookie('extman_username', '/', '');
+    f.username.value = '';
+}
+
+function checkType (f) {
+   if (f.bakecookie.checked) rememberMe(f);
+}
+
+function setFocus() {
+   var f = document.forms['login'];
+   if (f) {
+      if (f.username.value == null || f.username.value == "") {
+         f.username.focus();
+      } else {
+	 f.password.focus();
+      }
+   }
+}
+
+<!-- IF CAPTCHA_ON -->
+function rplCaptcha()
+{
+   var img = document.getElementById("verifyImg");
+   img.src = "/extman/cgi/captcha.cgi?" + Math.random();
+   var ctrl = document.getElementById("vcode");
+   if (ctrl != null)
+   {
+       ctrl.focus();
+   }
+}
+<!-- END CAPTCHA_ON -->
+
+//-->
+</script>
+</head>
+<body <!-- UNLESS ALREADY_LOGIN -->onload="setFocus()"<!-- END ALREADY_LOGIN -->>
+
+<div id="TopBan">
+<TABLE width=100% height=50px cellpadding=0 cellspacing=0 border=0>
+<TR>
+	<TD style=padding-left:10px;><IMG src="/extman/default/images/logo.gif" border=0></TD>
+ 	</TR>
+</TABLE>
+</div>
+
+<div id="TopNav">
+<div class="h5px"></div>
+<div id="Tmenu">
+        <ul id=navmenu>
+		<li></li>
+		<li class=tl1 style="margin-left: 100px"><a href=""><%loginextman%></a></li>
+		<li class=tl2><a href="/extmail/cgi/index.cgi"><%loginwebmail%></a></li>
+	</ul>
+	</div>
+	<div id="topinfo"><a href="http://www.extmail.org" target="_blank"><%about%></a>&nbsp;|&nbsp;<a href="http://www.extmail.org/donate/" target="_blank"><%donate%></a></div>
+</div>
+</div>
+
+<!-- IF LOGIN -->
+<DIV id="Main" style="padding-left: 100px; padding-top: 30px">
+<table align=left cellpadding=20>
+<tr>
+<td width=350 valign=top>
+<form name=login method=post onsubmit="checkType(this)">
+<div style="padding: 3px; border: 1px solid #000; width: 350px">
+<table class="login_form" cellspacing=0 width=350 cellspacing=2>
+<tr><td colspan=2 align=center><h4><%meta_title%></h4></td></tr>
+<!-- IF ALREADY_LOGIN -->
+<tr><td colspan=2 align=center>
+<b><%USER%></b>&nbsp;&nbsp;<%already_login%>
+</td>
+</tr>
+<tr><td colspan=2 align=center>
+	<b>[ <!-- IF ADMIN -->
+		<a href="overview.cgi?__mode=overview_manager&sid=<%SID%>&screen=overview_manager.html">
+	<!-- ELSE ADMIN --><a href="overview.cgi?sid=<%SID%>">
+	<!-- END ADMIN --><%enter%></a> ]
+	&nbsp;&nbsp;<a href=index.cgi?__mode=logout&sid=<%SID%>><%logout%></a>
+</td>
+<input type=hidden name="username" value="">
+</tr>
+<!-- ELSE ALREADY_LOGIN -->
+<tr><td valign=top style="padding-top:5px;padding-left:10px;width=60;">&nbsp;&nbsp;<%username%> </td><td>
+<!-- IF ERRMSG -->
+<div style="padding: 2px; border: 1px solid #FF0000; background-color: #ffcccc;">
+<!-- END ERRMSG -->
+<input name=username value=root@extmail.org class=login_input>
+<!-- IF ERRMSG -->
+<div style="color: #FF0000; font-family: arial">
+	<%ERRMSG%>
+</div>
+<!-- END ERRMSG -->
+</td></tr>
+<tr><td valign=top style="padding-top:5px;padding-left:10px;">&nbsp;&nbsp;<%password%></td><td><input name=password type=password class=login_input></td></tr>
+<!-- IF CAPTCHA_ON -->
+<tr><td valign=top style="padding-top:5px;padding-left:10px;"><%vcode%></td>
+	<td><input type=text style="width: 50px" id=vcode name=vcode>
+	&nbsp;<img id=verifyImg style="vertical-align: top;cursor: pointer" src="/extman/cgi/captcha.cgi" alt="<%hint_vcode%>">
+	&nbsp;<a href="javascript:rplCaptcha()" title="<%hint_vcode%>"><%rplvcode%></a>
+	</td>
+</tr>
+<!-- END CAPTCHA_ON -->
+<tr><td></td><td>
+<input type=checkbox checked name="bakecookie"/>
+<%remember%></td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+	<td style="padding-bottom:5px;"><input type=checkbox checked name=nosameip><%ipsecurity%>&nbsp;&nbsp;<input type=submit value=<%login%> style="width:60px;height:28px;">
+</tr>
+<input type=hidden name=action value=valid_login>
+<!-- END ALREADY_LOGIN -->
+</table>
+</div>
+<div align=right style="padding: 5px;padding-right; 0px;font-size: 10px">
+	Powerby <b><%VERSION%></b>
+</div>
+</form>
+</td>
+</tr></table>
+
+<div style="padding-top: 10px">
+	<H4><%hint_aux%></H4>
+	<ul>
+		<li><a href="/extman/cgi/forgetpwd.cgi"><%hint_aux_forgetpwd%></a></li>
+		<li><a href="/extman/cgi/changepwd.cgi"><%hint_aux_changepwd%></a></li>
+	</ul>
+</div>
+
+</DIV>
+
+<!-- UNLESS ALREADY_LOGIN -->
+<script type="text/javascript" language="javascript">
+<!--
+var f = document.login;
+if (f.username != undefined && getCookie("extman_username")) {
+    f.username.value = getCookie("extman_username");
+}
+
+if (getCookie("extman_username")) {
+    f.bakecookie.checked = true;
+} else {
+    /* forget me completely */
+    f.bakecookie.checked = false;
+}
+//-->
+</script>
+<!-- END ALREADY_LOGIN -->
+
+<!-- ELSE LOGIN -->
+
+<!-- UNLESS LOGOUT -->
+<div class="log_ok">
+<div>
+<%LOGIN_RESULT%></br>
+<%redirect_hint%>
+</div>
+<div style="margin-top: 10px">
+<b>[ <!-- IF ADMIN --><a href="overview.cgi?__mode=overview_manager&sid=<%SID%>&screen=overview_manager.html"><!-- ELSE ADMIN --><a href="overview.cgi?sid=<%SID%>"><!-- END ADMIN --><%enter%></a> ]</b>
+&nbsp;&nbsp;<a href=index.cgi?__mode=logout&sid=<%SID%>><%logout%></a>
+</div>
+<META HTTP-EQUIV="refresh" content="0;url=<!-- IF ADMIN -->sysinfo.cgi?sid=<%SID%><!-- ELSE ADMIN -->overview.cgi?sid=<%SID%><!-- END ADMIN -->">
+</div>
+<!-- END LOGOUT -->
+<!-- END LOGIN -->
+
+<!-- IF LOGOUT -->
+<!-- IF LOGOUT_OK -->
+<div class="log_ok">
+<META HTTP-EQUIV="refresh" content="0;url=index.cgi">
+<div><%logout_ok%> <a href="index.cgi"><%return%></a></div>
+</div>
+<!-- ELSE LOGOUT_OK -->
+<div class="log_fail">
+<div><%logout_fail%> <%ERR_LOGOUT%>, <a href="index.cgi"><%return%></a></div>
+</div>
+<!-- END LOGOUT_OK -->
+<!-- END LOGOUT -->
+
+<div style="margin-top: 150px">
+	<!-- INCLUDE FOOTER.html -->
+</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+# extmail.org
+dn: dc=extmail.org
+objectClass: organization
+objectClass: dcObject
+dc: extmail.org
+o: extmail.org
+
+# Manager, extmail.org
+dn: cn=Manager,dc=extmail.org
+objectClass: top
+objectClass: organizationalRole
+cn: Manager
+
+# domains + users: o=extmailAccount, dc=extmail.org
+dn: o=extmailAccount,dc=extmail.org
+objectClass: organization
+o: extmailAccount
+
+# aliases: o=extmailAlias, dc=extmail.org
+dn: o=extmailAlias,dc=extmail.org
+objectClass: organization
+o: extmailAlias
+
+# manager: o=extmailManager, dc=extmail.org
+dn: o=extmailManager,dc=extmail.org
+objectClass: organization
+o: extmailManager
+
+# Domain: virtualDomain=extmail.org, o=extmailAccount, dc=extmail.org
+dn: virtualDomain=extmail.org, o=extmailAccount, dc=extmail.org
+virtualDomain: extmail.org
+description: A virtualDomain for extmail.org
+hashDirPath: A0/B0
+Transport: virtual:
+domainMaxQuota: 1073741824
+domainMaxUsers: 50
+domainMaxAlias: 50
+domainMaxNetStore: 1073741824
+defaultQuota: 5242880
+defaultNetStore: 5242880
+defaultExpire: 1y
+disablesmtpd: 0
+disablesmtp: 0
+disablewebmail: 0
+disablenetdisk: 0
+disableimap: 1
+disablepop3: 0
+active: 1
+expireDate: 2010-10-01
+createDate: 2007-02-14 13:47:56
+objectclass: top
+objectclass: extmailDomain
+
+# User: mail=postmaster@extmail.org, virtualDomain=extmail.org, o=extmailAccount, dc=extmail.org
+dn: mail=postmaster@extmail.org, virtualDomain=extmail.org, o=extmailAccount, dc=extmail.org
+cn: Test user
+uid: test
+mail: postmaster@extmail.org
+virtualDomain: extmail.org
+mailMessageStore: extmail.org/postmaster/Maildir/
+homeDirectory: extmail.org/postmaster
+userName: postmaster@extmail.org
+mailQuota: 104857600S
+netdiskQuota: 52428800S
+uidNumber: 1000
+gidNumber: 1000
+userPassword: {CRYPT}$1$phz1mRrj$3ok6BjeaoJYWDBsEPZb5C0
+active: 1
+disablesmtpd: 0
+disablesmtp: 0
+disablewebmail: 0
+disablenetdisk: 0
+disableimap: 0
+disablepop3: 0
+expireDate: 2010-10-01
+createDate: 2007-02-14 17:56:33
+objectClass: top
+objectClass: uidObject
+objectClass: extmailUser
+
+# Alias: mailLocalAddress=support@extmail.org, o=extmailAlias, dc=extmail.org
+dn: mailLocalAddress=support@extmail.org, o=extmailAlias, dc=extmail.org
+mailLocalAddress: support@extmail.org
+virtualDomain: extmail.org
+mail: postmaster@extmail.org
+active: 1
+objectclass: extmailAlias
+
+# Manager: mail=root@extmail.org, o=extmailManager, dc=extmail.org
+dn: mail=root@extmail.org, o=extmailManager, dc=extmail.org
+cn: Root
+uid: root
+mail: root@extmail.org
+userPassword: {CRYPT}$1$BrT9qxfB$Ha81Mb5YVV6rNKNN5jmtj1
+managerType: admin
+active: 1
+question: who are you?
+answer: postmaster
+disablePasswdChange: 0
+createDate: 2007-02-14 18:32:14
+expireDate: 2010-08-01
+objectclass: top
+objectclass: extmailManager

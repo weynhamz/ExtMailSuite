@@ -1,0 +1,75 @@
+About contrib
+=============
+
+This directory contains scripts and tools come from third-party or
+developer's. please read this document carefully.
+
+passwd2ext.pl
+-------------
+AUTHOR: hzqbbc
+
+A small perl script to import system accounts into MySQL database, you
+need to config passwd2ext.pl for MySQL database username, password and
+db name, table name, default storage, uid and gid etc.
+
+Last, command line must specify default domain, eg:
+
+$ perl passwd2ext.pl extmail.org
+
+Then all users import from system will be members of extmail.org
+
+courier-authlib-ldap.patch
+--------------------------
+AUTHOR: hzqbbc
+
+A small patch for courier-authlib (0.5*) authldap module to make relative
+maildir attribute works fine, prepend LDAP_MAILROOT to maildir, copy this
+patch to authlib source directory, patch it:
+
+cp courier-authlib-ldap.patch /path/to/courier-authlib-0.57/
+cd /path/to/courier-authlib-0.57/
+patch -p0 < courier-authlib-ldap.patch
+
+After successfull patch, recompile courier-authlib, enjoy it:-)
+
+backup.sh
+---------
+AUTHOR: fengyong
+
+A small shell to backup mail data and mysql info, can transfer these
+backup to remote ftp server
+
+makegbook.pl
+------------
+AUTHOR: chifeng
+
+A small perl script to generate global address book file, this script
+is derive from fengyong's makeglobabook.pl
+
+makeglobabook.pl
+----------------
+AUTHOR: fengyong
+
+A small perl script to generate global address book, only support
+MySQL version.
+
+reset_extman_mysql_passwd.pl
+----------------------------
+AUTHOR: fengyong
+
+A small perl script to reset postmaster/admin password
+
+sender.pl
+---------
+AUTHOR: chifeng
+
+A perl script to read recipients from file and send bunch of email via
+SMTP, support a few template, eg: EMAILADDRESS, EMAILMAILFROM, you need
+to edit this script and setup proper $mailfrom.
+
+updatecf.pl
+-----------
+AUTHOR: fengyong
+
+A perl script to merge old extmail project configuration file to the
+current version, usage: updatecf.pl help

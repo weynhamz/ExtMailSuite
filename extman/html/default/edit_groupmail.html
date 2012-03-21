@@ -1,0 +1,209 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+</head>
+<script type="text/javascript" src="/extman/default/js/common.js"></script>
+<script type="text/javascript" src="/extman/default/manlib.js"></script>
+<script type="text/javascript" src="/extman/default/js/menu.js"></script>
+<script language="javascript">
+var currentNav = 'nav_groupmail';
+var bbinsert = parseInt('1');
+var allowsubmit = false;
+var issending = false;
+
+<!-- INCLUDE multifile_new.inc -->
+
+function chkMailTo() {
+	if ($('recipient').value.length && $('subject').value.length) {
+		return true;
+	}
+	if ($('alldomain').checked) {
+		return true;
+	}
+	return false;
+}
+
+function DoSend() {
+	if (issending)
+	{
+		alert('Sendmail in progress');
+		return false;
+	}
+	allowsubmit = true;
+	var FR = document.forms['postform'];
+
+	if(!chkMailTo()) {
+		allowsubmit = false;
+		alert('Bad input, try again please!');
+		return false
+	}
+
+	if (wysiwyg)
+	{
+		FR.html.value=true;
+		document.postform.body.value = getEditorContents();
+	}
+	else
+	{
+		FR.html.value="";
+		document.postform.body.value = getEditorContents();
+	}
+
+	// attchk();
+	$('btnsend1').disabled = true;
+	$('btnsend2').disabled = true;
+	postSubmited = true;
+	FR.submit();
+	issending = true;
+	allowsubmit = false;
+}
+
+function escapeHTML(str)
+{
+	str = str.replace(/&/g,'&amp;');
+	str = str.replace(/'/g, '&#039;');
+	str = str.replace(/"/g, '&quot;');
+	str = str.replace(/>/g, '&gt;');
+	str = str.replace(/</g, '&lt;');
+	str = str.replace(/ /g, '&nbsp;');
+	str = str.replace(/\r*\n/g, "<br>\n");
+	/* the following line is buggy
+	   str = str.replace(/\s*\d\.([^\r\n]+)/g, "<li>$1</li>");
+	 */
+	return str;
+}
+
+function unescapeHTML(str)
+{
+        //var div = document.createElement('div');
+        str = str.replace(/\r*\n\s*/g, "");
+        str = str.replace(/<\/div>/gi, "#nl#");
+        str = str.replace(/<\/li>/gi,"#nl#");
+        str = str.replace(/<\/P>/gi,"#nl#");
+        str = str.replace(/<\s*\/?\s*BR\s*\/?\s*>/gi,"#nl#");
+        str = str.replace(/<script[^>]*?>.*?<\/script>/gi,"");
+        str = str.replace(/<[^!]*?[^<>]*?>/gi,"");
+        //str = str.replace(/([\r\n])\s+/g, "$1");
+        str = str.replace(/&(quot|#34);/gi, '"');
+        str = str.replace(/&(amp|#38);/gi, '&');
+        str = str.replace(/&(lt|#60);/gi, '<');
+        str = str.replace(/&(gt|#62);/gi, '>');
+        str = str.replace(/&(nbsp|#160);/gi, " ");
+        str = str.replace(/&(iexcl|#161);/gi, String.fromCharCode(161));
+        str = str.replace(/&(cent|#162);/gi, String.fromCharCode(162));
+        str = str.replace(/&(pound|#163);/gi, String.fromCharCode(163));
+        str = str.replace(/&(copy|#169);/gi, String.fromCharCode(169));
+        str = str.replace(/&#(\d+);/gi, String.fromCharCode("$1"));
+        str = str.replace(/#nl#/gi, "\r\n");
+        return str;
+}
+
+</script>
+<body>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+	<div class="mts"><strong><%meta_title%></strong><!-- IF ERROR --><span class="error"><%ERROR%></span><!-- END ERROR --><!-- IF SUCCESS --><span class="success"><%SUCCESS%></span><!-- END SUCCESS --></div>
+	<div class="mbs"></div>
+</div>
+<table width="100%" cellpadding="2" cellspacing="0" align="center"><tr><td width="20px"></td><td style="border:1px solid #333;padding:10px;" align="center">
+<form name="postform" id="postform" method=post enctype="multipart/form-data" action="groupmail.cgi">
+<input type=hidden name=__mode value="send_mail">
+<input type=hidden name=sid value=<%SID%>>
+<input type=hidden name=html value=>
+
+<table cellspacing=0 cellpadding=2 border=0 width=80%>
+<tr class=etb>
+<td colspan=2>
+<span class=navsbl>
+<input id="btnsend1" type=button value="<%send%>" onclick="DoSend();">
+<input type=button name=cancel onclick="document.location.href='/extman/cgi/overview.cgi?sid=<%SID%>';" value="<%cancel%>">
+</span>
+</td>
+</tr>
+
+<tr>
+	<td nowrap><%subject%></td><td colspan=2>
+	<input type=text id=subject name=subject size=70 value="<%SUBJECT%>">
+	</td>
+</tr>
+<tr>
+	<td><%recipient%></td>
+	<td valign="top">
+		<div style="float:left;"><textarea id=recipient name=recipient cols=15 rows=4><%RECIPIENT%></textarea></div>
+		<div style="float:top;">&nbsp;@&nbsp;
+		<select name=domain id=domain>
+	    <!-- BEGIN LOOP_DOMAIN -->
+	    <option><%DOMAIN%></option>
+	    <!-- END LOOP_DOMAIN -->
+	    </select>
+	    <script language="javascript">
+	    highlight_Sel('domain');
+	    </script>
+	    <input id=alldomain name=alldomain type=checkbox> <%alldomain%><br /><br />&nbsp;&nbsp;<%hint%></div>
+	</td>
+	<td>
+
+	</td>
+</tr>
+<tr><td colspan=2>
+
+<!-- RTF editor -->
+<textarea name=body style=width:100%;height:200;overflow:auto;display:none></textarea>
+<table class=rte border=0 cellspacing=0 cellpadding=0>
+<TR>
+	<TD bgcolor=#EFEFEF style="padding:5px 0px 5px 0px;border-top:1px solid #E1E1E1;">
+	<TABLE>
+		<tr>
+			<td id="tdAttach">
+			<div id=tdtAttach>
+			<%attach%> &nbsp;
+				<img src="/extman/default/images/attach.gif">
+				<input id="my_file_element" type="file" name="file_1">
+				<!-- Multifiles upload secion -->
+				<div id="files_list" style="font-size: 11px;padding-top: 10px; line-height: 140%"></div>
+					<script>
+					var multi_selector = new MultiSelector( document.getElementById( 'files_list' ), 10 );
+					multi_selector.addElement( document.getElementById( 'my_file_element' ) );
+					</script>
+				<!-- end of Multiflies upload -->
+			</div>
+			</td>
+		</tr>
+	</TABLE>
+	</TD>
+</TR>
+<TR>
+	<TD class=tdmain_in_editor>
+		<!-- INCLUDE 'editor.html' -->
+	</TD>
+</TR>
+<TR>
+	<TD>
+	<span class=navsbl>
+		<input id="btnsend2" type=button value="<%send%>" onclick="DoSend();">
+		<input type=button name=cancel onclick="document.location.href='/extman/cgi/overview.cgi?sid=<%SID%>';" value="<%cancel%>">
+	</span>
+	</TD>
+	</TR>
+</TABLE>
+
+<!-- XXX -->
+</td></tr>
+</table>
+</form>
+</td><td width="20px"></td></tr></table>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>

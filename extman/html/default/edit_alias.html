@@ -1,0 +1,85 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><!-- IF NEWADD --><%add_alias%><!-- ELSE NEWADD --><%meta_title%><!-- END NEWADD --></title>
+<link rel="stylesheet" href="/extman/default/default.css" type="text/css">
+<script type="text/javascript" src="/extman/default/manlib.js"></script>
+</head>
+<body>
+
+<script language="javascript">
+	var currentNav = 'nav_alias';
+</script>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<div id="maintit">
+	<div class="mts"><strong><!-- IF NEWADD --><%add_user%><!-- ELSE NEWADD --><%meta_title%><!-- END NEWADD --></strong>
+	<!-- UNLESS NEWADD --><span style="padding-left: 20px"><a href="/extman/cgi/overview.cgi?__mode=overview_alias&sid=<%SID%>&domain=<%DOMAIN%>&screen=overview_alias.html"><strong><%gohome%></strong></a></span><!-- END NEWADD -->
+	<!-- IF ERROR --><span class="error"><%ERROR%></span><!-- END ERROR --><!-- IF SUCCESS --><span class="success"><%SUCCESS%></span><!-- END SUCCESS --></div>
+	<div class="mbs"></div>
+</div>
+<table width="100%" cellpadding="2" cellspacing="0" align="center"><tr><td width="20px"></td><td style="border:1px solid #333;padding:10px;" align="center">
+<!-- IF HAVE_ALIAS -->
+<form name="edit_domain" method=post action="alias.cgi">
+<input type=hidden name=__mode value="save_alias">
+<input type=hidden name=sid value=<%SID%>>
+<input type=hidden name=screen value="edit_alias.html">
+<!-- IF NEWADD -->
+<input type=hidden name=newadd value="newadd">
+<!-- ELSE NEWADD -->
+<!-- on edit_alias mode, feed full alias address, like alias@bar.com -->
+<input type=hidden name=alias value="<%ALIAS%>">
+<!-- END NEWADD -->
+<table cellspacing=0 cellpadding=2 border=0 width=80% class=etb>
+</tr>
+	<td><%alias%></td>
+	<td><!-- IF NEWADD -->
+	    <input type=text name=alias size=15> @
+	    <select name=domain id=domain>
+	    <!-- BEGIN LOOP_DOMAIN -->
+	    <option><%DOMAIN%></option>
+	    <!-- END LOOP_DOMAIN -->
+    	    </select>
+    	    <script language="javascript">
+		    highlight_Sel('domain');
+	    </script>
+	    <!-- ELSE NEWADD -->
+	    <b><%ALIAS%></b>
+	    <!-- END NEWADD -->
+	</td>
+</tr>
+<tr>
+	<td><%goto%></td><td><textarea name=goto cols=40 rows=10><%GOTO%></textarea>
+		<div style="padding: 5px;font-weight: bold"><%hint%></div></td>
+</tr>
+<tr>
+	<td>&nbsp;</td><td><input name=active type=checkbox <!-- IF ACTIVE -->checked<!-- END ACTIVE-->><%active%></td>
+</tr>
+<tr class="etbbt">
+	<td>&nbsp;</td>
+	<td>
+		<input type=submit name=save value="<%save%>">
+		<input type=button name=cancel onclick="document.location.href='/extman/cgi/overview.cgi?sid=<%SID%>';" value="<%cancel%>">
+	</td>
+</tr>
+</table>
+</form>
+<!-- ELSE HAVE_ALIAS -->
+<!-- UNLESS ERROR -->
+<%no_such_alias%>
+<!-- END ERROR -->
+
+<!-- END HAVE_ALIAS -->
+</td><td width="20px"></td></tr></table>
+
+<!-- INCLUDE FOOTER.html -->
+
+</body>
+</html>
