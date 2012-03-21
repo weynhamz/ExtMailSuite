@@ -1,0 +1,21 @@
+<div class="h5px"></div>
+<div id="Tmenu">
+	<ul id=navmenu>
+		<li id=nav_home class=tl2><a href="folders.cgi?__mode=folders_list&sid=<%SID%>&screen=welcome.html"><%index%></a></li>
+		<li id=nav_mail class=tl2><a href="folders.cgi?__mode=messages_list&sid=<%SID%>&folder=Inbox"><%inbox%></a></li>
+		<li id=nav_compose class=tl2><a href="compose.cgi?sid=<%SID%>"><%compose%></a></li>
+		<li id=nav_abook class=tl2><a href="abook.cgi?__mode=abook_show&sid=<%SID%>"><%abook%></a></li>
+		<li id=nav_mbox class=tl2><a href="folders.cgi?__mode=folders_list&sid=<%SID%>&mbmgr=1" class=topnav><%manbox%></a></li>
+		<!-- IF NETDISK_ON --><li id=nav_ndisk class=tl2><a href="netdisk.cgi?__mode=list_dir&sid=<%SID%>"><%netdisk%></a></li><!-- END NETDISK_ON -->
+		<li id=nav_option class=tl2><a href="pref.cgi?__mode=pref_list&sid=<%SID%>" class=topnav><%options%></a></li>
+	</ul>
+</div>
+<script language=javascript>
+function HightLightNav(id)
+{
+	//alert(id);
+	$(id).className = "tl1";
+}
+HightLightNav(currentNav);
+</script>
+</div>

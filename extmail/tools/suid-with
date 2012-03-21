@@ -1,0 +1,141 @@
+#!/bin/sh
+exec ${PERL-perl} -Swx $0 ${1+"$@"}
+#!perl		  [perl will skip all lines in this file before this line]
+
+# Copyright (C) 1995, 2000, 2002 Noah S. Friedman
+# Author: Noah Friedman <friedman@splode.com>
+# Created: 1995-08-14
+#
+# Simplified by He zhiqiang <hzqbbc@hzqbbc.com>
+# Date: Sat 31 Dec 2005
+
+use Getopt::Long;
+use POSIX qw(setsid);
+use Symbol;
+use strict;
+
+(my $progname = $0) =~ s|.*/||;
+
+my $opt_egid;
+my $opt_euid;
+my $opt_gid;
+my $opt_uid;
+
+sub err
+{
+  my $fh = (ref ($_[0]) ? shift : *STDERR{IO});
+  print $fh join (": ", $progname, @_), "\n";
+  exit (1);
+}
+
+sub numberp
+{
+  defined $_[0] && $_[0] =~ m/^-?\d+$/o;
+}
+
+sub group2gid
+{
+  my $g = shift;
+  return $g if numberp ($g);
+  my $gid = getgrnam ($g);
+  return $gid if defined $gid && numberp ($gid);
+  err ($g, "no such group");
+}
+
+sub user2uid
+{
+  my $u = shift;
+  return $u if numberp ($u);
+  my $uid = getpwnam ($u);
+  return $uid if defined $uid && numberp ($uid);
+  err ($u, "no such user");
+}
+
+sub set_egid
+{
+  my $sgid = group2gid (shift);
+  my $egid = $) + 0;
+
+  $) = $sgid;
+  err ($sgid, "cannot set egid", $!) if ($) == $egid && $egid != $sgid);
+}
+
+sub set_gid
+{
+  my $sgid = group2gid (shift);
+  my $rgid = $( + 0;
+  my $egid = $) + 0;
+
+  $( = $sgid;
+  $) = $sgid;
+  err ($sgid, "cannot set rgid", $!) if ($( == $rgid && $rgid != $sgid);
+  err ($sgid, "cannot set egid", $!) if ($) == $egid && $egid != $sgid);
+}
+
+sub set_euid
+{
+  my $suid = user2uid (shift);
+  my $euid = $>;
+
+  $> = $suid;
+  err ($suid, "cannot set euid", $!) if ($> == $euid && $euid != $suid);
+}
+
+sub set_uid
+{
+  my $suid = user2uid (shift);
+  my $ruid = $<;
+  my $euid = $>;
+
+  $< = $suid;
+  $> = $suid;
+  err ($suid, "cannot set ruid", $!) if ($< == $ruid && $ruid != $suid);
+  err ($suid, "cannot set euid", $!) if ($> == $euid && $euid != $suid);
+}
+
+sub parse_options
+{
+  Getopt::Long::config (qw(bundling autoabbrev require_order));
+  my $succ = GetOptions
+    ("h|help",          sub { usage () },
+     "G|egid=s",        \$opt_egid,
+     "g|gid=s",         \$opt_gid,
+     "U|euid=s",        \$opt_euid,
+     "u|uid=s",         \$opt_uid,
+    );
+  usage () unless $succ;
+}
+
+sub usage
+{
+  print STDERR "$progname: @_\n\n" if @_;
+  print STDERR "Usage: $progname {options} [command {args...}]\n
+Options are:
+-h, --help            You're looking at it.
+
+-G, --egid      EGID  Set \`effective' group ID.
+-g, --gid       GID   Set both \`real' and \`effective' group ID.
+-U, --euid      EUID  Set \`effective' user ID.
+-u, --uid       UID   Set both \`real' and \`effective' user ID.
+
+\n";
+
+  exit (1);
+}
+
+sub main
+{
+  parse_options ();
+  usage () unless @ARGV;
+
+  set_gid      ($opt_gid)         if defined $opt_gid;
+  set_egid     ($opt_egid)        if defined $opt_egid;
+  set_uid      ($opt_uid)         if defined $opt_uid;
+  set_euid     ($opt_euid)        if defined $opt_euid;
+
+  my $runprog = $ARGV[0];
+  local $^W = 0; # avoid implicit warnings from exec
+  exec ($runprog @ARGV) || err (*STDERR, "exec", $runprog, $!);
+}
+
+main ();

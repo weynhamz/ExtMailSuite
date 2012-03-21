@@ -1,0 +1,579 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<LINK media=screen href="/extmail/default/css/text-overflow.css" type=text/css rel=stylesheet>
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/moz-text-overflow.js"></script>
+
+<script language=Javascript>
+<!-- IF MESSAGES_LIST -->
+var currentNav = 'nav_mail';
+<!-- ELSE MESSAGES_LIST -->
+var currentNav = 'nav_mbox';
+<!-- END MESSAGES_LIST -->
+function CA(form)
+{
+	for (var i=0;i<form.elements.length;i++)
+	{
+		var e = form.elements[i];
+		if ((e.name != 'SELECTALL') && (e.type=='checkbox'))
+		{
+			e.checked = form.SELECTALL.checked;
+			/*if(e.checked)
+				hL(e);
+			else
+				dL(e);*/
+			//alert(e.parentElement.parentElement.className);
+		}
+	}
+}
+
+function item_selected(f){
+	for (var i=0;i<f.elements.length;i++)
+	{
+		var e = f.elements[i];
+		if ((e.name != 'SELECTALL') && (e.type=='checkbox'))
+		{
+			if (e.checked){
+				//has_check=1;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+function deletemsg()
+{
+	var f=document.getElementById('msgslist');
+
+	if (item_selected(f) == false) {
+ 		alert('<%nomsg_selected%>');
+ 		return false;
+	}
+
+	<!-- IF HINT_PURGE -->
+	var msg = '<%cfm_purge%>';
+	<!-- ELSE HINT_PURGE -->
+	var msg = '<%cfm_delete%>';
+	<!-- END HINT_PURGE -->
+
+	if(confirm(msg))
+	{
+		$("move").value="";
+		$("delete").value=1;
+		$("msgslist").submit();
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+function movemsg(sel)
+{
+	var f=document.getElementById('msgslist');
+
+	if (item_selected(f) == false) {
+		alert('<%nomsg_selected%>');
+		return false;
+	}
+
+	$("distfolder").value = $(sel).value;
+	$("move").value=1;
+	$("delete").value="";
+	$("msgslist").submit();
+	return true;
+}
+
+function msgaction()
+{
+	var sel=document.getElementById('msgflag');
+	var f=document.getElementById('msgslist');
+
+	if (item_selected(f) == false) {
+		alert('<%nomsg_selected%>');
+		return false;
+	}
+
+	for (var i=0; i<sel.options.length; i++) {
+		if (sel.options[i].selected != true)
+			continue;
+		if (sel.options[i].value == 'Unseen' || sel.options[i].value == 'Seen') {
+			$("setmsg").value=1;
+			$("msgslist").submit();
+			return true;
+		}
+		if (sel.options[i].value == 'Spam' || sel.options[i].value == 'Nonspam') {
+			$('report').value=1;
+			$('msgslist').submit();
+			return true;
+		}
+	}
+	return false;
+}
+
+function readmail(pos)
+{
+	var varname = 'MOVE-'+pos;
+	var msgid=$(varname).value;
+	document.location.href="readmsg.cgi?__mode=readmsg_sum&sid=<%SID%>&folder=<%FOLDER%>&msgid="+msgid+"&pos="+pos;
+}
+
+function editmail(file)
+{
+	document.location.href="compose.cgi?__mode=edit_drafts&sid=<%SID%>&folder=<%FOLDER%>&draft="+file;
+}
+
+
+function do_mkdir()
+{
+	$("mkdir").value="1";
+	$("rmdir").value="";
+	$("rename").value="";
+	$("foldername").value=$("fname").value;
+	$("mgrform").submit();
+}
+
+function do_delete(old)
+{
+	if (confirm("<%cfm_delete_mbox%>")) {
+		$("mkdir").value="";
+		$("rmdir").value="1";
+		$("oldfolder").value=old;
+		$("rename").value="";
+		$("mgrform").submit();
+	}
+}
+
+function do_rename(old)
+{
+	var fname = prompt("<%rename_input%>",old);
+	if ((fname==null)||(fname==old))
+	{
+	}
+	else
+	{
+		$("mkdir").value="";
+		$("rmdir").value="";
+		$("rename").value="1";
+		$("oldfolder").value=old;
+		$("foldername").value=fname;
+		$("mgrform").submit();
+	}
+}
+
+function do_purge(old)
+{
+	if (confirm("<%cfm_purge_mbox%>")) {
+		$("mkdir").value="";
+		$("rmdir").value="";
+		$("rename").value="";
+		$("purge").value="1";
+		$("foldername").value=old;
+		$("mgrform").submit();
+	}
+}
+
+function showerror(err)
+{
+	$("spanresult").innerHTML = "<font color=#ff0000>"+err+"</font>";
+}
+</script>
+
+</HEAD>
+
+<BODY>
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main">
+<TABLE width=100% cellpadding=0 cellspacing=0>
+<TR>
+	<TD width=170px valign=top id="MainLeft">
+<!-- INCLUDE 'MAIN_LEFT.html' -->
+	</TD>
+	<TD class=td1px></TD>
+	<TD class=tdmain valign=top>
+<!-- IF MESSAGES_LIST -->
+	<script language="javascript">
+		setTitle('<%FOLDER2_NAME%> - <%USER%>');
+	</script>
+
+	<form id="msgslist" name=msgslist method=post action='folders.cgi'>
+		<input type=hidden name=distfolder id=distfolder value="">
+		<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit>
+			<span class="navstl" style="padding-left: 10px">
+				<input type=button name=btn_delete value="<%delete%>" onclick="return deletemsg()">
+				<input type=button name=btn_move value="<%move%>" onclick="movemsg('distfolder1')">
+				<select name=distfolder1 id=distfolder1>
+					<!-- BEGIN LOOP_FOLDERS -->
+					<option value="<%DISTFOLDER%>"><%DISTNAME%></option>
+					<!-- END LOOP_FOLDERS -->
+				</select>
+				<input type=button name=btn_flag value="<%msgaction%>" onclick="msgaction()">
+				<select name=msgflag id=msgflag>
+					<!-- IF CAN_REPORT_SPAM -->
+					<!-- IF REPORT_AS_SPAM -->
+					<option value="Spam"><%report_as_spam%></option>
+					<!-- END REPORT_AS_SPAM -->
+					<!-- IF REPORT_AS_NONSPAM -->
+					<option value="Nonspam"><%report_as_nonspam%></option>
+					<!-- END REPORT_AS_NONSPAM -->
+					<!-- END CAN_REPORT_SPAM -->
+					<option value="Seen"><%seen%></option>
+					<option value="Unseen"><%unseen%></option>
+				</select>
+
+				&nbsp;<b><%FOLDER2_NAME%></b>
+			</span>
+			<span class="navstr">
+			<!-- IF HAVE_FIRST -->
+				<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%FIRST%>">
+				<img src="/extmail/default/images/firstpg.gif" alt=<%first%>>
+				<!-- ELSE HAVE_FIRST -->
+				<img src="/extmail/default/images/firstpg.d.gif" alt=<%first%>>
+				<!-- END HAVE_FIRST -->
+				<!-- IF HAVE_FIRST -->
+				</a>
+				<!-- END HAVE_FIRST -->
+				&nbsp;
+				<!-- IF HAVE_PREV -->
+				<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%PREV%>">
+				<img src="/extmail/default/images/prevpg.gif" alt=<%prev%>>
+				<!-- ELSE HAVE_PREV -->
+				<img src="/extmail/default/images/prevpg.d.gif" alt=<%prev%>>
+				<!-- END HAVE_PREV -->
+				<!-- IF HAVE_PREV -->
+				</a>
+				<!-- END HAVE_PREV-->
+				&nbsp;
+				<!-- IF HAVE_NEXT -->
+				<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%NEXT%>">
+				<img src="/extmail/default/images/nextpg.gif" alt=<%next%>>
+				<!-- ELSE HAVE_NEXT -->
+				<img src="/extmail/default/images/nextpg.d.gif" alt=<%next%>>
+				<!-- END HAVE_NEXT -->
+				<!-- IF HAVE_NEXT -->
+				</a>
+				<!-- END HAVE_NEXT -->
+				&nbsp;
+				<!-- IF HAVE_LAST -->
+				<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%LAST%>">
+				<img src="/extmail/default/images/lastpg.gif" alt=<%last%>>
+				<!-- ELSE HAVE_LAST -->
+				<img src="/extmail/default/images/lastpg.d.gif" alt=<%last%>>
+				<!-- END HAVE_LAST -->
+				<!-- IF HAVE_LAST -->
+				</a>
+				<!-- END HAVE_LAST -->
+				<%page_index%>
+				<select name=pageindex onChange="document.location.href='?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page='+this[this.selectedIndex].value;">
+				<!-- BEGIN LOOP_PAGES -->
+				<option value="<%PAGE_VALUE%>" <!-- IF IS_SELECTED -->SELECTED<!-- END IS_SELECTED-->><%PAGE_TEXT%></option>
+				<!-- END LOOP_PAGES -->
+				</select>
+			</span>
+			</TD>
+		</TR>
+		<TR>
+			<TD style="tdmain_in_con">
+
+				<!-- IF HAVEMSGLIST -->
+				<table cellpadding="0" cellspacing="0" style="background:#fff;font-size:12px;" class="text-overflow">
+				<col style="width: 24px;">
+				<col style="width: 20px;">
+				<col style="width: 27ex;">
+				<col style="width: 2ex;">
+				<col>
+				<col style="width: 14ex;">
+				<col style="width: 10px;">
+				<col style="width: 14ex;">
+				<tbody>
+				<tr class="MLTR_HEAD">
+					<td  align="right"><input type="checkbox" name="SELECTALL" onclick="CA(this.form)" ></td>
+					<td>&nbsp;</td>
+					<td>
+					<!-- IF flag_by_from -->
+					<!-- IF flag_by_from_rev -->
+					<img src="/extmail/default/images/sort_asc.gif" border=0>
+					<!-- ELSE flag_by_from_rev -->
+					<img src="/extmail/default/images/sort_desc.gif" border=0>
+					<!-- END flag_by_from_rev -->
+					<!-- END flag_by_from -->
+					<!-- IF flag_by_from_rev -->
+					<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%CURPAGE%>&resort=by_from">
+					<!-- ELSE flag_by_from_rev -->
+					<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%CURPAGE%>&resort=by_from_rev">
+					<!-- END flag_by_from_rev -->
+					<!-- IF REV_FROM --><%nav_to%><!-- ELSE REV_FROM --><%nav_from%><!-- END REV_FROM --></a>
+					</td>
+					<td> &nbsp; </td>
+					<td>
+						<!-- IF flag_by_subject -->
+						<!-- IF flag_by_subject_rev -->
+						<img src="/extmail/default/images/sort_asc.gif" border=0>
+						<!-- ELSE flag_by_subject_rev -->
+						<img src="/extmail/default/images/sort_desc.gif" border=0>
+						<!-- END flag_by_subject_rev -->
+						<!-- END flag_by_subject -->
+						<!-- IF flag_by_subject_rev -->
+						<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%CURPAGE%>&resort=by_subject">
+						<!-- ELSE flag_by_subject_rev -->
+						<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%CURPAGE%>&resort=by_subject_rev">
+						<!-- END flag_by_subject_rev --><%nav_subject%></a>
+					</td>
+					<td>
+						<!-- IF flag_by_size -->
+						<!-- IF flag_by_size_rev -->
+						<img src="/extmail/default/images/sort_asc.gif" border=0>
+						<!-- ELSE flag_by_size_rev -->
+						<img src="/extmail/default/images/sort_desc.gif" border=0>
+						<!-- END flag_by_size_rev -->
+						<!-- END flag_by_size -->
+						<!-- IF flag_by_size_rev -->
+						<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%CURPAGE%>&resort=by_size">
+						<!-- ELSE flag_by_size_rev -->
+						<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%CURPAGE%>&resort=by_size_rev">
+						<!-- END flag_by_size_rev --><%nav_size%></a>
+					</td>
+					<td> &nbsp; </td>
+					<td>
+						<!-- IF flag_by_date -->
+						<!-- IF flag_by_date_rev -->
+						<img src="/extmail/default/images/sort_asc.gif" border=0>
+						<!-- ELSE flag_by_date_rev -->
+						<img src="/extmail/default/images/sort_desc.gif" border=0>
+						<!-- END flag_by_date_rev -->
+						<!-- END flag_by_date -->
+						<!-- IF flag_by_date_rev -->
+						<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%CURPAGE%>&resort=by_date">
+						<!-- ELSE flag_by_date_rev -->
+						<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%CURPAGE%>&resort=by_date_rev">
+						<!-- END flag_by_date_rev --><%nav_date%></a>
+					</td>
+				</tr>
+				<!-- BEGIN LOOP_SUBLIST -->
+					<tr bgcolor="#ffffff" class="<!-- IF FNEW -->MLTR_N<!-- ELSE FNEW -->MLTR<!-- END FNEW -->">
+						<td align="right" style="padding-left:5px;"> <input type=checkbox name=MOVE-<%POS%> id=MOVE-<%POS%> value="<%MSGID%>"> </td>
+						<td class="sc t"><!-- IF FATT --><img src="/extmail/default/images/attach.gif"><!-- ELSE FATT -->
+&nbsp;<!-- END FATT --></td>
+						<td><div><!-- IF FROMCONTACT --><img src="/extmail/default/images/contact.gif" align=absmiddle><!-- END FROMCONTACT -->&nbsp;<span title="<%FROM%>"><%FROM%></span></div></td>
+						<td> &nbsp; </td>
+						<td <!-- IF FOLDER_DRAFTS -->onclick="editmail('<%FILE%>');"<!-- ELSE FOLDER_DRAFTS -->onclick="readmail('<%POS%>');"<!-- END FOLDER_DRAFTS --> style="cursor:pointer;">
+<div><span class=f12 title="<%SUBJECT%>"><%SUBJECT%></span></div>
+</td>
+						<td><%SIZE%></td>
+						<td> &nbsp; </td>
+						<td nowrap><span title="Date:<%DATE%>  Size:<%SIZE%>" style="cursor:default;"><%SHORTDATE%></span></td>
+					</tr>
+					<!-- END LOOP_SUBLIST -->
+				</tbody>
+			</table>
+		<!-- ELSE HAVEMSGLIST -->
+			<table cellpadding=0px cellspacing=0px width=100%>
+			<col style="width: 1000ex;">
+			<tr><td height="150px" align=center width=100% bgcolor="#ffffff"><b><%nomails%></b></td></tr>
+			</table>
+		<!-- END HAVEMSGLIST -->
+
+			</TD>
+		</TR>
+		<!-- IF HAVEMSGLIST -->
+		<TR>
+			<TD height=28px>
+			<span class=navsbr>
+				<!-- IF HAVE_FIRST -->
+				<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%FIRST%>">
+				<img src="/extmail/default/images/firstpg.gif" alt=<%first%>>
+				<!-- ELSE HAVE_FIRST -->
+				<img src="/extmail/default/images/firstpg.d.gif" alt=<%first%>>
+				<!-- END HAVE_FIRST -->
+				<!-- IF HAVE_FIRST -->
+				</a>
+				<!-- END HAVE_FIRST -->
+				&nbsp;
+				<!-- IF HAVE_PREV -->
+				<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%PREV%>">
+				<img src="/extmail/default/images/prevpg.gif" alt=<%prev%>>
+				<!-- ELSE HAVE_PREV -->
+				<img src="/extmail/default/images/prevpg.d.gif" alt=<%prev%>>
+				<!-- END HAVE_PREV -->
+				<!-- IF HAVE_PREV -->
+				</a>
+				<!-- END HAVE_PREV-->
+				&nbsp;
+				<!-- IF HAVE_NEXT -->
+				<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%NEXT%>">
+				<img src="/extmail/default/images/nextpg.gif" alt=<%next%>>
+				<!-- ELSE HAVE_NEXT -->
+				<img src="/extmail/default/images/nextpg.d.gif" alt=<%next%>>
+				<!-- END HAVE_NEXT -->
+				<!-- IF HAVE_NEXT -->
+				</a>
+				<!-- END HAVE_NEXT -->
+				&nbsp;
+				<!-- IF HAVE_LAST -->
+				<a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page=<%LAST%>">
+				<img src="/extmail/default/images/lastpg.gif" alt=<%last%>>
+				<!-- ELSE HAVE_LAST -->
+				<img src="/extmail/default/images/lastpg.d.gif" alt=<%last%>>
+				<!-- END HAVE_LAST -->
+				<!-- IF HAVE_LAST -->
+				</a>
+				<!-- END HAVE_LAST -->
+				<%page_index%>
+				<select name=pageindex onChange="document.location.href='?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER2%>&page='+this[this.selectedIndex].value;">
+				<!-- BEGIN LOOP_PAGES -->
+				<option value="<%PAGE_VALUE%>" <!-- IF IS_SELECTED -->SELECTED<!-- END IS_SELECTED-->><%PAGE_TEXT%></option>
+				<!-- END LOOP_PAGES -->
+				</select>
+				</span>
+				<span class=navsbl>
+					<input type=button name=btn_delete value="<%delete%>" onclick="return deletemsg()">
+					<input type=button name=btn_move value="<%move%>" onclick="movemsg('distfolder2')">
+					<select name=distfolder2 id=distfolder2>
+						<!-- BEGIN LOOP_FOLDERS -->
+						<option value="<%DISTFOLDER%>"><%DISTNAME%></option>
+						<!-- END LOOP_FOLDERS -->
+					</select>
+
+				<input type=hidden id="move" name="move" value="">
+				<input type=hidden id="setmsg" name="setmsg" value="">
+				<input type=hidden id="report" name="report" value="">
+				<input type=hidden id="delete" name="delete" value="">
+				<input type=hidden name=__mode value="messages_mgr">
+				<input type=hidden name=sid value="<%SID%>">
+				<input type=hidden name=folder value="<%R_FOLDER%>">
+				<input type=hidden name=page value="<%CURPAGE%>">
+				</span>
+			</TD>
+		</TR>
+		<!-- END HAVEMSGLIST -->
+		</TABLE>
+		</form>
+<!-- ELSE MESSAGES_LIST -->
+
+<!-- IF FOLDERS_LIST -->
+<script language="javascript">
+	setTitle('<%manbox%>');
+</script>
+
+<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit>
+			<SPAN style="float:left;left:0px;"><span class="pl10 b"><%manbox%></span></span>
+			<SPAN id=spanresult style="float:right;padding-right:10px;"></SPAN>
+			</TD>
+		</TR>
+		<TR>
+			<TD class=tdmain_in_con>
+	<table cellpadding=0px cellspacing=0px style="background:#fff;width:100%;font-size:12px;">
+		<col style="width: 10px;">
+		<col>
+		<col>
+		<col style="width: 50px;">
+		<col style="width: 50px;">
+		<col style="width: 50px;">
+		<col style="width: 80px;">
+		<tbody>
+			<tr class="MLTR_HEAD">
+				<td>&nbsp;</td>
+				<td><%list_folder%></td>
+				<td>&nbsp;</td>
+				<td><%list_new%></td>
+				<td><%list_read%></td>
+				<td><%list_size%></td>
+				<td><%operation%></td>
+			</tr>
+		<!-- BEGIN LOOP_ALLFOLDERS_LIST -->
+	<tr class="MLTR">
+	<td>&nbsp;</td>
+	  <td style="overflow:hidden;">
+	  <a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER%>"><img src="/extmail/default/images/<!-- IF CUSTOM_ICON --><%FOLDER%><!-- ELSE CUSTOM_ICON -->folders<!-- END CUSTOM_ICON -->.gif" border=0 align=absmiddle></a>
+	  <a href="?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER%>"><%FOLDER_NAME%></a></td>
+	  <td>&nbsp;</td>
+	<!-- IF NEW -->
+	  <td style="color: #FF0000">
+	<!-- ELSE NEW -->
+	  <td>
+	<!-- END NEW -->
+	  <%NEW%></td>
+	  <td><%SEEN%></td>
+	  <td><%SIZE%></td>
+	  <td>&nbsp;<!-- UNLESS CUSTOM_ICON -->
+	  <a href="javascript:do_rename('<%FOLDER_NAME%>');">
+		  <img alt="<%rename%>" src="/extmail/default/images/edit.gif"></a>&nbsp;
+	  <a href="javascript:do_delete('<%FOLDER_NAME%>');">
+		  <img alt="<%delete%>" src="/extmail/default/images/delete.gif"></a>&nbsp;
+	  <!-- END CUSTOM_ICON -->
+	  <!-- IF CAN_PURGE -->
+	  <!-- IF CUSTOM_ICON -->
+	  <a href="javascript:do_purge('<%FOLDER%>');">
+	  <!-- ELSE CUSTOM_ICON -->
+	  <a href="javascript:do_purge('<%FOLDER_NAME%>');">
+	  <!-- END CUSTOM_ICON -->
+		  <img alt="<%purge%>" src="/extmail/default/images/purge.gif"></a>
+	  <!-- END CAN_PURGE -->
+	  </td>
+	</tr>
+	<!-- END LOOP_ALLFOLDERS_LIST -->
+	<form name="mgrform" id="mgrform" action="folders.cgi" target="proframe">
+	<input type=hidden id="__mode" name=__mode value=folders_mgr>
+	<input type=hidden id="sid" name=sid value="<%SID%>">
+	<input type=hidden id="rename" name=rename value="">
+	<input type=hidden id="oldfolder" name=oldfolder value="">
+	<input type=hidden id="foldername" name=foldername value="">
+	<input type=hidden id="screen" name=screen value="foldermgr.html">
+	<input type=hidden id="mkdir" name=mkdir value="">
+	<input type=hidden id="rmdir" name=rmdir value="">
+	<input type=hidden id="purge" name="purge" value="">
+
+	<tr class="MLTR_N"><td>&nbsp;</td><td><b><%list_total%></b></td><td>&nbsp;</td>
+	<td><%MBX_CUR_QNEW%></td><td><%MBX_CUR_QSEEN%></td><td><%MBX_CUR_QSIZE%></td><td>&nbsp;</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td style="padding:10px;"><%createnewfolder%>&nbsp;&nbsp;
+			<input type="text" id=fname name="fname" width="130px" maxlength=30>&nbsp;&nbsp;
+			<input type="button" style="width:60px;" onclick="do_mkdir();" value="<%create%>">
+		</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+	</form>
+	</table>
+	</TD>
+	</TR>
+</TABLE>
+<!-- END FOLDERS_LIST -->
+<!-- END MESSAGES_LIST -->
+
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+<iframe id="proframe" name="proframe" style="border:0px;width:0px;height:0px;"></iframe>
+</BODY>
+</HTML>

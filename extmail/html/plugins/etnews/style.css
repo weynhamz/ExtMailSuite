@@ -1,0 +1,15 @@
+#etnews_container {
+    background-color: #F9FBFC;
+    border: 0px solid #C3CED9;
+    font-size: 12px;
+    padding: 5 12 5 18;
+}
+
+#etnews_hint {
+    padding: 5px;
+    line-height: 1.4em;
+}
+
+#etnews_div {
+    display: none;
+}

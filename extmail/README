@@ -1,0 +1,101 @@
+ExtMail - A high performance webmail system
+===========================================
+
+It was written in pure perl, only support Maildir++(or Maildir), we try to
+optimize the design and archtecture, make it scalable well and run faster
+than common php/perl webmail system.
+
+Feature:
+========
+
+  o Fully support Maildir++, reference URL:
+    http://www.inter7.com/courierimap/README.maildirquota.html
+
+  o Index messages with cache. Speed up most operation
+
+  o Handle big mailbox( over 1GB or 10k+ messages) in short time
+
+  o Fast operation on large file (100M+) via optimize I/O library
+
+  o Multi-language and template support, easy customization
+
+  o Fully UTF-8 and multi-charset conversion support, eg CJK.
+
+  o Small code size and tidy, use perl OO design
+
+  o Small memory and cpu footprint, suitable for ISP
+
+  o IMAP4v1 modified UTF-7 folder and legacy folder support
+
+  o Ajax composing, multi-attach upload and tiny RTF editor
+
+  o Web based spam messages reporting, give admin a shortcut
+
+Offical Sites
+=============
+
+  http://www.extmail.org
+
+  o Community of extmail - http://www.extmail.org/forum/
+
+  o Development Blog - http://blog.extmail.org/
+
+  o Download Source - http://www.extmail.org/download/
+
+Prerequisites:
+==============
+
+  perl 5.006 or above, 5.008 is recommended
+  Encode (2.0 or higher) or Text::Iconv
+  Module DB_File (already include in perl)
+  Module Symbol (already include in perl)
+  Module Fcntl (already include in perl)
+
+  A working web server with CGI support, apache is recommended
+
+  using tools/pkg_stats.sh to check which module required is not present:
+  # cd /path/to/extmail-source
+  # . ./tools/pkg_stats.sh
+
+Optional modules:
+=================
+
+  Net::LDAP - need this if ldap authentication activated
+  DBI - need this if mysql authentication activated
+  Benchmark - need this if developer want debug information
+
+Recommand software
+==================
+
+For reducing effort, we highly recommand that use pre-complied software,
+such as RPM or BSD pkgs, including perl, apache, and mysql or ldap etc..
+
+Linux - RPM/deb is prefer
+FreeBSD - pkg is prefer
+
+Directory
+=========
+
+  html  - the template directory, every theme should have a sub directory
+  cgi   - the cgi scripts directory
+  libs  - the extmail lib and related packages
+  lang  - I18n locale directory, translator may want to look at it :)
+  tools - include session cleanup and some useful small tools
+
+INSTALL
+=======
+
+See INSTALL in the latest distribution
+
+FastCGI Support
+===============
+
+Since 0.23-20060104 extmail ship with FastCGI support, please refer to the
+README.fcgi to get help in detail
+
+Drawbacks:
+==========
+
+  o not support mbox/mbx or imap/pop3, but why mb*/pop3/imap?
+
+  o Too simple, but complex make things mass and slow, why complex?

@@ -1,0 +1,1532 @@
+1.2
+
+Sun 15 Nov 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Change x.y.z version defination to x.y
+	* Fix parsing bug in Session.pm to support IPV6 address
+	+ Add html redirect code to Ext::App::redirect to support cgid
+	  , which is a new designed high performance CGI server.
+	+ Add '-' support in abook_edit.html
+	* Move signature from compose body bottom to the head
+	+ Add SYS_IP_SECURITY_ON to webmail.cf.default, let admin can
+	  enable or disable the default ipsecurity login action.
+
+1.1.1
+
+Sat  6 Nov 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix regexp matching bug under FCGI env, which exist for
+	  a long time, since 1.1.1 we got solution!
+	* avoid $1-$N reference without checking matching result,
+	  this will cause unexpected result. check the url:
+	  http://www.extmail.org/forum/viewthread.php?tid=10542
+	* Fix bug in Ext/App/Message.pm that can't handle imap utf7
+	  eg: &X1JoYw
+	+ Redesign dispatch.fcgi, the FCGI server for extmail system.
+	  using new process control technology to auto adapt requests
+	  just like Apache. But this new version is very experimental
+	  use it with careful. Please read dispatch.fcgi builtin help.
+	* Update dispatch-init, add status flag
+	+ Fix dispatch.fcgi to support IBM AIX, working under 5.3 TL10
+	* Fix bad javascript UTF8 escape bug, add UTF8.inc js functions
+	+ Add experimental pushmail/SMS gateway code via MailFilter
+	+ Add tools/mail2sms as a gateway between MDA and provider,
+	  this programe is only a demo script, you should write your
+	  own script to connect to Pushmail/SMS provider.
+	* Change sort2name() calling to Ext::Utils::sort2name, later
+	  we will change function inherit method, which may fix FCGI
+	  problem complaining function call not found.
+	* Fix bad cookie expire value bug, thanks: charley
+	+ Add spamassassin spam report code, which contributed by stvictor
+	+ Add batch messages reporting function
+	* Fix a bug in spam_report.pl that can't handle multiple messages
+	* Update README.filter file
+	* Update lists.inc, remove most of asCh, just left ".-_+@"
+	* Fix mailfilter delete bug, which will cause MDA fail if only
+	  delete action selected.
+	+ Add auto domain replace javascript code to index.html
+	+ Add browser title auto filling javascript code, show title
+	  on different page, like Gmail :)
+	+ Update Mailfilter, add -d '$HOME/Maildir/autoreply.db' to
+	  enable mailbot programe send autoreply only once every day
+	  for every sender.
+	+ Add function for adding sender to blacklist, whitelist
+	* Remove unnecessary images and files
+
+1.1.0
+
+Sun 3 May 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in MIME that can't decode hz-gb-2312 in some case.
+	* Fix bug in rfc822_addr_parse that missing '+' identification
+	* Fix bug in Ext::App::error() that can't handle "'", which
+	  will corrupt JSERR template var and browser will complain
+	* Locale translation update: from (zh_CN) '登陆' to '登录',
+	  from (zh_TW) '登陸' to '登錄', thanks: librago
+
+1.0.9
+
+Thu 2 Apr 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Begin 1.0.9 - will do a lot of improvement
+	* Merge search module from commercial version
+	* Fix bug in search that can't correctly delete/move messages
+	* Fix abnormal setting messages status bug
+	* Add SYS_HTTP_CACHE flag to enable (set 1) or disable (set 0)
+	  http cache behavior, thanks: wdy <delphiss@foxmail.com>
+	* Fix a bug in del_search_bmsgs_db() that will return corrupt
+	  data, if there is no mails in all folders
+	* Abandon old Ext::CGI module and use perl buildin CGI module,
+	  due to low performance under FCGI envirement
+	* Add SYS_UPLOAD_TMPDIR to setup temp directory for uploading
+	* Fix a lot of bugs in new CGI.pm, can specify upload temp dir
+	* Fix CGI::cgi() bad return on perl LIST context
+	* Fix bug in set_bmsgs_delete() that failed to write correct
+	  maildirsize info, the bug exists in 1.0.7/1.0.8 :(
+	* Add switch to PHPRPC plugin chkupdate to support enable or
+	  disable service, update version checking algorithm
+	* Fix bug in group listing page
+	* Change dispatch-init startup parameter, default max req set
+	  to 15 for avoiding memory leak
+	* Remove libs/MIME lib because the base64/qb code is too old
+	* Load Encode::HanExtra if available to support GB18030 or other
+	  extra sets of Chinese encodings
+	* Fix broken delete bug in Ext::App::Message->delete()
+	* Add experimental spam report capability, currently it's very
+	  simple module, only call spam_report.pl to run spam tranning.
+	  Support dspam or Spamassassin, but wait for fix!
+	* Add SYS_SPAM_REPORT_ON and SYS_SPAM_REPORT_TYPE to webmail.cf
+	* Add X-DSPAM-Result tag support in MailFilter
+	* Fix delete msg bug in Ext::App::Search if searching the Trash
+	  folder, thanks: youxiu <578252940@qq.com>
+	* Fix bug in spam_report.pl and Message.pm, currently we only
+	  test Dspam support, SpamAssassin is wait for developmenet
+
+1.0.8
+
+Mon 9 Mar 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix delete bug in Message.pm, thanks: libran (Forum ID)
+	* Fix bug that incompatible with Maildir spec, thanks: gaosheng_guo
+	  rewrite regexp in maildir_find()
+	* Update tools/decode, remove absolute lib path, thanks: libran
+	* Fix bug in decode_it() to support incompatible base64 encoding
+	  messages, for those line sizes not in multiples of 4 will cause
+	  base64 decode corruption, thanks a lot to pen10 (Forum ID)
+	* Fix bug in get_parts() return NULL body content, thanks: pen10
+	* Rewrite date display code for message reading
+	* Fix delete bug in Message.pm that can't delete message while
+	  purge flag is set, thanks: sailing123
+	* Change all outgoing html/text body encoding from 8bit to base64
+	* Support email like "Bob, yang" <aa@bb.com> , which name part
+	  has comma(s), via dirty address pickup regexp, thanks: wendyzh
+	* Fix notification button display button, thanks: yyk915
+	* Fix broken msgid=0 error while import attachment from mail to
+	  netdisk, thanks: sailing123
+	* Fix duplicate base64 encoding for 8bit content.
+
+1.0.7
+
+Thu 6 Mar 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix mistyping bug in README.fcgi, thanks: liushaobo, wwmhero
+	* Upgrade Maildir implemention, add msgid support, this feature
+	  will avoid deleting or moving wrong message file.
+	* Add -host option to dispatch.fcgi, thanks: fengyong
+	* Fix warn bug in libs/Ext/GD.pm
+	* Fix warn bug in libs/Ext/Utils.pm
+	* Fix globabook.html bug that add a stupid "ON" on composing
+	* Fix PPUniDetector::detect "Malformed UTF-8 character" error in
+	  some case, thanks: pen10
+	* Fix bug in Message::init() that missing MSGID initialization
+	* Add notification confirm feature, like Outlook does
+	* Add Mark message as seen/unseen feature
+
+1.0.6
+
+Thu 5 Mar 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	* New version control release, odd number is for development or
+	  beta, even number is bug fix and stable.
+
+1.0.5
+
+Sun 21 Sep 2008 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add rfc822_sanity() to compose.html, which will remove invalid
+	  characters from email field, this will make MTA very happy
+	* Imporve replyall function, similar method to gmail
+	* Add experimental inline img support in Message.pm
+	* Fix a weird bug in hdr_fmt_list(), s/\n\s+/ / => s/\n[\ \t]+/ /
+	* Add experimental css to do auto wrap on readmsg.html, this
+	  new feature is very useful to display a long line or a lot of
+	  images.
+	* Fix bug in decode_words* functions, this bug will cause long
+	  subject or header string corrupt, thanks commercial customer czg
+	* Add meta_title to %lang_compose
+	* Fix bug in Compose.pm that select a bad file descriptor
+	* Fix a secure path bug in Maildir.pm, need untaint()
+	* Fix a regexp bug (missing /i) in hdr_fmt_hash(), thanks czg
+	* Add a temporary solution to handle \r\n\r\n and \n\n spliter
+	  in Ext::MIME, thanks commercial customer czg's report
+	* Fix js bug while doing notnull compore in fm_chk(), add replace()
+	  to remove space
+	* Fix a bug in hdr_fmt_list splition, the line spliter should set
+	  to \r*\n instead of \n, thanks czg's report
+	* Do some html and css cleanup, add delete/move message toolbar
+	  on the top of message list, make it easier to use.
+	* Fix a stupid bug in MySQL.pm that will update all user's question
+	  and answer to the same, thanks czg
+	* Fix url attack on CGI.pm, Maildir.pm, Compose.pm, Folders.pm
+	* update i18n translation
+	* Optimize htmlsanity() to remove inline javascript code in mail
+	  body, code from openwebmail
+	* Improve SQL injection detect and defence capability, add
+	  strsanity() to remove invalid character(s)
+	* Redesign CGI upload procedure, old design will case webmail
+	  complain that can not open attach file if we upload files and
+	  refresh pages at the same time. Thanks commercial customer czg
+	* Update tools/cleansid.pl to support new CGI upload design
+	* Add support to replace ';' '，' ；' with ','
+	* Fix javascript bug in welcome.html frame display code
+	* Cleanup Fileman.pm, resort file/directory list
+	* Add msgid message file name to message operation code
+	* Rewrite RFC822.pm rfc822_encode_str(), since 1.0.5 it can
+	  correctly break long CJK string into chunk(s) without trouble
+	* Fix builtin Base64(V=2.10) encode/decode long line bug, we
+	  will remove this version Base64 in the future
+	* Fix compose.html js bug, which will case Firefox refuse to
+	  work if there is null recipient to/cc/bcc
+
+1.0.5b1
+
+Sun 6 Apr 2008 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix folders.html translation and javascript bugs
+	* Fix some i18n translation bug
+	* Improve filtering capability - since 1.0.5 via extmail filtering
+	  rules configuration, maildrop can filter out CJK and other 8bit
+	  characters via external decoder.
+	* Update Extmail Filter from 1.1 to 1.2, Ext::MailFilter
+	* Add README.filter to guide user how to configure
+	* Remove ldap.pl from tools/
+	* Fix a stupid eval bug in Lang.pm
+	* Add password recovery question/answer modification feature to
+	  personal preference setting
+	* Do some html template CRLF cleanup, remove win32 \r :-)
+	* Update Auth/*.pm to support question/answer modification
+	* Add "Status: 301 Moved Permanantly" to redirect(), this will
+	  fix redirect problem with nginx web server.
+	* Update README.fcgi
+	* Upgrade sendmail() method in Compose.pm from calling command
+	  line /usr/sbin/sendmail to Net::SMTP, which make it easier
+	  to do user restrictions
+	* Fix calculation bug in Storage/Fileman.pm fget_curquota(), thanks:
+	  linus2k <linus.wei@gmail.com>
+	* Fix dead weather rpc servers, all 3 rpc-srv*.extmail.net is up
+	  and function properly, add dns view now. sorry everybody :-(
+	* Improve filtering rules, add experimental rule that will try to
+	  avoid mail looping, eg: forward or autoreply
+	* Add "xxx-xx@" style mail address support to abook, but still
+	  wait for fix.
+	* Add global abook to auto complete list while composing.
+
+1.0.4
+
+Sun 24 Feb 2008 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug that can't login extman via login tab, missing a
+	  hidden form field :)
+	* Add more conversation choice to preference setting: raykingecs
+	* POP3 preference code/pref_pop3.html and i18n cleanup
+	* Add enable/disable checkbox to whitelist and blacklist setting
+	* Add tablet layout support to options, cooler than before
+	* Fix some style bug for tablet support to options, but still
+	  wait for new design, mixing table and div is a nightmare
+	* Add option for mail deletion mode:
+	  purge  - will be completely remove from disk
+	  delete - just move messages to Trash box
+	* Disable appending *To* filed to recipients when calling reply
+	  all function, thanks: raykingecs
+	* Improve Ext::Storage::Maildir cache reuse facility, this
+	  technology greatly improve cache rebuild and file I/O, we
+	  refer to zyb's code, thanks zyb!
+	* Fix bug that can't rename or delete old style maildir folder
+	  in folders_mgr() in Folders.pm.
+	* Give a new design to Abook.pm and App/Abook.pm, now we support
+	  grouping, and rich contact fields :-)
+	* Fix a lot of js bug in group*.html and group*.inc
+	* Fix a bug that can't force charset while reading a message,
+	  thanks for reporting: wangpenghui <wangpenghui@westea.org>
+	* Add htmlsanity() checks to forwarding, this may be helpful
+	* Fix purge mail js and code bugs, thanks: raykingecs
+	* Fix readmsg.html Add_Contact() js bug
+
+1.0.3
+
+Thu 26 Jul 2007 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in fixpath() in FileMan.pm, thanks: zqf
+	* Rewrite Ext::Config mechanism, add Ext.pm, the top level
+	  parent package for all other packages. From 1.0.3, all other
+	  extsuite perl package can read global config file content
+	  via Ext.pm. The new mechanism works very well under persistent
+	  perl environment, old code sucks.
+	* Update lots of packages to use Ext base package, update cgi/*.cgi
+	* Fix some minor bugs in App/*.pm
+	* Fix a obscure bug in Ext::Logger under FCGI, should not call
+	  do_closelog($FH) without log type determination, it will cause
+	  Syslog C api crash, process exit abnormally, then web server
+	  throw 5XX error to browser.
+	* Change dispatch_lig.sh BASE path, README.fcgi wait for change
+	* Fix request_file() bug in lighttpd that miss extman url parsing,
+	  thanks: leo zhang :-)
+
+1.0.2
+
+Thu 22 Mar 2007 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bad charset detection bug in Compose.pm, thanks: xcabc
+	* Add support to extman 0.2.2+ free signup service
+	* Fix signup javascript bug
+	* Add password disable changing support, need extman 0.2.2+
+	* Add Ext::CaptCha module to support captcha
+	* Add Ext::GD to support captcha feature, this module can
+	  be used by extman free signup module or ext* login service
+	* Change chkupdate cookie expire from 24h to 3h
+	* Fix rebuild_attach() bug missing attach tpl varibles, while
+	  removing attach.
+	* Add message size limitation for compose.
+	* Fix bug in edit_drafts() for new *dosave* message, that
+	  show_attach() can't get correct draft filename(id)
+	* Fix some javascript bugs in compose.
+	* Change readmsg.html long line wrapping capability, but works
+	  not good under Firefox, sucks.
+	* Improve DoWarn() and sendok() js function in compose.html
+	* Fix hardcode timezone bug in Folders.pm, thanks: bobyang
+	* Fix missing autoreply setting bug in pref, but this is not
+	  a good solution, wait for completely redesign.
+	* Fix bug in Ext::App::Folders::messages_list, if there is
+	  a contact entry that missing email address, programe will
+	  mistakenly identify sender address that has ' character
+	  as from personal contact.
+	* Fix a bug in Ext::MIME::get_msg_hdr_fast() that can't handle
+	  bad Subject: or From: or To: or Date: header, thanks: gowto
+	* Fix Date/time sorting bug in Maildir.pm, use a better function
+	  to handle date conversion (datefield2dateserial()) if str2time
+	  can't correctly convert Date header
+
+1.0.1
+
+Mon 05 Feb 2007 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix dispatch-init bugs under FreeBSD, thanks: fuweb
+	* Fix missing if/else statement bugs in Auth/*
+	* Add Ext::Logger module to log system event(s)
+	* Add lock/unlock/haslock functions to Utils
+	* Add md5crypt to Ext::Passwd, as an alias to md5, to
+	  avoid confusing md5 with plain-md5
+	* Add support to incompatible md5crypt password that missing
+	  $1$ prepending string.
+	* Add NVERSION to global template, to show numeric version
+	* Fix edit_import showing bad signature bugs, thanks:okgoba
+	* Add additional clear password support, this feature is
+	  useful for vpopmail, and for whom want to save clear
+	  password, Uncomment SYS_*_CLEARPW if you want to activate
+	  it, default is off.
+	* Update README.vpopmail to support pw_clear_passwd
+
+1.0.0
+
+Mon 27 Nov 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix utf-8 attachment or file download bug for IE browser
+	* Fix always no new mail bug in welcome.html template
+	* Fix Add_Contact() UTF8 name bugs, add ucs4_to_utf8(), code
+	  from openwebmail.
+	* Fix netdisk UTF-8 url parameter bug, edit_filename should
+	  use <%FILE%> instead of <%FILE_NAME%>
+	* Fix utf-8 attachment new bug for IE browser, release new
+	  PL1 patch for old published patch.
+	* Fix folders_mgr rmdir and rename bugs, thanks jacke2003
+	* Improve RFC2047 decodes, better handling 163.com message
+	* Fix ctrl+enter js sendmail bug in compose.html
+	* Fix some css problem in index.html and footer
+	* Fix forwarding bad filename conversion bug, show_attach()
+	* Fix missing the first attachment which content-type is
+	  text/plain bug
+	* Fix some css problem under FF2/IE7 (index.html relate)
+	* Fix can't rename a file under sub dir in netdisk module
+	* Add experimental encoding detect capability, but still an
+	  experimental feature, will not available untill i think it
+	  mature, only for test purpose.
+	* Fix a terrible bug exists in CGI.pm _read_multiparts() long-
+	  time ago, it will do url2str() automatically, but this will
+	  break data posted by HTML form! ** only enfect multipart
+	  form-data **
+	* Improve message listing string truncation
+	* Fix header key lower case bug in get_msg_hdr_fast(), thanks:
+	  hello-nick <nick@olivemail.net>
+	* Setup default nickname for out going message From header
+	* Fix message_mgr() bug, some UTF7 foldername will cause
+	  deleting or moving messages failure
+	* Add HZ/HZ-GB2312/HZ-GB 7bit encoding support, rewrite the
+	  decode_it() and decode_* relate function
+	* Rename CharsetDetector to Encode::PPDetector
+	* Redesign Extmail authentication arch, remove Ext::Auth, add
+	  Ext::Passwd to handle different type of password, support
+	  courier-authlib and dovecot-auth, and the following scheme:
+	  crypt|cleartext|plain|md5|plain-md5|ldap-md5|sha|sha1
+	* Add experimental Unicode lang detector Encode::PPUniDetector
+	  but need to turn perl taint mode(-T) off or width char
+	  regexp will not work correctly!
+	* Update Compose.pm to refect new Unicode lang detect change.
+	* Update several template files, fix some html/css bugs
+	* Fix global abook (type=file) bugs, thanks: xware (taiwan)
+	* Fix bug in get_msg_hdr_fast() that incorrectly handle
+	  broken subject header with extra spaces, thanks:
+	  fengkuanglaotou (疯狂老头)
+	* Fix multi-files upload bug in Firefox, thanks byan's patch
+	* Update FCGI dispatch.fcgi design, add timeout and max requests
+	  limitation, make it more robust
+	* Fix some js/html logic and bugs, thanks: andot ma
+	* Fix Folders.pm paging bugs, add myceil() to Utils.pm
+	* Add default sorting capability to Address Book.
+	* Redesign the session expiration detection mechanism, if we
+	  set sys_sess_cookie_only = 1 and sys_sess_timeout = 0, then
+	  the session will be expired after you close the browser, thanks:
+	  andot <andotcn@msn.com> - http://www.coolcode.cn
+	* Fix Folders.pm messages_list() bug in long sender/subject
+	* Fix Netdisk bugs which user can use null name to create new
+	  directory or rename file(s)
+	* Fix regexp bug in Utils.pm - html_escape, thanks: arfankai
+	* Fix missing MBX_* template in folders.html
+	* Add show all contact for addressbook, html/css/i18n cleanup
+	* Add purge capability to folders management
+	* Update README and INSTALL, do some code cleanup, for 1.0.0
+	* Fix purge_maildir() and PPUniDetector::cn_detect() bugs
+	* Add trylocal2() to PPUniDetector that allow programer assign
+	  prefer charset if the string is Unihan (eg: set to big5/gb2312
+	  currently only support big5/gb2312, sorry) Thanks: xware
+	* Add 7BIT support to PPUniDetector, fix i18n code
+	* Redesign the web plugins with new PHPRPC 2/3 code, andot
+	  contribute most of the code/plugins and sample, thanks!
+
+1.0-beta3
+
+Thu 20 Nov 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	+ Add experimental encoding selection on message reading, wait
+	  for bugs and stability fix
+	+ Add experimental sender identification feature via local abook
+	* Fix folder name web injection bug, after login user can feed
+	  "../folder" to folders.cgi to view other maildir? Security bug!
+	* Fix _substr() error on nagtive $len - Utils.pm
+	* Fix whitelist.html bad link bug
+	* rename decode_words_ncr() to decode_words_utf8, fix filename
+	  conversion but when copying attachment to netdisk.
+	* Fix edit_reply() and edit_forward() bad encoding conversion
+	  bug, for multipart/* MIME there is no charset in header but
+	  in the part header.
+	* Fix indivial netdisk on/off bug, add checks in global_tpl()
+	* Fix userconfig() charset bug, now will always return UTF-8
+	* Completely rewrite Ext::MailFilter and Ext::App::Filter to
+	  simplify making filter rules, GMail style :)
+	* Rename the standard template to default, fix Template.pm and
+	  the App.pm, legacy user should take care this change
+	* Update README and Version
+
+1.0-beta2
+
+Sun 12 Nov 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Incorporate VERSION in App.pm and Compose.pm
+	* Rename legacy standard template (before 0.24-RC2) to simple
+	* Fix bug in Netdisk.pm that missing require Ext::MIME
+	* Improve function name import/export to avoid namespace
+	  conflict, but this part is waiting for fix
+	* UTF-8 issue still need to improve, wait for fix
+
+1.0-beta1
+
+Fri 10 Nov 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* New version come out, 0.24-RC2 will be the last 0.x release.
+	* Merge newstyle to standard since 1.0-beta1, nick design and
+	  will maintain this official template.
+	* Correct a lot of newstyle bugs and looks
+	* Improve i18n and information translation
+	* Enforce UTF-8 as http header charset value.
+	* Fix a lot of ui/vi design and bugs
+
+0.24-RC2
+
+Tue 07 Nov 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add experimental UTF8 support code to extmail, and from this
+	  version i decide to use UTF8 as basic I/O charset.
+	* Finish basic utf8 and imap_utf7 encoding/decoding operation
+	  for Folders.pm and Compose.pm
+	* Improve utf8 encoding for Compose.pm
+	* Fix folder rename i18n bug - err_rename
+	* Found a terrible bug, moving messages to a folder without
+	  cache will cause set_bmsgs_move() raise exception
+	* move folders_list() from Folders.pm to App.pm as a global
+	  template.
+	* Fix global template varibles conflict with other module tpl
+	  name, folders information will be assigned MBX_ as prefix
+	* Fix netdisk namespacing conflict with folders information
+	* Fix mail content parsing bug in Message.pm - can't correctly
+	  parseing without content-type, now set to text/plain by default
+	* Add disablewebmail and disablenetdisk feature to MySQL.pm
+	* Add disablewebmail and disablenetdisk feature to LDAP.pm
+	* Improve maildir cache rebuild mechanism, rewrite parse_curcnt()
+	  since 0.24-RC2 a new maildir cache design will be launch
+	* Change attachment upload design from old different pages to
+	  intergrated into compose template, thanks nick, great help!
+	* Improve datetime display in messages listing mode
+	* Change curcache rebuild interval from 30 min to 60 min
+	* Add serveral blanklines above signature
+
+0.24-RC1-20061101
+
+Tue 01 Nov 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add an experimental IMAP utf7 encode support, add new module
+	  call IMAPUTF7.pm
+	* Fix a bug in Template.pm that will cause customize template
+	  selection always fail. $CFG => $SYS_CFG
+
+0.24-RC1
+
+Sat 02 Sep 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Found a bug desin in extman/extmail LDAP schema: use mail
+	  attribute as alias will cause a bug in Auth/LDAP auth(), it
+	  only get the first entry($res->entry(0)), this is false when
+	  you add an alias goto address same as your login mail!
+	* Update webmail.cf, now basedn is o=extmailAccount,dc=extmail.org
+
+0.24-pre8
+
+Sat 08 Jul 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix missing elements bug while doing autocomplete, add show_all
+	  parameter for abook_show() to display every element.
+	* Add support to multiple or single part email that missing body
+	* Fix upper/lower case bug of checking Content-Type in Compose.pm
+	* Fix bad body decoding bug in edit_forward() of Compose
+	* Fix bug that can't handle broken filename on messages migration
+	  in set_status(), add :2, to the end of filename
+	* Fix dangous bug in opt_getfile() of Fileman, thanks:
+	  unusual <xzlh51@gmail.com>
+	* Temporary fix bad header pasing while uploading attachment in
+	  CJK characters under iso-8859-1, change split(/;/) to split(/; /)
+	* Fix pref_signature() saving bug with null string, split the
+	  function into read and save functions, code cleanup, thanks:
+	  qazplm <qazplm@china.com>
+	* Switch to default template if prefered template not found, thanks:
+	  qazplm <qazplm@china.com>
+	* Improve unknow MIME multipart/filename detection, thanks:
+	  qazplm <qazplm@china.com>
+	* Fix bug in Auth::Authlib that can't handle authdaemon reports
+	  Input/Output error
+	* Rewrite session id generation part, now we have three type of
+	  random id generator: rand_dev rand_md5 rand_time. the rand_dev
+	  and rand_md5 method is prefered and better.
+	* Fix renaming bug in App/Netdisk that can't rename sub folder
+	* Change Session.pm rand method choosing code into gen_rand_func()
+	  to avoid Maildir.pm complain that gettimeofday() not defined:(
+	* Fix miss typing error in Template.pm, thanks: uingei
+
+0.24-pre7_authlib
+
+Fri 16 Jun 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add Ext::Auth::Authlib module, support courier-authlib now.
+	* Fix printf statement bug in Authlib.pm
+	* update webmail.cf.default, add SYS_AUTHLIB_SOCKET parameter
+	* update SYS_AUTH_TYPE, support mysql|ldap|authlib now
+	* Add htmlsanity() to sanity html body, useful on RTF editor,
+	  or some broken html body will mess RTF editor, thanks:
+	  Wang binwen <hongfengwbw@gmail.com>
+
+0.24-pre7
+
+Tue 13 Jun 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix varible re-defined bug in MIME.pm, thanks:
+	  kangaroo <yxy7421@hotmail.com>
+	* Fix edit_import() missing body_is_html assign bug
+	* Fix bug in fckconfig.js, the UseBROnCarriageReturn must be set
+	  to false (IE only), or formatting will be mess up.
+	* Fix try{} catch(e){} statement bug, fix the auto focus bug,
+	  enable StartFocus to true in fckconfig.js
+	* Fix boundary detection bug in MIME.pm, must \Q$boundary\E, thansk:
+	  zhang yang hua <zhang_yanghua@fj.sgcc.com.cn>
+	* Fix content-type bug on broken header, eg: Content-type, thanks:
+	  zhang yang hua <zhang_yanghua@fj.sgcc.com.cn>
+	* Fix savefolder unescape/escape bug
+	* Add DoDelete() javascript function on reading message
+	* Add SYS_USER_* default setting for user preference, enable ccsent,
+	  show_html, compose_html, conv_link and addr2abook by default
+	* Fix missing body bug in rebuild_update_message(), thanks: skypp
+
+0.24-pre6
+
+Sun 11 Jun 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* add _getbody() function to Compose.pm, to enable easy way
+	  to get the prefer body, eg: text/html or text/plain
+	* Experimental auto body type detection code, now extmail can
+	  automatically do html/text reply/forward whatever the editor
+	  mode is, all situation will works very well now.
+	* Update RTE from FCKeditor 2.1.1 to 2.3b, merge old loading
+	  code, 2.3b fix old version input method bugs and runs faster!
+	* Fix bug when reading mail that has only html part and show_html
+	  turned off, html_escape() should only be called when content
+	  type is plain!
+	* Fix bug when composing plain text email without RTF editor
+	  turned on, should also check both $q->cgi('body') and plaintext
+	* Fix some bugs in edit_forward(), cleanup code
+	* Change input field cols from 12 to 20 under RTE disable mode
+	* Remove RTE toolbar end image, replace with toolbar.bg.gif:)
+	* Add mail print, can auto close popup window after printing
+	* Redesign preference UI, add config group, clean and clear now!
+
+0.24-pre5
+
+Sat 03 Jun 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix attachment filename bug in MIME.pm, now can recognize
+	  attachment header like name="xxx.xx"
+	* Improve txt2link feature, but waiting fix
+	* Fix _read_mimeparts() lastline bug for CGI.pm, thanks:
+	  zyb <zyb@65168.com>
+	* Add html2txt() to Utils.pm, improve converstion from text
+	  to html format, but waiting more fix and redesign.
+	* Fix Mailfilter hasrecipient rules bug, thanks binwen:
+	  Wang binwen <hongfengwbw@gmail.com>
+	* Fix reply mail bug, from OE with text/plain content-type
+	* Improve plain text and html body support, including html2txt()
+	  and txt2html() functions.
+	* Add Plain text <==> RTF format convertion support, thanks:
+	  Nick.cn <nick.cn@gmail.com> , without his help we can't make
+	  extmail html editor(fckeditor backend) get the great feature!
+	* Improve signature htmlize, add txt2link() to filter it
+	* Fix taint mode bug in Maildir.pm mk_maildir(), thanks:
+	  Wang binwen <hongfengwbw@gmail.com>
+	* Re-arrange a lot of html/text related code, add quote style
+	  to reply and forward body when it is in RTF mode.
+	* Add reply i18n translation and fix a small bug
+	! Found bugs under IE and firefox, if auto focus() on the
+	  main body field under RTF editor, we can't input CJK or
+	  move cursor unless auto focus() on subject, but FF still
+	  can't move cursor unless we click mouse from here to there:(
+
+0.24-pre4
+
+Tue 30 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Improve FCGI support for lighttpd and Apache, according
+	  to FastCGI specification, HTTP header should use \r\n as
+	  line terminator instead of \n, update all infected files
+	* Reset locale to C before accept() in dispatch.fcgi
+	* Complete the replyall feature for Compose module
+	* Redesign dispatch.fcgi, add fastcgi remote server running
+	  mode, and completely seperate the fcgi app from web server!
+	* Fix a lot of taint mode bug under setuid/gid mode for FCGI
+	* Remove open2() support to catch sendmail error msg, due
+	  to the incompatibility to FCGI, sorry and waitfor fix :(
+	* Improve replyall feature when there is no Cc header
+	* Fix POP3 module taint mode bug under -T (taint mode)
+	* Add dispatch-init script to maintain dispatch.fcgi
+	* Update README.fcgi and INSTALL
+
+0.24-pre3
+
+Mon 29 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix rfc822_encode_addr() bug in RFC822, the bug
+	  will cause cc/bcc/to header broken
+	* Improve cache rebuild algorithm, detect change to cur/new
+	  , now extmail can cooperate with Outlook or thunderbird
+	  well :-)
+	* Add recipients auto save to address book feature
+	* It's a good time to release pre3
+	* Update webmail.cf.default, enable netdisk by default
+
+0.24-pre02
+
+Fri 26 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Rewrite cookie support for CGI.pm
+	* Re-design cookie working flow, fix cookie bug in
+	  Login.pm and App.pm (login process)
+	* Fix Mail::POP3Client strip cr(\r) bug in _sockread()
+	* Fix valid_maildir bug in Maildir.pm, this bug will
+	  cause attachment to netdisk operation fail
+	* Change SYS_SESS_TIMEOUT to xx seconds/hour/day/week
+	  and year format, eg: 3h means 3 hours
+	* Add account memory feature like GMail :-)
+
+0.24-pre01
+
+Tue 23 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in plain text to html conversion, missing
+	  newline (\r*\n) handler
+	* Add auto link conversion to plain text or html body
+	* Add -I to pkg_stats.sh to include non-std lib
+	* Fix bug in edit_autoreply() when input is null
+
+0.23-20060522
+
+Mon 22 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add the attachments to netdisk feature
+	* Fix op_addfile() bug when upload same file name, quota
+	  will update incorrectly
+	* Fix missing user preference bug in edit_import()
+	* Fix missing attachment flag on editing draft
+
+0.23-20060521
+
+Sun 21 May 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	+ Sorry to all, now i 'm back :-)
+	* Fix redundent CRLF bytes write to uploaded attachment,
+	  thanks jklin's suggestion, future will merge the standard
+	  CGI module?
+	* Fix bug in Netdisk that will prepend more / to dir
+	* Add time_offset(), fix Netdisk file mtime display bug
+
+0.23-20060312
+
+Sun 12 Mar 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add filehandle oriented pseudo system function, like
+	  index, length and substr, prefix as "_", thanks:
+	  jklin <jk@jklin.com>
+	* Rewrite has_attach() to get more accuracy using the
+	  pseudo system call _index() and _substr
+
+0.23-20060309
+
+Thu 09 Mar 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix Netdisk rename bug under subdirecotry, thanks:
+	  cnyg <mzzxdb@21cn.com>
+	* Fix a bug in rfc822_addr_parse() if sender is null
+	* Enhance get_msg_hdr_fast(), make it possible to store
+	  header To as From when the target folder is .Drafts
+
+0.23-20060301
+
+Wed 01 Mar 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Begin wideranging bug fix and improvment for 0.24
+	* Fix a bug in Ext::Storage::Fileman %ext_maps, wrong suffix
+	  of excutable file
+	* Fix bug Ext/App/Pref.pm in pop3_save() that can't detect
+	  null or invalid username and password
+	* Add capability to Ext/App/Compose.pm, can capture sendmail
+	  error while sending a message bigger than sendmail limit,
+	  or found some pipe error
+	* Rename html_esc to html_escape, rewrite to a more flexible
+	  version, added & and " conversion
+	* Fix security bug in Storage/Fileman.pm that permit hacker
+	  can rename/move/remove the filesize. Added $CFG{ctrlfile}.
+	* Fix bug in get_files_list() of Ext::Storage::Fileman that
+	  will not show filename if the file is named filesize.
+	* Fix race condition and locking bug in fre_calculate()
+	* Fix calculation bug in op_addfile()
+	* Fix calculation bug in get_dir_cnt() that can't ignore
+	  control file (filesize)
+	* Improve truncate code for messages_list() of Folders.pm
+	  strip sender name from mail address, better NCR handling
+	* Fix bug in Netdisk.pm list_dir(), add fixpath() for $base
+
+0.23-20060226
+
+Sun 26 Feb 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in App::Compose that throw "Can't open 0, No such
+	  file or directory" error, check rebuild_attach() return
+	  before calling sendmail method.
+	* Fix bug in App::Filter that don't check autoreply.cf, it
+	  cause maildrop error if end user not save autoreply.cf
+
+0.23-20060222
+
+Wed 22 Feb 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix big bug in Ext::Fileman fixpath(), wrong regexp
+	  will ignore ../ style path and expose $HOME
+	* Add pop3 save hint message
+	* Enhance MIME.pm, rewrite get_msg_hdr_fast(), use system
+	  function, eg: index, substr
+	* Add rfc822_add_parse(), make sender display better on
+	  messages list screen, RFC822 address parsing wait 4 fix
+
+0.23-20060219
+
+Sat 18 Feb 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Merge jklin's patch (v1) into Folders.pm and folders.html
+	  support first/last pages and selectable paging :-)
+	* Fix bug in Fileman.pm, remove a lot of redundent code
+	* Add rename and movement feature to Netdisk, now Netdisk
+	  module is fairly complete :-)
+	* Improve cache rebuild algorithm, add DATETIME to store
+	  str2time() result before step into sorting, this is very
+	  helpful to reduce CPU time. Update to V1.01 and gain
+	  about 60%-70% speedup.
+	* Abort simple template maintenance, remove it since 20060219
+	* Add DateTime.pm, thanks jklin's contribution, but currently
+	  disable the datefield2serial(), uncomment the code in the
+	  str2time() if you want more accurate time sorting
+	* Fix extlib.js, add https support
+	* Add CREDITS, thanks to whom contribute to extmail community
+
+0.23-20060216
+
+Thu 16 Feb 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Redesign POP3 can_receive(), new mechanism can avoid
+	  duplicated email receives and more than one process
+	  checking email, via flock() and non-blocking technology
+	* Fix set_status() bug of Ext::Storage::Maildir
+	* Improve POP3 module, add quota checking algorithm
+	* Add misc setting navigation bar, plan to giveup simple
+	  template, who will use it? :-(
+
+0.23-20060214
+
+Tue 14 Feb 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Ext/App/Pref.pm: Fix undef lang bug casuing pref_list()
+	  can't output correct I18n for pref_theme
+	* Ext/MIME.pm: Fix case sensitive bug in decode_it()
+	* Start experimental web POP3 module, name as Ext::POP3
+	* Add file locking to a process that receiving pop3 mail
+
+0.23-20060212
+
+Sun 12 Feb 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Rewrite get_signature(), do html convertion if compose_html
+	  enable, which will greatly help plain text signature to
+	  adopt Rich Text Editor
+
+0.23-20060211
+
+Sat 11 Feb 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a bug in standard/netdisk.html that miss posting the
+	  sid varible to extmail, then cause all upload temp files
+	  store at /tmp/ instead of /tmp/$sid/
+	* Improve NetDisk.pm and Fileman.pm, implemented multiple
+	  files in netdisk as attachments for an email draft
+	* re-calculate netdisk on every login, this will be great
+	  help to update the netdisk quota
+	* Add experimental Cookie support, only function for login
+	  and logout, not complete and very beginning
+	* Update simple template, support netdisk (copy templates
+	  from standard template)
+
+0.23-20060210
+
+Fri 10 Feb 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Start experimental network storage module, name as
+	  netdisk, include low level I/O module Ext::Storage::Fileman
+	* Fix bug in CGI.pm that _read_multiparts don't do url2str
+
+0.23-20060210
+
+Fri 10 Feb 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Update Qmail/vpopmail support, release 20060210
+	* Add README.vpopmail
+	* Add SYS_LDAP_ATTR_DOMAIN = virtualDomain config and
+	  SYS_MYSQL_ATTR_DOMAIN = domain webmail.cf
+	* Fix big bug in Config.pm, rewrite the per object config
+	  varible storage method, old code via global $CFG will fail
+	  if multiple instance *newed*, $CFG will be tainted, new
+	  method via $self->{cfg} to store per object config, thanks:
+	  shepherd <sheerli@gmail.com>
+	* Fix Config.pm related package to update the new varible
+	  storage method
+	* Fix bug in MailFilter.pm, missing dot(.) at line 271
+	  bug code,  $buf .= "  to \"\$HOME/Maildir/Junk/.\"\n";
+	  good code, $buf .= "  to \"\$HOME/Maildir/.Junk/.\"\n"; thanks:
+	  huzi <huzi1977@msn.com>
+	* Fix charset bug in index.html
+
+0.23-20060124
+
+Wed 25 Jan 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add experimental Qmail/vpopmail support
+	* Add support for two types of vpopmail table, vpopmail1
+	  will add support for all user accounts in one table,
+	  vpopmail2 will add support for accounts store in per
+	  domain table
+	* Translate dot(.) to underline(_) in vpopmail2 mode
+	* Improve fully cache rebuild performance, about 10%-15%
+	  faster than old code, also change the internal cache
+	  data strcture.
+
+0.23-20060120
+
+Fri 20 Jan 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in index.html that cause IE 5.0 javascript problem
+	  change undefined magic word to null, works fine with IE 5/6+
+	  and firefox 1.x
+	* Update login error message to i18n
+	* Add default globabook.cf
+
+0.23-20060117
+
+Tue 17 Jan 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add experimental auto-reply support, base on spam filter
+	  extension, a piece of cake :-) it works
+	* Fix folder management bugs in Folders.pm, old stupid code
+	  would not completely remove a maildir, because the new
+	  function valid_dirname corupt the logic, redesign folder
+	  management
+	* Making error handling into i18n
+	* Add checking to folder renaming and delete, if request
+	  folder reference by a certain filtering rule, abort!
+	* Make the posibility to use white/black list with simple
+	  template, but need more javascript support, need to fix :(
+
+0.23-20060115
+
+Sun 15 Jan 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add experimental Spam Filter extension, including
+	  blacklist and whitelist, archive spam mail to the Junk
+	  mail folder.
+	* Fix statement warning bug in Maildir.pm , when the code
+	  call "print FD _fmt2mds($s,$c)".
+	* Complete 99% of spam filter templates I18n
+	* Fix bug in removement to loading bar for firefox, use
+	  firstChild property instead of children(0) - IE only!
+	* Change mobile attribute to telephoneNumber in LDAP global
+	  addressbook, the 4 necessary attributes are 'cn' 'mail' 'o'
+	  and the 'telephoneNumber'
+
+0.23-20060114
+
+Sat 14 Jan 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in Abook.pm with null edit id
+	* Improve capability of characters convertion, add from_to()
+	  and _fixcharset() in Utils.pm, improve GB2312 convertion
+	* Add experimental Global Address Book support, currently
+	  only support LDAP, works under openLDAP or ActiveDirectory
+	* Fix some stupid bugs in GlobalAbook.pm
+	* Add simple javascript to support multiple recipients in
+	  personal and global address book
+	* Fix some bug in default.css, but still can't make firefox
+	  working perfect under messages listing page
+
+0.23-20060108
+
+Sun 08 Jan 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Update FAQ, add bad characters issue fix
+	* Add support to amavisd* inserted header "X-Spam-Status"
+	  , make it possible to filter spam to Junk or not
+	* Fix bug of compose.html in standard template, it always
+	  send html=true to extmail, should only send if htmlcompose
+	  enabled.
+
+
+0.23-20060104
+
+Wed 04 Jan 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Release daily snapshot with FastCGI support (20060104)
+	* Do some code cleanup
+	* Update FAQ, add FastCGI info
+	* Update README, add FastCGI part
+	* Update README.fcgi and do some cleanup
+
+0.23-20051231
+
+Sat 31 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a lot of bugs in dispatch_*.fcgi and extmail Core code,
+	  including CGI.pm , Config.pm and App.pm
+	* Integrade lighttpd and apache FastCGI dispatch programe
+	  into one script
+	* Prepare docs about howto configure lighttpd or apache to
+	  run extmail as FastCGI, and add suexec support
+
+0.23-20051229
+
+Thu 29 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Porting extmail to FastCGI platform, make some dirty hack
+	  to works but not recommend this setup on production system
+	* Fix a bug of RTE (Rich Text Editor), old fck_startup.js
+	  call index.cgi?screen=fckconfig.inc and this trick will
+	  be failure if the SYS_USER_TEMPLATE=simple, fckconfig.inc
+	  does not exist in the simple template.
+	* Release an experimental FCGI package toolkit, including
+	  dispatch.fcgi, startup scripts for lighttpd and suexec
+	  tools and configuration, also add a new module (Ext::FCGI)
+
+0.23-20051226
+
+Mon 26 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add rich text editor relate code into core libs
+	* Enable the capability to choose RTE on/off in
+	  user personal preference
+	* Hack FCKeditor to support loading bar :-)
+	* Support username, domain input contain space
+	  prefix or suffix, thanks Benyu <bbenyu@gmail.com>
+	* Move FCKeditor to html/plugins/RTE, and the html/plugins
+	  directory is for future plugins related html/images
+	* Add SYS_MFILTER_ON to enable/disable Spam Filter capability
+	* Fix bug in userconfig(), must set compose_html and show_html
+	  to default 0, or the determination will always return true
+
+0.23-20051225
+
+Sun 25 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Reduce the code size of rich text editor, simplify
+	  dialog files (image and link dialogs).
+	* Hack the FCKeditor core code, pass an extmail related
+	  varible to fck_startup.js to load demanded locale
+	  into user browser instead of auto detecting or via
+	  configuation.
+	* Fix a security bug in Template.pm, add _safepath()
+	* Add a cancel button in foldermgr.html to return
+	  left.html frame.
+
+0.23-20051223
+
+Fri 23 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add an experimental rich text editor (HTML editor) in
+	  standard template, using FCKeditor and minimize it
+	* Fix attachment add/remove bugs in Compose.pm
+	* Add basic html/plain type determination logic
+
+0.23-20051221
+
+Wed 21 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add auto locale/language detection, in Ext::Lang
+	* Move pref_lang() from Pref module to Lang and rename to
+	  langlist(), it provide an API to access i18n locale info
+	* Make the introduction of extmail to i18n in index.html,
+	  modification made to both simple and standard templates
+	* Fix a bug in Mailfilter.pm while opening a file that does
+	  not exists.
+
+
+0.23-20051219
+
+Mon 19 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add an experimental spam filter module, base on maildrop
+	  programe - a command line filter tools
+	* Support filer add/remove/edit/up/down and header/body
+	  detection, size limit and other filtering capability.
+	* Begin new version publication mechanism, put date number
+	  as the suffix of daily snapshot, and snapshot version
+	  use odd number, stable version use even number :-)
+
+0.22-20051216
+
+Fri 16 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a bug in renaming a folder, if new name null, then
+	  the old folder will be delete, this is urgent bug.
+	* Add navagation bar in simple/attachmgr.html
+
+0.22
+
+Thu 15 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Intergrade enhanced template into official release, and
+	  make it as default template, rename to standard, old
+	  standard template rename to simple
+	* Improve simple template css
+	* Do some code cleanup, Compose.pm, automatically choose
+	  recipient by replyto, return-path and from header
+	* Add gmail like attachment upload feature (experimental)
+	* Fully folder management implemented
+	* upgrade install and website installation docs, the apache
+	  Alias derective changed to "Alias /extmail /path/to/extmail"
+	  without the slash "/", thanks pch957 <pch957@163.com>
+
+0.22beta2
+
+Fri 2 Dec 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add experimental multifile upload code to enhanced template
+	* Experimental attach management code, not stable, just in
+	  daily code, stable version not available
+
+0.22beta
+
+Mon 28 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add extlib.js and auto domain detection for login form
+	* Update templates, exchange position of domain/password,
+	  easier to use than before
+	* Complete folder management in enhanced template, wait for
+	  migrate to standard
+
+0.21
+
+Wed 16 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a bug striping space or tab in hdr_fmt_hash(), it should
+	  not strip space in " " or will kill some boundary value.
+	* Add cc/bcc disaply capability to read messages screen, thanks:
+	  Wang ming da <wangmd0217@hotmail.com>
+	* Fix bug in Compose.pm edit_reply() that can't parse email addr
+	* Fix bug in standard/folders.html that not show localize folder
+	  list name, thanks njblue2004 <njblue2004@yahoo.com.cn>
+
+0.21Beta
+
+Sat 12 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a bug in Template.pm, original modification to it to
+	  allow customize initial template fail, treat $CFG as HASH,
+	  but infact a HASH ref, and in App.pm userconfig() should
+	  not initialize template varible, let Template.pm to deter-
+	  min itself.
+	* Do some html/css cleanup
+
+0.21alpha
+
+Tue 8 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a bug in sha support, old code only general 27 bytes sha
+	  encrypted string, but not compatible with base64 standard, add
+	  '=' to the end of string, thanks Huzi <romantic.life@msn.com>
+
+0.20
+
+Tue 1 Nov 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a bug in rfc822_encode_addr() when handling mail address
+	  that contain the dot (.) character, the whole string will be
+	  lost.
+	* Add ldap/mysql host and socket path varible to webmail.cf
+	* Migrate VERSION from webmail.cf to the CORE code, remove the
+	  SYS_WEBMAIL_VER varible
+	* Fix bug in Config.pm, remove prefix and suffix white space of
+	  value.
+	* Fix a bug in INSTALL, NameVirtual *:80, it's wrong, should be
+	  NameVirtualHost *:80, thanks hmilycbz <hmilycbz@sina.com>
+
+0.20beta
+
+Wed 26 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add SHA/SHA1 encrypt type support, now extmail should be
+	  compatible with main popular password encrypt method. :-)
+	* Fix a bug in text/plain email forwarding, i lose an im-
+	  portant statement that no attach and no multipart, only
+	  text/plain, ouch :-(, including update _stp_parse()
+	* Fix a bug in rfc822_encode_addr(), insert white space before
+	  address if it's not the first line when the address form
+	  is <addr> or addr, eg: foo@bar.com, the form of "Name" <addr>
+	  has no problem.
+
+0.20alpha
+
+Mon 24 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a possible bug, in Auth/*.pm, auth() function, if the
+	  attribute contain password return nothing(null), then
+	  crypt($password, $pwd) will always equal $pwd, because
+	  $pwd = null, this should not happen, and must disable.
+
+0.19
+
+Sat 22 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add capability to config logindomain and template base on
+	  domain, using SetEnv via apache or equivalent web server.
+	  Caution: This capability will not available under Suexec.
+	* Fix default charset bug in Compose.pm, now extmail will
+	  first check user.cf, then SYS_USER_CHARSET then the fall
+	  back 'us-ascii'.
+
+0.19beta
+
+Fri 21 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug when login with upper case username or domain,
+	  this bug will cause extmail shows up "Can't chdir to
+	  /path/to/base//Maildir" error, solution: lowcase all input
+	  except password, thanks Condar <condar@163.com>
+	* Fix warnning bug, apache log shows that "Ext::Config::PF"
+	  used only once: possible typo at index.cgi line 11.
+
+0.19alpha3
+
+Wed 12 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Make quota warning/error message i18n/intl
+
+0.19alpha2
+
+Mon 10 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a bug in enhanced template, the left.html auto
+	  refresh page will cause email draft lose their uploaded
+	  attachment, because DESTORY() in CGI.pm will purge
+	  everything, currently only remove left refresh, wait for
+	  new design
+	* Fix a bug in Template.pm, now change SYS_USER_TEMPLATE
+	  will inflect not only user template, but also the system
+	  default login template
+
+0.19alpha
+
+Sun 9 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix Ext::DB bug on creating new db file in FreeBSD
+	  , use O_CREAT|O_RDWR instead of O_CREAT
+	* Add support for quota string that does not follow
+	  courier / Maildir++ specification
+
+0.18
+
+Thu 6 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add minimal new password length limitation
+	* Add default timezone config parameter in webmail.cf
+	* Add address book search feature
+
+0.18beta2
+
+Wed 5 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in cgi/*.cgi, prepend wrong DIR to @INC.
+	* Fix bug in index.html template file, correct login
+	  information memory javascript bug.
+	* Update the load file mechanism of Ext::Config, more
+	  general use. Since now all cgi programe should set
+	  $Ext::Config::PF to a config file, eg: webmail.cf
+	* Use eval to catch all error in cgi/*, all runtime
+	  code will reside in eval block
+
+0.18beta
+
+Tue 4 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix terrible bug in edit_forward(), like, broken header
+	  for building text body, and missing attachment, and some
+	  buggy filehandler, use $NEW to replace FD. The FD will
+	  cause unexpect I/O error, and corrupt the output
+
+0.17
+
+Mon 3 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix bug in broken boundary completion, and move initia-
+	  lization of some global varibles into part_parse() scope,
+	  this make sense for multiple times calling get_msg_info()
+	* Still bad design on calling get_msg_info() multiple times,
+	  idea: re-design the mechanism, add a new parameter, and
+	  automatically check whether the get_msg_info() to same
+	  file is already called, this will reduce redundant I/O :)
+
+0.17beta
+
+Sun 2 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix URL passing bug, should call str2url() to encode
+	  URL before output
+	* Do some cleanup for str2url()'ed varibles
+	* Re-design error.html, add redirect capability while
+	  there is error reading a message of folder, thanks
+	  hojo and fei report the bugs!
+	* Rewrite a new eURL() to do local url encode instead
+	  of escape() in enhanced template readmsg.html, this
+	  fix big bug while add contact using js code and the
+	  Abook.pm can't return to old URL, for corrupt url en-
+	  coded string
+
+0.17alpha
+
+Sat 1 Oct 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Redesign ExtMail logo, better font and line, like GMail
+	  logo :-)
+	* add logo class in default.css
+
+0.16
+
+Fri 30 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add an experimental login information memory javascript
+	  module, make login and typing much easier :-) like Yahoo
+	  or hotmail!
+	* Fix a bug of hdr_get_hash() in MIME.pm, ignore irregular
+	  header unless it's a HASH reference
+	* Rewrite runtime statistic code, much better than old regexp
+	  code, and more accurate.
+
+0.16beta
+
+Wed 28 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Improve enhanced template and merge the mailframe
+	  experimental template into enhanced :-)
+	* Do some CSS and html cleanup
+
+0.15
+
+Wed 28 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add timezone configration
+	* Fix a small bug in App.pm
+
+0.15beta
+
+Tue 27 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add Clear/MD5 password type support, update MySQL/LDAP
+	  module, include the encrypt/password change functions
+	* Add a new SYS_ parameter to take control of password
+	  crypt type, name SYS_CRYPT_TYPE, default to crypt
+	* Fix small bug, on messages list, the moveto select object
+	  should translate the default mailbox to locale, thanks to
+	  ye_niu_zlg@hotmail.com.
+
+0.15alpha
+
+Tue 27 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix request bug in Login.pm, to reset working path unless
+	  a session is valid, via $self->valid_session() method
+
+0.14
+
+Mon 26 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix style bug in pref.html in standard template, now
+	  table padding and border works fine in firefox/mozilla
+	* Go on experimental enhanced template
+
+0.14beta
+
+Fri 23 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a bug in runtime calculation of App.pm
+	* Tweak userconfig initialization and fix some bug, thanks
+	  fei@bj.tom.com at extmail/community
+
+0.14alpha
+
+Thu 22 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Do some clean up on html template
+	* Rewrite runtime measurement code
+
+0.13
+
+Wed 21 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Release extmail-0.13 for test
+
+0.13beta
+
+Tue 20 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Do some clean up on html template
+	* Build extmail.org official website and forum, prepare
+	  installation and configuration document, start a blog
+	  for development :-)
+
+0.13alhpa
+
+Sun 18 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix register() bug in App.pm
+
+0.12
+
+Fri 16 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix a big big bug! Ouch! If user pass a url without any
+	  cgi parameters, programe will still work, sucks, it's
+	  a security hole. In App level, use register() and valid()
+	  and permit() to cooperate to check the validation of
+	  a request
+
+0.11
+
+Thu 15 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Begin an experimental template, add mail address auto-
+	  complete feature derive from Wick, just like GMail
+	* Fix a big bug of autocomplete js code
+
+0.11beta
+
+Wed 14 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* fix some bug in trace() in App.pm, but Error Handling
+	  method/func* and design are still very poor, when to
+	  fix it?
+
+0.11alpha2
+
+Tue 13 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* localize system default maildir, eg: Inbox, Sent
+	* Add support for message delete on reading mail
+	* update App/Message.pm, check $MSGFILE before use, but
+	  error handling still sucks :-( wait for new design
+	* Fix Abook bugs, when edit an entry, abook_show() over-
+	  laps the tpl data of abook_edit() assigned, this is
+	  false.
+	* Fix bug in str2ncr() when lack of charset parameter.
+
+0.11alpha
+
+Mon 12 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix broken header parsing error, eg without content-type
+	* Fix re-calculation bug when login webmail, now check
+	  QUOTA and update maildirsize when login.
+	* Re-arrange quota and disk usage UI, add a new system
+	  configration directive SYS_PERMIT_NOQUOTA, compatible
+	  with unlimit quota
+
+0.10pre5
+
+Sun 11 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Update tools/pkg_stats.sh, new to extmail user should
+	  use it to check the existence of required perl modules
+	* Fix bug in Storage::Maildir::init(), create the default
+	  dir first and re_calculate() if needed.
+	* Disable setup_locking in Ext::DB, it's a bug, see the
+	  man of DB_File(3), DB_File should not use lock, use
+	  BekerleyDB instead.
+
+0.10pre4
+
+Fri 9 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Complete ldap/mysql authentication code
+	* Add capability of changing account password
+	* Make code cleanup, rename Ext::Date to Ext::RFC822,
+	  and move some code from App/Compose.pm to it
+	* Move some code from CGI.pm to Utils.pm
+	* Remove Base.pm, it's useless now
+	* Html template cleanup, but need more cleanup
+	  and works
+	* Add AUTHORS FAQ INSTALL README
+
+0.10pre3
+
+Mon 5 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Email index sorting implemention completed
+	* fix some bug of RFC822 date handling
+	* Finish pure perl version iconv(1) using Encode
+	  need perl 5.8.0
+
+0.10pre2
+
+Mon 4 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* beautify template html code, add some locale thing
+	* Design email index soring mechanism
+	* Implemente index sorting, currently there are 6 types,
+	  by date/size/status/from/subject/timestamp
+
+0.10pre1
+
+Thu 1 Sep 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Multi language(locale) arch implemented, using
+	  the same mechanism of openWebMail
+	* Rewrite template files and write en_US/zh_CN
+	  locale packages.
+
+0.092
+
+Wed 31 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Simeple AddressBook done, using CSV format
+	* support Abook export
+	* Ext::CSV derive from Alan Citterman 's Text::CSV
+
+0.091alpha
+
+Sun 28 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* simple forward/forward as attach implemention
+	* enhance file size display, more human readble
+
+0.09
+
+Thu 26 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Implement NCR (Numeric character reference) convertion
+	  and now it can display multi charset without any doubt:)
+
+0.09beta
+
+Thu 25 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* add X-Original-IP and X-Mailer header
+	* Implement RFC822 addr/string encoding in header, now
+	  it do more better than most of other webmail/freemail
+
+0.09alpha
+
+Mon 22 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Some code cleanup
+	* Implement FCC/Save Copy to Sent(ccsent) capability
+
+0.08
+
+Thu 18 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* An experimental preference setting module implemented,
+	  but not all feature function
+	* Caution: if you want to modify a varible or do a simple
+	  if/else within a LOOP, in the Template engieen, you must
+	  set it in the LOOP block, please refer to Pref.pm
+
+0.08alpha
+
+Wed 17 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Improve MIME parsing, now it will correctly parse
+	  multipart/alternative or mixed etc, say "it can
+	  recursive parse"
+
+0.07
+
+Sun 14 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Redesign temporary draft file handling, keep it's static
+	  part not change instead of create a new one, on every
+	  rebuild_attac() request.
+	* Implement the new standard maildir filename describe on
+	  http://cr.yp.to/maildir.html, compatible with courier
+	  series software, this implemention is much better than
+	  Data::ID::Maildir :-)
+	* Fix bug that Compose.pm doesn't update maildirsize,
+	  when draft has been rewrriten.
+	* do some cleanup
+
+0.07beta
+
+Sat 13 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Seperate attachment append/remove and message update
+	  into 3 functions
+	* Do some cleanup, bug fix attachment update and boundary
+	  handling.
+
+0.06
+
+Fri 12 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Core attachment management function works fine
+	* rebuild message after dosave/doattach/delete and dosave
+
+0.06beta
+
+Thu 11 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Improve attchment design, add attachmgr controler
+	* New design, now all attachment operation will be done
+	  in attachmgr.html (or attachmgr controler)
+
+0.06alpha
+
+Tue 9 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Implement attachment upload
+	* build header and body works, but urgly
+
+0.05.2beta
+
+Fri 4 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix the bug that strip CRLF not correctly in the CGI
+	  function _read_mimeparams()
+	* Experimental Draft build/rebuild function starting.
+
+0.05.2alpha
+
+Wed 3 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix CGI bug in handling multipart/data type
+	* do some cleanup works in sub DESTROY {}
+
+0.05beta
+
+Mon 1 Aug 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add multipart/data support in CGI module
+	* Put all attach files in /tmp for later use
+
+0.05alpha
+
+Sun 31 Jul 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* fix messages delete bug, now update the maildirsize
+	  after delete messages
+	* redesign is_overquota(), now it can return SOFT/HARD
+	  overquota flag.
+
+0.04
+
+Sat 30 Jul 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* add Folder management(create/delete)
+	* add messages management(move/delete)
+	* fix curcnt update bug
+	* Check mailir quota when login, unlink maildirsize
+	  then calll re_calculate()
+
+0.04beta
+
+Fri 29 Jul 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* New OO request driven works
+	* Add a new error handling function
+	* Migrate old demo scripts into new archtecture.
+
+0.04alpha
+
+Wed 27 Jul 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Fix some bug in Maildir.pm, now it can check_new
+	  properly.
+	* Re-design OO Inheritable module archtecture.
+
+0.03
+
+Mon 25 Jul 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Development restarting
+	* Add experimental template module
+
+0.02-frozen
+
+Mon 7 Mar 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Stop developing, due to some reason, ouch :-(
+
+0.02
+
+Sat 27 Feb 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Part of Core modules tested
+	* can decode and parse message, performance improve.
+
+0.01
+
+Sun 20 Feb 2005 He zhiqiang <hzqbbc@hzqbbc.com>
+        * Begin this project, name extmail, means *Extend*
+	* Goals: Direct maildir access, fast and secure, support
+	  template, multi-languages, multi-charset convert
+	  to UTF8, using OO design, MySQL/LDAP support.

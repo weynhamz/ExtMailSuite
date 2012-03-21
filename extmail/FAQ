@@ -1,0 +1,24 @@
+Q: Why does extmail use /var/www/extsuite/extmail as base directory?
+A: Because in most suexec installation, the AP_DOC_ROOT set to /var/www,
+   so if extmail place outside the AP_DOC_ROOT, then suexec will refuse
+   to execute and return error. This is a suexec security reason.
+
+Q: Why does extmail not support mbox/mbx or IMAP/POP3?
+A: mbox/mbx sucks in most of email operation, eg: add/remove/update. And
+   the second reason is, that mbox/mbx or maildir are the backend of most
+   opensource imap/pop3 server, so why not access maildir directly?
+
+Q: Will direct maildir access cause security problem?
+A: In general the answer is *NO*! But please pay more attention to the
+   security of suexec and apache configuration.
+
+Q: How could i get FastCGI to my webserver?
+A: Since 0.23-20060104 extmail ship with FastCGI support, please make
+   sure that your web server was supported by extmail, currently the
+   experimental FastCGI support tested under Apache and lighttpd. And
+   please refer to the webserver manual for FastCGI support and the
+   configuration information, then refer to README.fcgi to get help.
+
+Q: Why i encounter bad characters under FreeBSD?
+A: Under some version, the Text::Iconv module broken, and please remove
+   it and extmail will automatically use Encode instead, it's fine

@@ -1,0 +1,70 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%SUBJECT%> - <%FROM%></title>
+<link rel="stylesheet" href="/extmail/default/css/newstyle.css" type="text/css">
+<style>
+body {margin:5px}
+</style>
+</head>
+<body onload="window.print();window.close();">
+
+<!-- IF READMSG_SUM -->
+<div style="border:1px solid #000;padding:3px;">
+<div style="border-bottom: 1px solid #aaa;padding:3px;">
+	<span><b><%subject%></b></span> <span><%SUBJECT%></span>
+</div>
+<div style="border-bottom: 1px solid #aaa;padding:3px;">
+	<span><b><%from%></b></span> <span id="from"><%FROM%></span>
+</div>
+<div style="border-bottom: 1px solid #aaa;padding:3px;">
+	<span><b><%to%></b></span> <span><%TO%></span>
+</div>
+<!-- IF CC -->
+<div style="border-bottom: 1px solid #aaa;padding:3px;">
+        <span><b><%cc%></b></span> <span><%CC%></span>
+</div>
+<!-- END CC -->
+<!-- IF BCC -->
+<div style="border-bottom: 1px solid #aaa;padding:3px;">
+	<span><b><%bcc%></b></span> <span><%BCC%></span>
+</div>
+<!-- END BCC -->
+<div style="border-bottom: 1px solid #aaa;padding:3px;">
+	<span><b><%date%></b></span> <span><%DATE%></span>
+</div>
+<!-- IF ATTACHMENT -->
+<div style="border-bottom: 1px solid #aaa">
+<table border=0 cellspacing=0 cellpadding=0>
+<tr style="vertical-align: top;padding-top: 3px"><td nowrap><b><%attach_list%></b></td>
+<td id="attachment_list">
+<table border=0 cellspacing=0 cellpadding=0>
+<tr><td style="padding-top: 0px">
+<!-- BEGIN LOOP_ATTACH -->
+<%NAME%> (<%HSIZE%>)&nbsp;
+
+<!-- END LOOP_ATTACH -->
+</td></tr>
+</table>
+</td></tr>
+</table>
+</span>
+</div>
+<!-- END ATTACHMENT -->
+
+<p></P>
+
+<!-- IF TEXT_BODY -->
+<pre style="padding:5px;">
+<%BODY%>
+</pre>
+<!-- ELSE TEXT_BODY -->
+<div style="padding:5px;font-size:14px;line-height:20px;">
+<%BODY%>
+</div>
+<!-- END TEXT_BODY -->
+</div>
+<!-- END READMSG_SUM -->
+
+</body>
+</html>

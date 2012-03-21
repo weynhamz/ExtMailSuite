@@ -1,0 +1,6 @@
+# This is readme file for standard theme, please provide i18n theme
+# description below, parser will ignore comments line, format:
+# locale name : description
+zh_CN: 新版风格（IE5.5+/FF1.0+）
+zh_TW: 新版風格（IE5.5+/FF1.0+）
+en_US: NewStyle (IE5.5+/FF1.0+)

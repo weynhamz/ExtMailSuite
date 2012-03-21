@@ -1,0 +1,15 @@
+ExtMail is written by
+
+Chi-Keung Ho (He zhiqiang) <hzqbbc@hzqbbc.com>
+
+Building 10, RM701
+West Tai-shark road,
+Wong-pu district, GZ of China
+
+CSV support based on code by  Alan Citterman, http://search.cpan.org/~alancitt/
+
+Template based on Ktemplate by Kasper Dziurdz, http://www.repsak.de/
+
+POP3 based on POP3Client by Sean Dowd <pop3client@dowds.net>
+
+PPDetector based on code by qianyu <foolfish@cpan.org>

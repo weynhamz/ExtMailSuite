@@ -1,0 +1,48 @@
+README FOR FILTERING
+--------------------
+
+Since 1.0.5 we implemented a lot improved maildrop filtering design,
+the following is the function list:
+
+o filter out CJK and other 8bit character on Subject and From/To
+o mail to external PushMail / SMS service provider
+o Bad sender or mail loop detection, advoid mail bombing
+
+Configuration
+=============
+
+Add the following three lines to /path/to/maildroprc
+
+#==========================================================
+# Decoder for high quality key word filtering
+# Author: hzqbbc <hzqbbc@hzqbbc.com> - ExtMail Dev Team
+DECODER="/var/www/extsuite/extmail/tools/decode -v"
+MAIL2SMS="/var/www/extsuite/extmail/tools/mail2sms"
+
+if ((/^(From|Sender|Return-Path):.*MAILER\-DAEMON/))
+{
+  BADSENDER=1
+}
+
+# Custom filter and auto deliver to Junk mailbox support
+# need test command and other Unix command
+`test -f $HOME/.mailfilter && exit 1 || exit 0`
+
+# No customize filtering rules
+if ( $RETURNCODE == 0 )
+{
+  if (/^X-Spam-Flag:.*YES/ || /^X-DSPAM-Result:.*Spam/)
+  {
+    exception {
+      to "$HOME/Maildir/.Junk/."
+    }
+  }
+}
+#==========================================================
+
+Change the "/var/www/extsuite/" to your real extmail path, or decoding
+will fail.
+
+Enjoy the new filtering power :-)
+
+- by hzqbbc

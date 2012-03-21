@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<META http-equiv=Content-Type content="text/html; charset=<%lang_charset%>">
+<!-- IF LOGIN -->
+<TITLE><%meta_title%></TITLE>
+<LINK media=screen href="/extmail/default/css/login.css" type=text/css rel=stylesheet>
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<!-- ELSE LOGIN -->
+	<!-- UNLESS LOGOUT -->
+	<TITLE><%meta_title%> -</TITLE>
+	<!-- END LOGOUT -->
+<!-- END LOGIN -->
+
+<!-- UNLESS ALREADY_LOGIN -->
+<script type="text/javascript" language="javascript">
+<!--
+function setCookie (name, value, expires, path, domain, secure) {
+    var curCookie = name + "=" + escape(value) + (expires ? "; expires=" + expires : "") + (path ? "; path=" + path : "") + (domain ? "; domain=" + domain : "") + (secure ? "secure" : "");
+    document.cookie = curCookie;
+}
+
+function getCookie (name) {
+    var prefix = name + '=';
+    var c = document.cookie;
+    var nullstring = '';
+    var cookieStartIndex = c.indexOf(prefix);
+    if (cookieStartIndex == -1)
+        return nullstring;
+    var cookieEndIndex = c.indexOf(";", cookieStartIndex + prefix.length);
+    if (cookieEndIndex == -1)
+        cookieEndIndex = c.length;
+    return unescape(c.substring(cookieStartIndex + prefix.length, cookieEndIndex));
+}
+
+function deleteCookie (name, path, domain) {
+    if (getCookie(name))
+        document.cookie = name + "=" + ((path) ? "; path=" + path : "") + ((domain) ? "; domain=" + domain : "") + "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+}
+
+function fixDate (date) {
+    var base = new Date(0);
+    var skew = base.getTime();
+    if (skew > 0)
+        date.setTime(date.getTime() - skew);
+}
+
+function genNowTime() {
+    var now = new Date();
+    fixDate(now);
+    now.setTime(now.getTime() + 365 * 24 * 60 * 60 * 1000);
+    now = now.toGMTString();
+    return now;
+}
+
+function rememberMe (f) {
+    var now = genNowTime();
+    if (f.username != null)
+       setCookie('extmail_username', f.username.value, now, '/', '', '');
+    if (f.domain != null)
+       setCookie('extmail_domain', f.domain.value, now, '/', '', '');
+}
+
+
+function forgetMe (f) {
+    deleteCookie('extmail_username', '/', '');
+    deleteCookie('extmail_domain', '/', '');
+    deleteCookie('extmail_passwd', '/', '');
+    //f.username.value = '';
+   //f.domain.value = '';
+    //f.password.value = '';
+}
+
+function checkType (f) {
+    if (f.bakecookie.checked) rememberMe(f)
+	else forgetMe (f);
+}
+
+function setFocus() {
+    var f = document.forms['login'];
+    if (f) {
+	if (f.username.value == null || f.username.value == "") {
+	    f.username.focus();
+	} else {
+	    f.password.focus();
+	}
+    }
+}
+
+function showerror(err) {alert(err);}
+
+//-->
+</script>
+<!-- END ALREADY_LOGIN -->
+</HEAD>
+<!-- IF LOGIN -->
+<BODY<!-- UNLESS ALREADY_LOGIN --> onload="setFocus();"<!-- END ALREADY_LOGIN -->>
+<DIV id=phd>
+<DIV class=lg><A href="http://www.extmail.org/" target=_blank><IMG alt=ExtMail
+src="/extmail/default/images/logo.gif" border=0></A></DIV><!--//logo -->
+<div class=donate><a href="http://www.extmail.org/support/<%LANG%>/index.html" target="_blank">
+<b><%support_link%></b></a> |
+<img style="vertical-align: middle" src="/extmail/images/donate.png">
+<a href="http://www.extmail.org/donate/" target="_blank"><b style="color: #5678A6"><%donate%></b></a>
+</div>
+</DIV>
+<DIV class=hack></DIV><!--mantle -->
+<DIV class=mantle_outer>
+<DIV id=mantle class=ms1>
+<DIV class=tl></DIV>
+<DIV class=tr></DIV>
+<DIV class=fix><div class=fixa><%wsplash%></div><br><span class=fixa></span></DIV>
+<DIV class=intro id=md1 style="DISPLAY: block"></DIV>
+
+<DIV class=login style="border:1px solid #8A8A8A;">
+	<div style="padding:15px;">
+	<div style="border-bottom:1px solid #8A8A8A;padding-bottom:5px;margin-bottom:10px;">
+	<span id="my" style="color:#255788;height:10px;"><b><span id="logtitle"><%webmail_login%></span></b>
+	<!-- UNLESS ALREADY_LOGIN -->
+	&nbsp;<img src="/extmail/images/sl.gif"><script type="text/javascript">menuregister(true, "my")</script>
+	<!-- END ALREADY_LOGIN -->
+	</span>
+	</div>
+	<!-- IF ALREADY_LOGIN -->
+	<div id="lgextmail" style="display:block;margin-bottom: 50px">
+	<TABLE cellpadding=2px>
+		<tr><td colspan=2><b><%USER%></b> <%already_login%></td></tr>
+		<tr><td colspan=2><%choose_action%></td></tr>
+		<tr><td align=center><a href="?__mode=welcome&sid=<%SID%>"><%enter%></a> </td>
+		<td align=center><a href="?__mode=logout&sid=<%SID%>"><%logout%></a></tr>
+	</TABLE>
+	</div>
+	<!-- ELSE ALREADY_LOGIN -->
+	<div id="lgextmail" style="display:block;">
+	<TABLE cellpadding=2px>
+	<form name="login" id=login action="/extmail/cgi/index.cgi" method="post" onsubmit="checkType(this)">
+	<TR>
+		<TD><%username%></TD>
+		<TD>
+		<!-- IF ERRMSG -->
+		<div style="padding: 2px; border: 1px solid #FF0000; background-color: #ffcccc;">
+		<!-- END ERRMSG -->
+		<INPUT TYPE="text" class="input_n" NAME="username"><br/>
+		<!-- IF ERRMSG -->
+		<span style="color: #FF0000; font-family: arial">
+			<%ERRMSG%>
+		</span>
+		</div>
+		<!-- ELSE ERRMSG -->
+			<span id="tip" class="tip"><%hint_webmail_login%></span>
+		<!-- END ERRMSG -->
+		</TD>
+	</TR>
+	<TR>
+		<TD><%password%></TD>
+		<TD><INPUT TYPE="password" class="input_n" NAME="password"></TD>
+	</TR>
+	<TR>
+		<TD><%domain%></TD>
+		<TD><INPUT TYPE="text" class="input_n" NAME="domain"></TD>
+	</TR>
+	<TR>
+		<TD></TD>
+		<TD><INPUT TYPE="checkbox" NAME="bakecookie"><%remember_one%></TD>
+	</TR>
+	<TR>
+		<TD></TD>
+		<TD><input type=checkbox <!-- IF IPSEC_ON -->checked<!-- END IPSEC_ON --> name=nosameip><%ip_security%>&nbsp;&nbsp;<INPUT TYPE="submit" class="input_s" value="<%login%>">&nbsp;&nbsp;</TD>
+	</TR>
+	</form>
+	</TABLE>
+	</div>
+	<div id="lgextman" style="display:none;">
+	<TABLE cellpadding=2px>
+	<form name="extmanlogin" action="/extman/cgi/index.cgi" method="post">
+		<input type=hidden name=action value=valid_login>
+	<TR>
+		<TD><%username%></TD>
+		<TD><INPUT TYPE="text" class="input_n" NAME="username"><br/><span class="tip"><%hint_extmail_login%></span></TD>
+	</TR>
+	<TR>
+		<TD><%password%></TD>
+		<TD><INPUT TYPE="password" class="input_n" NAME="password"></TD>
+	</TR>
+	<TR>
+		<TD></TD>
+		<TD><INPUT TYPE="checkbox" NAME=""><%remember_one%></TD>
+	</TR>
+	<TR>
+		<TD></TD>
+		<TD><INPUT TYPE="submit" class="input_s" value="<%login%>">&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+	</TR>
+	</form>
+	</TABLE>
+	</div>
+	<p />
+	<!-- IF SIGNUP_ON -->
+	<div style="padding: 10px; padding-top: 0px; text-align: center">
+	<script language="javascript">
+		var signup_domain = '';
+		function DoSignup() {
+			var url = '/extman/cgi/signup.cgi?domain=';
+			if (signup_domain) {
+				url += signup_domain;
+			} else {
+				url += document.login.domain.value;
+			}
+			document.location.href = url;
+		}
+	</script>
+		<button onclick="DoSignup()" style="padding-top: 2px"><%signup%></button>
+	</div>
+	<!-- END SIGNUP_ON -->
+	<!-- END ALREADY_LOGIN -->
+	<div style="border-bottom:1px solid #8A8A8A;padding-bottom:5px;margin-bottom:5px;">
+	<span style="color:#255788;"><b><%welcome_index%></b></span>
+	</div>
+	<div style="text-align:center;">
+	<span style="color:#666;line-height:20px;">
+	<%hint_pop3_setting%><br />
+	<span id="hintpad" name="hintpad"></span>
+	</span>
+	</div>
+	</div>
+</DIV>
+<DIV class=plus>
+<UL class=ul2>
+ <LI class=ico1><%intro2%>
+ </LI>
+ <LI class=ico1><%intro3%>
+
+ </LI>
+ <LI class=ico1><%intro4%>
+ </LI>
+ <LI class=ico1><%intro5%>
+ </LI>
+ </UL></DIV>
+<DIV class=bl></DIV>
+<DIV class=br></DIV></DIV></DIV><!--//mantle --><p>
+<DIV id=foot style="FONT-SIZE: 12px;margin:30px auto; clear:both;width:750px;border-top:1px solid #DADADA;text-align:center;color:#8A8A8A;padding-top:5px; font-family: Arial;">
+<div class=pb>Powered by <font style="font-weight: bold; color: #000"><%VERSION%></font> &copy 2004-2009 ExtMail.Org Runtime: <%TIME%></div>
+
+	<div class="headermenu_popup" id="my_menu" style="display: none;">
+		<table cellpadding="4" cellspacing="0" border="0">
+		<tr><td class="popupmenu_option" onclick="logmail();"><%webmail_login%></td></tr>
+		<tr><td class="popupmenu_option" onclick="logman();"><%extman_login%></td></tr>
+		</table>
+	</div>
+</DIV>
+
+<script>
+function logmail()
+{
+	$("lgextmail").style.display="block";
+	$("lgextman").style.display="none";
+	$("logtitle").innerHTML = "<%webmail_login%>";
+}
+function logman()
+{
+	$("lgextmail").style.display="none";
+	$("lgextman").style.display="block";
+	$("logtitle").innerHTML = "<%extman_login%>";
+}
+function domain()
+{
+	var url = document.location.href;
+	url = url.replace(/^(http:\/\/|https:\/\/)*([a-zA-Z0-9-_\.=]+):*.*/, "$2");
+	var res = url.match(/^(mail|webmail|www|freemail|)\.(.*)/);
+	if (res) { url = res[2] }
+	return url;
+}
+</script>
+
+<script type="text/javascript" language="javascript">
+<!-- IF ALREADY_LOGIN -->
+var hpval = domain();
+document.getElementById('hintpad').innerHTML = 'POP3 <b>:</b>&nbsp;&nbsp;pop3.'+ hpval
+        + '<br />' + 'SMTP <b>:</b>&nbsp;&nbsp;smtp.'+ hpval +'<br />';
+<!-- ELSE ALREADY_LOGIN -->
+<!--
+var f = document.login;
+if (f.username != null && getCookie("extmail_username"))
+    f.username.value = getCookie("extmail_username");
+if (f.domain != null && getCookie("extmail_domain"))
+    f.domain.value = getCookie("extmail_domain");
+if (f.password != null && getCookie("extmail_passwd"))
+    f.password.value = getCookie("extmail_passwd");
+if(getCookie("extmail_username") && getCookie("extmail_domain")) {
+    f.bakecookie.checked = true;
+}else {
+    /* forget me completely */
+    f.bakecookie.checked = false;
+}
+
+if (f.domain != null && !getCookie("extmail_domain") && f.domain.value =='') {
+    f.domain.value = domain();
+}
+
+document.getElementById('hintpad').innerHTML = 'POP3 <b>:</b>&nbsp;&nbsp;pop3.'+f.domain.value
+	+ '<br />' + 'SMTP <b>:</b>&nbsp;&nbsp;smtp.'+f.domain.value+'<br />';
+//-->
+<!-- END ALREADY_LOGIN -->
+</script>
+</BODY>
+<!-- ELSE LOGIN -->
+
+<!-- UNLESS LOGOUT -->
+<frameset border="0" rows="0,100%">
+	<frame scrolling="yes" noresize="" frameborder="0" src="folders.cgi?__mode=folders_list&sid=<%SID%>&screen=welcome.html" name="main">
+	<frame noresize="" frameborder="0"  name="loading" src="/extmail/default/loading.html">
+</frameset>
+<!-- END LOGOUT -->
+
+<!-- END LOGIN -->
+
+<!-- IF LOGOUT -->
+<!-- IF LOGOUT_OK -->
+<script language="javascript">
+top.window.location.href="/extmail/cgi/index.cgi";
+</script>
+<!-- ELSE LOGOUT_OK -->
+<div class="fail">
+<div><%logout_fail%> <%ERR_LOGOUT%>, <a href="index.cgi"><%return%></a></div>
+</div>
+<!-- END LOGOUT_OK -->
+<!-- END LOGOUT -->
+</HTML>

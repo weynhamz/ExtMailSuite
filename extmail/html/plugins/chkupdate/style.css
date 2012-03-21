@@ -1,0 +1,15 @@
+#chkupdate_container {
+    background-color: #F9FBFC;
+    border: 1px solid #FF0000;
+    font-size: 12px;
+    width:260px ;
+    white-space:nowrap;
+    margin-left: 12px;
+    padding: 2 5 2 5;
+    display: none;
+}
+
+#chkupdate_hint {
+    padding: 0px;
+    line-height: 1.4em;
+}

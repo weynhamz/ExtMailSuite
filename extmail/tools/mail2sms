@@ -1,0 +1,55 @@
+#!/usr/bin/perl
+#
+# mail2sms - a demo pipe gateway for mail to PushMail/SMS service
+#
+# Author: He zhiqiang <hzqbbc@hzqbbc.com>
+#   Date: Sep 23, 2009, 11:22:45
+#
+# $Id$
+use vars qw($DIR);
+BEGIN {
+        $DIR = $0;
+        if ($DIR =~ m!^/!) {
+                $DIR =~ s#/tools/mail2sms$##;
+                unshift @INC, "$DIR/libs";
+        } else {
+                $DIR =~ s#/mail2sms$##;
+                unshift @INC, "$DIR/../libs";
+        }
+}
+
+no strict;
+use IO::Socket;
+use MIME::Base64;
+use Ext::RFC822 qw(rfc822_addr_parse);
+use Ext::Lang qw(charset_detect);
+use Ext::MIME;
+use Ext::Unicode;
+
+my $id = $ARGV[0] || ( print "***DEMO VERSION***\nUsage: $0 pushmail_id\n" and exit 75 );
+
+my $header = '';
+{
+	local $/ = "\n\n";
+	$header = <STDIN>;
+}
+
+my %HDR = hdr_fmt_hash($header);
+my $from = hdr_get_hash('From', %HDR);
+my $subj = hdr_get_hash('Subject', %HDR);
+
+$subj = decode_words($subj);
+$from = rfc822_addr_parse($from)->{addr} || $from;
+
+TRY: {
+	my $charset = charset_detect($subj);
+	$subj = iconv($subj, $charset, 'utf-8') if ($charset);
+}
+
+while (<STDIN>) {
+	# put your code here
+}
+
+print "+OK deliver done\n";
+
+exit 0;

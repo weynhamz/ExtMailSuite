@@ -1,0 +1,244 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<script language=javascript>
+var currentNav = "nav_abook";
+setTitle('<%meta_title%>');
+</script>
+</HEAD>
+<BODY>
+<script language=Javascript>
+function unSelect(s)
+{
+        var lst = document.getElementById(s);
+        for(var i = 0; i < lst.options.length; i++)
+        {
+                if(lst.options[i].selected)
+                {
+                        lst.options[i].selected = false;
+                }
+        }
+}
+function Add(src, dst)
+{
+        var lst1 = document.getElementById(src);
+        var lstindex = lst1.selectedIndex;
+
+        var lst2 = document.getElementById(dst);
+
+        //alert(lstindex);
+        if(lstindex>=0)
+        {
+                for(var ii = 0; ii < lst1.options.length; ii++)
+                {
+                        var canAdd = 1;
+                        if(lst1.options[ii].selected)
+                        {
+                                var value = lst1.options[ii].value;
+                                var text = lst1.options[ii].text;
+                                for(var i = 0; i < lst2.options.length; i++)
+                                {
+                                        if(value == lst2.options[i].value)
+                                        {
+                                                canAdd = 0;
+                                                break;
+                                        }
+                                }
+                                if(canAdd)
+                                        lst2.options.add(new Option(text,value));
+                        }
+                }
+        }
+}
+function Del(src)
+{
+        var lst2 = document.getElementById(src);
+        var lstindex = lst2.selectedIndex;
+        if(lstindex>=0)
+        {
+                var length = lst2.options.length;
+                // must delete reverse or delete will fail
+                for(var ii = length -1; ii >=0; ii--)
+                {
+                        if(lst2.options[ii].selected)
+                                lst2.options[ii].parentNode.removeChild(lst2.options[ii]);
+                }
+        }
+}
+
+function chk(frm) {
+	var dList = frm.dst;
+	var grpmember = '';
+	var len = dList.options.length;
+	var lName = frm.grpname.value.replace(/^ +/, "").replace(/ +$/, "");
+
+	// we permit space, for en-us or europe people groupname has white space
+	if (!new RegExp("^[_a-zA-Z0-9 \\u0081-\\uffff]+$","g").test(lName)) {
+		alert('<%groupname%> <%fmchk_js_4%>');
+		return false;
+	}
+
+	frm.grpname.value = lName; // after cleanup
+
+	for (var i=0; i<len; i++) {
+		if (i< len-1) {
+			grpmember += dList.options[i].text + '|';
+		} else {
+			grpmember += dList.options[i].text;
+		}
+	}
+	frm.grpmember.value = grpmember;
+	return true;
+}
+
+function cfm_delete() {
+	if(confirm("<%confirm%>"))
+	{
+		document.getElementById("delete").value=1;
+		document.getElementById("myfrm").submit();
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+<!-- INCLUDE UTF8.inc -->
+
+function DoCompose(lst) {
+	var List = document.getElementById(lst);
+	var mail = '';
+	for(var i=0;i<List.options.length;i++) {
+		var e = List.options[i];
+		if (mail) {
+			mail += ', ' + e.value;
+		} else {
+			mail = e.value;
+		}
+	}
+	if (mail) {
+		// must call escape() to encode UTF8 string to ucs4
+		mail = escape(utf8_encode(mail));
+		document.location.href='compose.cgi?sid=<%SID%>&to='+mail + '&atag=1';
+	} else {
+		alert('<%nullselect%>');
+	}
+}
+</script>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main">
+
+<TABLE width=100% cellpadding=0 cellspacing=0>
+<TR>
+	<TD width=230px valign=top id="MainLeft">
+	<table cellspacing=0 cellpadding=0>
+        <tr><td>
+	<!-- INCLUDE 'groups.inc' -->
+	</td></tr>
+	<tr><td>
+	</table>
+	<form method=post action="abook.cgi" enctype="multipart/form-data" id="myfrm" name="myfrm" onSubmit="return chk(this);">
+        <input type=hidden name=sid value=<%SID%>>
+	<input type=hidden name=__mode value=group_edit>
+	<input type=hidden name=screen value="group_edit.html">
+	<input type=hidden name="delete" id="delete" value="">
+	<!-- UNLESS MODE_EDIT -->
+	<input type=hidden name="newgroup" value="1">
+	<!-- END MODE_EDIT -->
+	</TD>
+	<TD class=td1px></TD>
+	<TD valign=top class=tdmain>
+		<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit><span style="float:left;left:0px;">
+			<span class="pl10 b">
+				<!-- IF MODE_EDIT--><%edit%> "<%EDIT_NAME%>"
+				<!-- ELSE MODE_EDIT --><%add%><!-- END MODE_EDIT -->
+				<%group%>
+			</span>
+			<span class="pl10 b"><a href="/extmail/cgi/abook.cgi?sid=<%SID%>">&lt;&lt;<%return%> <%title%>
+			</a></span>
+			</span>
+			<SPAN style="float:right;padding-right:10px;">
+			<a href="globabook.cgi?sid=<%SID%>"><%globabook%></a>
+			</SPAN>
+			</TD>
+		</TR>
+		<TR>
+		<TD class=tdmain_in_con>
+		<div style="padding: 5px; padding-left: 10px"><%groupname%>: <input size=30 name="grpname" value="<%EDIT_NAME%>">
+		<!-- IF OKMSG --><span class="ok"><%OKMSG%></span><!-- END OKMSG -->
+		<!-- IF ERRMSG --><span class="fail"><b><%ERRMSG%></b></span><!-- END ERRMSG -->
+		</div>
+<table cellpadding=0px cellspacing=0px style="background:#FFF;width:90%;font-size:12px;margin-left: 10px">
+	<tr><td>
+		<select id="src" name="src" size="10" multiple onchange="unSelect('dst');" style="width: 200px; height: 200px">
+		<!-- BEGIN LOOP_ABOOK -->
+		<option value="<%MAIL%>"><%MAIL%></option>
+		<!-- END LOOP_ABOOK -->
+	</select>
+	</td>
+	<td style="padding: 10px">
+	<input type="button" value="&gt;&gt;<%add%>" onclick="Add('src', 'dst');" />
+	<input type="button" value="&lt;&lt;<%delete%>" onclick="Del('dst');" />
+	<input type="hidden" name="grpmember" value="">
+	<!-- IF MODE_EDIT -->
+	<input type="hidden" name="CURID" value="<%CURID%>">
+	<input type="hidden" name="delid" value="<%CURID%>">
+	<!-- END MODE_EDIT -->
+	</td>
+	<td width="100%">
+	<select id="dst" name="dst" size="10" multiple onchange="unSelect('src');" style="width: 200px; height: 200px">
+		<!-- BEGIN LOOP_MEMBER -->
+		<option value="<%MEMBER%>"><%MEMBER%></option>
+		<!-- END LOOP_MEMBER -->
+	</select>
+</td></tr>
+</table>
+
+			</TD>
+		</TR>
+		<TR>
+			<TD height=28px>
+			<span class="navsbl">
+				<!-- IF MODE_EDIT -->
+				<input type=submit name=editsave value=" <%save%> ">
+				<input type=button value=" <%delete%> " onclick="cfm_delete();">
+				<input type=button value=" <%compose%> " onclick="DoCompose('dst');">
+				<!-- ELSE MODE_EDIT -->
+				<input type=submit name=editsave value=" <%add%> ">
+				<input type=button value=" <%cancel%> " onclick="document.location.href='abook.cgi?sid=<%SID%>'">
+				<!-- END MODE_EDIT -->
+			</span>
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</form>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+</BODY>
+</HTML>

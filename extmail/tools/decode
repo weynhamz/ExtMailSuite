@@ -1,0 +1,57 @@
+#!/usr/bin/perl
+#
+# decode - a small script to decode mail message, and convert to utf8
+#
+# Author: He zhiqiang <hzqbbc@hzqbbc.com>
+#   Date: Apr 11, 2008, 20:20:03
+#
+# $Id$
+use vars qw($DIR);
+BEGIN {
+	$DIR = $0;
+	if ($DIR =~ m!^/!) {
+		$DIR =~ s#/tools/decode$##;
+		unshift @INC, "$DIR/libs";
+	} else {
+		$DIR =~ s#/decode$##;
+		unshift @INC, "$DIR/../libs";
+	}
+}
+no strict;
+use Ext::Lang qw(charset_detect);
+use Ext::Unicode;
+use Ext::MIME;
+use POSIX qw(strftime);
+
+my $verbose = 0;
+my $str0;
+
+if ($#ARGV == 0) {
+    $str0 = $ARGV[0];
+} elsif ($#ARGV == 1 && $ARGV[0] eq '-v') {
+    $verbose = 1;
+    $str0 = $ARGV[1];
+} else {
+    print "Usage: $0 [-v] string\n";
+    exit 255;
+}
+
+my $str = decode_words($str0); # decoded;
+my $buf = $str;
+my $charset = '';
+
+TRY: {
+    $charset = charset_detect($str);
+    $buf = iconv($buf, $charset, 'utf-8') if ($charset);
+}
+
+print $buf,"\n";
+
+if ($verbose) {
+    open (FD, ">> /tmp/decode.log") or die $!;
+    print FD strftime("%Y-%m-%D %H:%M:%S", localtime);
+    print FD " in='$str0', detect=$charset, out='$buf', len=",length($buf), "\n";
+    close FD;
+}
+
+exit (0);

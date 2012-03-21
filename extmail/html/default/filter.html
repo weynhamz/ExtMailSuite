@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<script language=javascript>
+var currentNav = "nav_option";
+var needChk = true;
+
+setTitle('<%meta_title%>');
+
+function chkSubmit(form) {
+	var checked = false;
+	if (needChk == false)
+		return true;
+	for (var i=0;i<form.elements.length;i++)
+	{
+		var e = form.elements[i];
+		if (e.type=='radio' && e.checked)
+		{
+			checked = true;
+			break;
+		}
+	}
+	if (checked == false) {
+		alert('<%hint_select_item%>');
+	}
+	return checked;
+}
+
+function addRule() {
+	needChk = false;
+}
+
+</script>
+</HEAD>
+<BODY>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main" style="background:#fff;">
+
+<TABLE width=100% cellpadding=0 cellspacing=0 back>
+<TR>
+	<TD width=170px valign=top id="MainLeft">
+<!-- INCLUDE 'OPTION_NAV.html' -->
+	</TD>
+	<!--<TD class=td1px></TD> -->
+	<TD valign=top class=tdmain_ab>
+		<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit>
+			<span style="float:left;left:0px;">
+			<span class="pl10 b"><%opt_filter%></span>
+			<span></span>
+			</span>
+			<SPAN style="float:right;padding-right:10px;"></SPAN>
+			</TD>
+		</TR>
+		<TR>
+			<TD class=tdmain_in_con>
+	<table width=100% cellspacing=10>
+	<form name="extension" method="post" action="/extmail/cgi/filter.cgi">
+	<input type=hidden name="__mode" value="extension_mgr">
+	<!-- IF AUTOREPLY_ON --><input type=hidden name="autoreply" value="on"><!-- END AUTOREPLY_ON -->
+	<input type=hidden name="sid" value="<%SID%>">
+			<tr>
+				<td style="padding:5px;border:1px solid #ccc;">
+				<div class=optiontit></div>
+					<table cellpadding=5 cellspacing=5 width=100%>
+					<tr>
+						<td class=optionkey>&nbsp;</td>
+						<td><input type=checkbox name=whitelist <!-- IF WHITELIST_ON -->checked<!-- END WHITELIST_ON -->>
+							<a href="?__mode=edit_list&white=1&sid=<%SID%>&screen=whitelist.html">
+							<img src="/extmail/default/images/edit.gif" alt="<%edit%>"> [<%edit%>]</a>&nbsp;<%hint_whitelist%>
+						</td>
+					</tr>
+					<tr>
+						<td class=optionkey><%extension_title%></td>
+						<td><input type=checkbox name=blacklist <!-- IF BLACKLIST_ON -->checked<!-- END BLACKLIST_ON -->>
+							<a href="?__mode=edit_list&black=1&sid=<%SID%>&screen=blacklist.html">
+							<img src="/extmail/default/images/edit.gif" alt="<%edit%>"> [<%edit%>]</a>&nbsp;<%hint_blacklist%>
+						</td>
+					</tr>
+					<tr>
+						<td class=optionkey>&nbsp;</td>
+						<td><input type=checkbox name=spam2junk <!-- IF SPAM2JUNK_ON -->checked<!-- END SPAM2JUNK_ON -->>
+							<img src="/extmail/default/images/delete.gif">&nbsp;<%hint_spam2junk%>
+						</td>
+					</tr>
+					<tr>
+						<td colspan=2 align=center style="height:10px;"><hr size="1" style="color:#ccc;width:90%;" /></td>
+					</tr>
+					<tr>
+						<td class=optionkey style="height:40px;"><%forward_title%></td>
+						<td><input type=checkbox name=forward <!-- IF FORWARD_ON -->checked<!-- END FORWARD_ON -->>
+						<%forward%>
+			<input type=input name=forwardaddr value="<%FORWARD_ADDR%>" size=30><input type=checkbox name=forwardcc <!-- IF FORWARDCC_ON -->checked<!-- END FORWARDCC_ON -->>
+			<%forwardcc%><br />
+			<span class=tip><%hint_forward%></span>
+						</td>
+					</tr>
+					<tr>
+						 <td class=optionkey><%forward_title%></td>
+						 <td><input type=checkbox name=mail2sms <!-- IF MAIL2SMS_ON -->checked<!-- END MAIL2SMS_ON -->>
+                     				<%mail2sms%>
+						</td>
+					</tr>
+					<tr>
+					<td style="height:35px;"></td><td><input type=submit name="save" value="<%confirm%>"></td>
+					</tr>
+					</table>
+				</td>
+			</tr>
+	</form>
+	<form name="filter" method="post" action="/extmail/cgi/filter.cgi" onsubmit="return chkSubmit(this)">
+	<input type=hidden name="__mode" value="filter_edit">
+	<input type=hidden name="sid" value="<%SID%>">
+			<tr>
+				<td style="padding:5px;border:1px solid #ccc;">
+				<div class=optiontit><%meta_filter_title%></div>
+					<table cellpadding=5 cellspacing=5 width=100%>
+					<!-- IF HAVE_FILTER_LIST -->
+					<!-- BEGIN FILTER_LIST_LOOP -->
+					<tr>
+						<td class=optionkey><input type=radio name="fid" id="fid" value="<%FILTER_ID%>"><%FILTER_NAME%></td>
+						<td><%condition%><b><%FILTER_COND%></b><br /><%execution%> <%FILTER_EXEC%></td>
+					</tr>
+					<!-- END FILTER_LIST_LOOP -->
+					<tr>
+						<td class=optionkey>&nbsp;</td>
+						<td>
+							<input type=submit name="edit" value="<%edit%>">
+							<input type=submit name="up" value="<%up%>">
+							<input type=submit name="down" value="<%down%>">
+							<input type=submit name="remove" value="<%remove%>">
+							<input type=submit name="add" value="<%add%>" onclick="javascript:addRule()">
+						</td>
+					</tr>
+					<!-- ELSE HAVE_FILTER_LIST -->
+					<tr><td class=optionkey><%nofilterdefined%></td><td><input type=hidden name="add" value="append"><input type=submit value="<%add%>" onclick="javascript:addRule()"></td><tr>
+					<!-- END HAVE_FILTER_LIST -->
+					</table>
+				</td>
+			</tr>
+	</form>
+	</table>
+
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+</BODY>
+</HTML>

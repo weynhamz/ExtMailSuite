@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<script language=javascript>
+var currentNav = "nav_option";
+setTitle('<%meta_title%>');
+
+function NewAccount() {
+	var obj = document.getElementById('newaccount');
+	var err = document.getElementById('errorbar');
+	obj.style.display = '';
+	if (err != null) {
+		err.style.display = 'none';
+	}
+}
+
+function Cancel() {
+	var obj = document.getElementById('newaccount');
+	obj.style.display = 'none';
+}
+</script>
+</HEAD>
+<BODY>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main" style="background:#fff;">
+
+<TABLE width=100% cellpadding=0 cellspacing=0 back>
+<TR>
+	<TD width=170px valign=top id="MainLeft">
+<!-- INCLUDE 'OPTION_NAV.html' -->
+	</TD>
+	<!--<TD class=td1px></TD> -->
+	<TD valign=top class=tdmain_ab>
+		<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit>
+			<span style="float:left;left:0px;">
+			<span class="pl10 b"><%pop_title%></span>
+			</span>
+			</TD>
+		</TR>
+		<TR>
+			<TD class=tdmain_in_con align=left>
+<form name=pref_save method=post action="pref.cgi">
+<div class="msgnav" style="margin: 5px 5px 5px 5px"><span class="first">
+		<input type=button onclick="javascript:NewAccount()" value="<%newpop%>">
+	</span>
+	<span class="last">
+	<input type=button name="return" value="<%back_pref%>"
+	        onclick="location.href='?__mode=pref_list&sid=<%SID%>'">
+	<input type=submit name="dodelete" value="<%dodelete%>">
+</span>
+</div>
+
+<table class="pref_pop3" cellspacing=1 cellpadding=0>
+	<tr><td><%username%></td><td><%host_port%></td>
+		<td><%active%></td><td><%backup%></td><td><%action%></td>
+	</tr>
+	<!-- IF POP3LIST_LOOP -->
+	<!-- BEGIN POP3LIST_LOOP -->
+	<tr>
+		<td><%POP3_UID%></td>
+		<td><%POP3_SERVER%></td>
+		<td><!-- IF POP3_ACTIVE -->
+			<font class="ok"><%yes%></font>
+			<!-- ELSE POP3_ACTIVE -->
+			<font class="fail"><%no%></font>
+			<!-- END POP3_ACTIVE -->
+		</td>
+		<td><!-- IF POP3_BACKUP -->
+			<%yes%>
+			<!-- ELSE POP3_BACKUP -->
+			<%no%>
+			<!-- END POP3_BACKUP -->
+		</td>
+		<td><a href="?__mode=pop3_list&edit=<%POP3_UID%>&sid=<%SID%>">
+			<img src="/extmail/default/images/edit.gif" alt="<%edit%> <%POP3_UID%>"></a>
+		<input type=checkbox name="REMOVE-<%NUM%>" value="<%POP3_UID%>">
+		</td>
+	</tr>
+	<!-- END POP3LIST_LOOP -->
+	<!-- ELSE POP3LIST_LOOP -->
+	<tr><td colspan=5><%pop_listnull%></td></tr>
+	<!-- END POP3LIST_LOOP -->
+</table>
+
+<div style="margin-left: 10px">
+<!-- IF ERRMSG -->
+<div style="margin-top: 10px" id="errorbar" name="errorbar">
+	<span><img src="/extmail/default/images/hint_sm.gif"> <b><%error%></b></span>
+	<span class="fail"><%ERRMSG%></span>
+</div>
+<!-- ELSE ERRMSG -->
+<div style="margin-top: 10px">
+	<img src="/extmail/default/images/hint_sm.gif">
+	<%hint_savepop%>
+</div>
+<!-- END ERRMSG -->
+
+<// -- Account  --->
+<table width=350 class="pop3tab" <!-- UNLESS EDIT_ACCOUNT -->style="display: none"<!-- END EDIT_ACCOUNT --> name="newaccount" id="newaccount">
+	<tr>
+		<td><%username%></td>
+		<td><input class="tinput" name="username" id="username" value="<%EDIT_UID%>">
+			<!-- IF EDIT_ACCOUNT -->
+			<a href="?__mode=pop3_list&sid=<%SID%>"><%newpop%></a>
+			<!-- END EDIT_ACCOUNT -->
+		</td>
+	</tr>
+	<tr>
+		<td><%password%></td>
+		<td><input class="tinput" name="passwd" id="passwd" type=password></td>
+	</tr>
+	<tr>
+		<td><%host%></td>
+		<td><input class="tinput" name="host" id="host" value="<%EDIT_HOST%>"></td>
+	</tr>
+	<tr>
+		<td><%port%></td>
+		<td><input class="tport" name="port" id="port" value="<%EDIT_PORT%>"></td>
+	</tr>
+	<tr>
+		<td><%backup%></td>
+		<td>
+			<input name=backup type=checkbox <!-- IF EDIT_BACKUP -->checked<!-- END EDIT_BACKUP -->>
+			<%hint_backup%>
+		</td>
+	</tr>
+	<tr>
+		<td><%active%></td>
+		<td>
+			<input name=active type=checkbox <!-- IF EDIT_ACTIVE -->checked<!-- END EDIT_ACTIVE -->>
+			<%hint_active%>
+		</td>
+	</tr>
+	<tr><td colspan=2>
+			<div style="color: #FF0000; padding: 8px">
+			<img src="/extmail/default/images/hint.gif"> <%hint_pop%>
+		</div>
+</td></tr>
+<tr><td colspan=2>
+<!-- IF EDIT_ACCOUNT -->
+<input type=submit name="doedit" value="<%doedit%>"> &nbsp;
+<!-- ELSE EDIT_ACCOUNT -->
+<input type=submit name="doadd" value="<%doadd%>"> &nbsp;
+<!-- END EDIT_ACCOUNT -->
+<input type=button value="<%cancel%>" onclick="javascript:Cancel()">
+</td></tr>
+</table>
+</div>
+
+<input type=hidden name="__mode" value="pop3_save">
+<input type=hidden name="sid" value="<%SID%>">
+<input type=hidden name="screen" value="pref_pop3.html">
+</form>
+
+			</TD>
+		</TR>
+		<TR>
+			<TD height=28px>
+			<span style="float:left;text-align:left;padding-left:10px;font-size:12px;line-height:30px;font-weight:normal;font-weight:bold;padding-top:5px;">
+
+			</span>
+			<span style="float:right;text-align:right;padding-right:10px;font-size:12px;line-height:30px;font-weight:normal;font-weight:bold;padding-top:5px;">
+
+			</span>
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+</BODY>
+</HTML>

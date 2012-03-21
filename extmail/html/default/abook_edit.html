@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<script language=javascript>
+var currentNav = "nav_abook";
+</script>
+</HEAD>
+<BODY>
+<style>
+    #tabwin ul{margin:0;padding:0;list-style:none;color:#000;vertical-align: top}
+    #tabwin li{float:left;background:#fff;border-right:1px solid #FFF;padding:3px 8px 3px 8px;cursor: pointer}
+    #tabwin .tab-selected{background:#D9E6F4;margin:0;padding:3px 8px 3px 8px;font-weight: bold}
+    #tabwin .cleard{clear:both;}
+    /* top right bottom left */ /* FireFox and IE will behavor different here, sorry :( */
+    #tabwin .content-tab {margin: 0; width: 98%; border: 1px solid #ccc}
+    #tabwin input{width: 200px}
+    #tabwin .abkey {width: 100px}
+</style>
+
+<script language=javascript>
+setTitle('<%meta_title%>');
+function Chk(frm) {
+	if (!frm.ab_name.value || !frm.ab_email.value) {
+		alert('<%infonull%>');
+		return false;
+	}
+	if (frm.ab_email.value.replace(/^ +/, "").replace(/ $/, "").replace(/(,|^)(.|)+<([\w._-]+@[\w\-]+\.([\w\-]+\.){0,3}\w{2,4})>|(\,|^)([\w+._-]+@[\w\-]+\.([\w\-]+\.){0,3}\w{2,4})/g,"")!="") {
+		alert('<%fmchk_js_7%>');
+		return false;
+	}
+	// we permit space, for en-us or europe people name has white space
+	if (!new RegExp("^[_a-zA-Z0-9 \\u0081-\\uffff]*$","g").test(frm.ab_name.value)) {
+		alert('<%ab_name%> <%fmchk_js_4%>');
+		return false;
+	}
+	return true;
+}
+
+function Select(tab){
+        for(i=1; i <5; i++){
+                if (i==tab) {
+                        document.getElementById("Tab"+i).className="tab-selected";
+                        document.getElementById("Content"+i).style.display="block";
+                }else{
+                        document.getElementById("Tab"+i).className="";
+                        document.getElementById("Content"+i).style.display="none";
+                }
+        }
+}
+
+function cfm_delete() {
+	if(confirm("<%confirm%>"))
+	{
+		document.getElementById("delete").value=1;
+		document.getElementById("myfrm").submit();
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+<!-- INCLUDE UTF8.inc -->
+
+function DoCompose() {
+	var form = document.getElementById("myfrm");
+	var mail = form.ab_email.value;
+	var name = form.ab_name.value;
+	if (mail) {
+		var to = '<'+mail+'>';
+		if (name) {
+			to = '"'+name+'" '+to;
+		}
+		to = escape(utf8_encode(to));
+		document.location.href='compose.cgi?sid=<%SID%>&to='+to + '&atab=1';
+	} else {
+		alert('<%nullselect%>');
+	}
+}
+</script>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main">
+
+<TABLE width=100% cellpadding=0 cellspacing=0>
+<TR>
+	<TD width=230px valign=top id="MainLeft">
+	<table cellspacing=0 cellpadding=0>
+	<tr><td>
+	<!-- INCLUDE 'groups.inc' -->
+	</td>
+	</tr>
+	</tr><td>
+		<form method=post action="abook.cgi" name="searchit">
+		<input type=hidden name=sid value=<%SID%>>
+		<input type=hidden name=__mode value=abook_search>
+		<div class=panelout style="margin-left:5px;margin-right:5px;padding:5px">
+		<span style="padding:5px;">
+		<input name=keyword size=15 value="<%KEYWORD%>">&nbsp;<input type=submit name=search value="<%search%>">
+		</span>
+		</div>
+	</form>
+	</td>
+	</table>
+
+	<form method=post action="abook.cgi" enctype="multipart/form-data" id="myfrm" name="myfrm" onSubmit="return Chk(this)">
+        <input type=hidden name=sid value=<%SID%>>
+        <input type=hidden name=__mode value=abook_edit>
+        <input type=hidden name=url value="<%RETURN_URL%>">
+	<input type=hidden name="delete" id="delete" value="">
+	<!-- IF MODE_EDIT -->
+	<input type=hidden name=CURID value="<%CURID%>">
+	<input type=hidden name="REMOVE-<%CURID%>">
+	<!-- END MODE_EDIT -->
+	</TD>
+	<TD class=td1px></TD>
+	<TD valign=top class=tdmain>
+		<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit><span style="float:left;left:0px;">
+			<span class="pl10 b">
+				<!-- IF MODE_EDIT --><%edit%>"<%AB_NAME%>"<!-- ELSE MODE_EDIT -->
+				<%add%> <%info%>
+				<!-- END MODE_EDIT -->
+			</span><span class="pl10 b"><a href="/extmail/cgi/abook.cgi?sid=<%SID%>">&lt;&lt;<%return%> <%title%></a></span>
+			</span>
+			<SPAN style="float:right;padding-right:10px;"><a href="globabook.cgi?sid=<%SID%>"><%globabook%></a>
+			</SPAN>
+			</TD>
+		</TR>
+		<TR>
+			<TD class=tdmain_in_con>
+<table cellpadding=0px cellspacing=0px style="background:#FFF;width:80%;font-size:12px;">
+<tr>
+<td colspan=4>
+<div style="padding: 10px; font-size: 14px;" id=tabwin name=tabwin>
+	<ul>
+		<li class="tab-selected" id="Tab1" onclick="Select('1');"><%tab_basic%></li>
+		<li class="tab" id="Tab2" onclick="Select('2');"><%tab_personal%></li>
+		<li class="tab" id="Tab3" onclick="Select('3');"><%tab_business%></li>
+		<li class="tab" id="Tab4" onclick="Select('4');"><%tab_other%></li>
+		<div class="cleard"></div>
+	</ul>
+
+	<!-- INCLUDE 'rich_abook.inc' -->
+
+</div>
+</td></tr>
+</table>
+
+		</TD>
+		</TR>
+		<TR>
+			<TD height=28px>
+			<span class="navsbl">
+				<!-- IF MODE_EDIT -->
+				<input type=submit name=editsave value=" <%save%> ">
+				<input type=button value=" <%delete%> " onclick="cfm_delete();">
+				<input type=button value=" <%compose%> " onclick="DoCompose();">
+				<!-- ELSE MODE_EDIT -->
+				<input type=submit name=newabook value="<%add%>">
+				<input type=button value=" <%cancel%> " onclick="document.location='abook.cgi?sid=<%SID%>'">
+				<!-- END MODE_EDIT -->
+			</span>
+			<input type=hidden name=page value="<%CUR_PAGE%>">
+			<input type=hidden name=keyword value="<%KEYWORD%>">
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</form>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+</BODY>
+</HTML>

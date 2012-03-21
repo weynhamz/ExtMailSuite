@@ -1,0 +1,77 @@
+BODY { font-size:12px; font-family: helvetica,arial,sans-serif }
+TD { font-size:12px;}
+FORM { margin:0; padding:0;}
+IMG { border:0;}
+#phd {
+	CLEAR: both; height:40px;FONT-SIZE: 12px; MARGIN: 0px auto 0px; WIDTH: 750px;
+}
+#phd .lg {
+	position:absolute;FLOAT: left;top:30px;
+}
+#phd .donate {
+	position:relative;left:150px;top:30px;
+}
+#phd .donate a,a:link,a:hover,a:visited { text-decoration: none}
+.ms1 { background:url(/extmail/default/images/splash.jpg) left top no-repeat #79A4D0;}
+.mantle_outer { height:415px;}
+/*mantle*/
+#mantle { width:750px;margin:auto; clear:both; position:relative; top:0; left:0; margin-top:20px;}
+#mantle .tl,#mantle .tr,#mantle .bl,#mantle .br { width:3px; height:3px; overflow:hidden; position:absolute;}
+#mantle .tl { background:url(/extmail/default/images/rb.gif) no-repeat; float:left; top:0; left:0;}
+#mantle .tr { background:url(/extmail/default/images/rb.gif) no-repeat -3px 0; float:right; top:0; right:0;}
+#mantle .bl { background:url(/extmail/default/images/rb.gif) no-repeat 0 -3px; float:left; bottom:0; left:0;}
+#mantle .br { background:url(/extmail/default/images/rb.gif) no-repeat -3px -3px; float:right; bottom:0; right:0;}
+#mantle .fix { height:157px !important; height:154px;}
+#mantle .fix b {margin-left:230px;margin-top:100px;font-size:20px; font-weight:normal;color:#fff;}
+#mantle .fixa  {margin-left:200px;margin-top:0px;padding-top:20px; font-size:14px; font-weight:bold;line-height:20px;color:#fff;}
+#mantle .alpha { position:absolute; bottom:0; height:40px;width:750px; left:0;}
+#mantle .login { width:245px; height:405px; position:absolute; right:20px; top:-20px;background-color:#fff;}
+#mantle .intro,#mantle .intro2 { width:205px;position:absolute; left:15px; top:15px; _top /* */:45px; text-align:left; color:#fff; font-size:14px; line-height:20px;}
+#mantle .intro b { font-size:20px; font-weight:normal;}
+#mantle .intro img { margin-bottom:.8em;}
+#mantle .intro2 img { margin-bottom:1.2em;}
+#mantle .intro2 a:link,#mantle .intro2 a:visited { color:#B12F11; font-weight:bold;}
+#mantle .hasid { text-align:left; padding:20px 0 0 0; margin-left:68px; clear:both;}
+#mantle .hasid img { margin-bottom:.3em;}
+#mantle .plus { position:absolute; top:170px; height:40px;width:460px; height:200px; left:0;}
+#mantle a:link,#mantle a:link:visited { color:#41679B;}
+#pt1,#pt2 { width:120px; height:22px; border:1px solid #FFFF00;}
+
+.ul1 { margin:10px 0 0 7px; padding:0;}
+.ul1 li {/* list-style:none; padding:0;*/text-align:left; margin-bottom:.5em;}
+.ul2 { margin:0 0 0 20px; padding:0;}
+.ul2 li {list-style:none; padding:0; text-align:left; margin-bottom:.7em; font-size:12px; color:#5678A6; padding:5px 0 0 10px; line-height:20px;}
+.ul2 strong { font-size:14px;}
+.ul2 .ico1 { /**background:url(/extmail/default/images/ico1.gif) center left no-repeat;**/}
+
+.tb2 a:link,.tb2 a:visited { color:#41679B;}
+.tb2 { margin:auto;}
+.tb2 td { text-align:left}
+
+.sp1px {height:1px;color:#8A8A8A;}
+
+.headermenu_popup {
+	BORDER-RIGHT: #8A8A8A 1px solid; BORDER-TOP: #8A8A8A 1px solid; MARGIN-TOP: 1px; BORDER-LEFT: #8A8A8A 1px solid; COLOR: #154ba0; BORDER-BOTTOM: #8A8A8A 1px solid
+}
+.headermenu_popup A {
+	COLOR: #154ba0; TEXT-DECORATION: none
+}
+.popupmenu_highlight {
+	PADDING-RIGHT: 8px; PADDING-LEFT: 8px; BACKGROUND: #999; PADDING-BOTTOM: 3px; FONT: 12px Tahoma, Verdana; CURSOR: pointer; COLOR: #ffffff; PADDING-TOP: 3px; WHITE-SPACE: nowrap
+}
+.popupmenu_highlight A {
+	PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 3px; COLOR: #ffffff; PADDING-TOP: 3px; TEXT-DECORATION: none
+}
+.popupmenu_popup {
+	BORDER-RIGHT: #86b9d6 1px solid; BORDER-TOP: #86b9d6 1px solid; BORDER-LEFT: #86b9d6 1px solid; COLOR: #154ba0; BORDER-BOTTOM: #86b9d6 1px solid
+}
+.popupmenu_option {
+	PADDING-RIGHT: 8px; PADDING-LEFT: 8px; BACKGROUND: #fff; PADDING-BOTTOM: 3px; FONT: 12px Tahoma, Verdana; CURSOR: pointer; COLOR: #154ba0; PADDING-TOP: 3px; WHITE-SPACE: nowrap
+}
+.popupmenu_option A {
+	PADDING-RIGHT: 8px; PADDING-LEFT: 8px; PADDING-BOTTOM: 3px; COLOR: #154ba0; PADDING-TOP: 3px; TEXT-DECORATION: none
+}
+.tip {color:#999;}
+.input_n{width:150px;height:17px !important;height /**/:20px;border-style:inset;padding:2px 0 0 2px;font:normal 12px tahoma;}
+.input_s{width:62px;height:27px;padding-top:2px;font-weight:bold;border-style:outset;}
+

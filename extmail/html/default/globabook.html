@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<script language=javascript>
+var currentNav = "nav_abook";
+setTitle('<%meta_title%>');
+</script>
+</HEAD>
+<BODY>
+<script language=Javascript>
+function CA()
+{
+	var form = $("myfrm");
+	for (var i=0;i<form.elements.length;i++)
+	{
+		var e = form.elements[i];
+		if ((e.name != 'SELECTALL') && (e.type=='checkbox'))
+		{
+			e.checked = form.SELECTALL.checked;
+		}
+	}
+}
+
+function DoCompose() {
+	var form = $("myfrm");
+	var mail = '';
+	for(var i=0;i<form.elements.length;i++) {
+		var e = form.elements[i];
+		if ((e.type =='checkbox') && e.checked && (e.name != 'SELECTALL')) {
+			if (mail) {
+				mail += ',' + e.value;
+			} else {
+				mail = e.value;
+			}
+		}
+	}
+	if (mail) {
+		document.location.href='compose.cgi?sid=<%SID%>&to='+mail + '&atag=1';
+	} else {
+		alert('<%nullselect%>');
+	}
+}
+</script>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main">
+
+<TABLE width=100% cellpadding=0 cellspacing=0>
+<TR>
+	<TD width=230px valign=top id="MainLeft">
+
+<form method=post action="globabook.cgi" name="searchit" id="searchit">
+<input type=hidden name=sid value=<%SID%>>
+<input type=hidden name=__mode value=abook_search>
+<div class=panelout style="margin-left:5px;margin-right:5px;padding:5px;">
+<span style="padding:5px;">
+<input name=keyword size=15>&nbsp;<input type=submit name=search value="<%search%>">
+</span>
+</div>
+</form>
+
+<form method=post action="abook.cgi" enctype="multipart/form-data" name="myfrm" id="myfrm">
+<input type=hidden name=sid value=<%SID%>>
+<input type=hidden name=url value="<%RETURN_URL%>">
+<!----beginleft-->
+
+<!----endleft-->
+
+	</TD>
+	<TD class=td1px></TD>
+	<TD valign=top  class=tdmain>
+		<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit><span style="float:left;left:0px;">
+			<span class="pl10 b"><%title%>
+			</span>
+			<span></span></span>
+			<SPAN style="float:right;padding-right:10px;"><a href="abook.cgi?sid=<%SID%>"><%personal_abook%></a>
+			</SPAN>
+			</TD>
+		</TR>
+		<TR>
+			<TD class=tdmain_in_con>
+
+<table cellpadding=0px cellspacing=0px style="background:#FFF;width:100%;font-size:12px;">
+<!-- IF HAVE_ABOOK -->
+<tr class="MLTR_HEAD">
+<td><input type=checkbox name=SELECTALL onclick="CA()"><%list_check%>
+<td><%name%>&nbsp;</td>
+<td><%mail%>&nbsp;</td>
+<td><%company%>&nbsp;</td>
+<td><%mobile%>&nbsp;</td>
+</tr>
+<!-- BEGIN LOOP_ABOOK -->
+<tr class="MLTR">
+<td><input type=checkbox name=REMOVE-<%ID%> value="<%MAILADDR%>"></td>
+<td><a href="#" title="<%edit%> <%NAME%>"><%NAME%></a></td>
+<td><!-- IF MAILADDR -->
+	<a href="compose.cgi?to=<%MAILADDR%>&sid=<%SID%>"><%MAILADDR%></a>
+	<!-- END MAILADDR -->
+</td>
+<td><!-- IF COMPANY --><%COMPANY%><!-- ELSE COMPANY -->&nbsp<!-- END COMPANY --></td>
+<td><!-- IF MOBILE --><%MOBILE%><!-- ELSE MOBILE -->&nbsp<!-- END MOBILE --></td>
+</tr>
+<!-- END LOOP_ABOOK -->
+
+<!-- ELSE HAVE_ABOOK -->
+<tr><td colspan=4>
+<div style="padding: 10px; font-size: 14px;">
+<!-- IF SEARCH_NULL -->
+<p><b><%nullsearch%></b></p>
+<p><%search_tips%></p>
+<!-- ELSE SEARCH_NULL -->
+<p><b><%caution%></b></p>
+<p><%caution_tips%></p>
+<!-- END SEARCH_NULL -->
+</div>
+</td></tr>
+<!-- END HAVE_ABOOK -->
+</table>
+
+			</TD>
+		</TR>
+		<TR>
+			<TD height=28px>
+			<span class="navsbr">
+			<!-- IF HAVE_PREV -->
+			<a href="?sid=<%SID%>&page=<%PREV%><!-- IF KEYWORD -->&__mode=abook_search&keyword=<%KEYWORD%><!-- END KEYWORD -->"><%prev%></a>
+			<!-- END HAVE_PREV -->
+			<!-- IF HAVE_NEXT -->
+			<a href="?sid=<%SID%>&page=<%NEXT%><!-- IF KEYWORD -->&__mode=abook_search&keyword=<%KEYWORD%><!-- END KEYWORD -->"><%next%></a>
+			<!-- END HAVE_NEXT -->
+
+			</span>
+			<span class="navsbl">
+				<input type=button value=" <%compose%> " onclick="DoCompose();">
+			</span>
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</form>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+</BODY>
+</HTML>

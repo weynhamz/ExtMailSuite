@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+
+<!-- Plugins css -->
+<link rel="stylesheet" href="/extmail/plugins/coolweather/style.css">
+<link rel="stylesheet" href="/extmail/plugins/etnews/style.css">
+<link rel="stylesheet" href="/extmail/plugins/chkupdate/style.css">
+
+<script language=javascript>
+var currentNav = "nav_home";
+var userlang = "<%LANG%>";
+var version = "<%NVERSION%>";
+var software = "extmail";
+
+setTitle('<%meta_title%>');
+
+</script>
+<script type="text/javascript" src="/extmail/plugins/phprpc_client.js"></script>
+<script type="text/javascript" src="/extmail/plugins/rpc_init.js"></script>
+<script type="text/javascript" src="/extmail/plugins/coolweather/coolweather.js"></script>
+<script type="text/javascript" src="/extmail/plugins/etnews/etnews.js"></script>
+<script type="text/javascript" src="/extmail/plugins/chkupdate/chkupdate.js"></script>
+<script language=javascript>
+rpc_chklng();
+</script>
+
+</HEAD>
+<BODY>
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main">
+<TABLE width=100%  cellpadding=0 cellspacing=0>
+<TR>
+	<TD width=170px valign=top id="MainLeft">
+<!-- INCLUDE 'MAIN_LEFT.html' -->
+	</TD>
+	<TD class=td1px></TD>
+	<TD valign=top>
+	<div id="mwel"><%welcome%> <%USER%></div>
+	<div class="panelin" id="chkupdate_container">
+	</div>
+	<script type="text/javascript">
+		chkupdate_init(version, software);
+	</script>
+
+	<div id="mquota">
+	<!-- quota usage bar -->
+	<table cellspacing=0 cellpadding=0 border=0>
+        <TR>
+        <!-- IF MBX_QUOTA_SIZE -->
+        <td nowrap width=200 class="quotapc" colspan=3>
+        <%your_storage%><%MBX_QUOTA_PC%>%<%your_storage2%><%MBX_QUOTA_SIZE%>
+        </td></tr>
+        <tr style="padding-bottom: 3px"><TD class="quotapc" WIDTH=5>0%</TD><TD WIDTH=150>
+                <table class="quotabar" cellSpacing="0" cellPadding="0" width="100%" border="0">
+                <tr><td width="100%" style="border:1px solid #C7C8CB;padding:1px;">
+                <div class="<!-- IF MBX_OVERQUOTA -->quotapc_over<!-- ELSE MBX_OVERQUOTA -->quotapc_normal<!-- END MBX_OVERQUOTA -->" style="FONT-SIZE: 6px; WIDTH: <%MBX_QUOTA_PC%>%; HEIGHT: 6px;">
+                </div>
+                </td></tr></table>
+                </TD><TD class="quotapc" ALIGN=left>100%</TD>
+        </tr><tr>
+                <!-- END MBX_QUOTA_SIZE -->
+                <!-- IF MBX_OVERQUOTA -->
+                <td class="overquota" colspan=3>
+                        <%MBX_OVERQUOTA_MSG%>
+                </td>
+                <!-- ELSE MBX_OVERQUOTA -->
+                <td class="quotapc" colspan=3>
+                        <%your_storage3%> <%MBX_CUR_QCOUNT%> <%your_storage4%> <%MBX_CUR_QSIZE%>
+                </td>
+                <!-- END MBX_OVERQUOTA -->
+        </TR>
+	</table>
+	<!-- end of quota bar -->
+		</div>
+		<!-- IF POP3OK -->
+		<div class="ok"><%POP3OK%></div>
+		<!-- END POP3OK -->
+		<!-- IF LOOP_POP3ERR -->
+		<div class="fail">
+		<!-- BEGIN LOOP_POP3ERR -->
+		      <%POP3ERR%></br>
+		<!-- END LOOP_POP3ERR -->
+		</div>
+		<!-- END LOOP_POP3ERR -->
+
+		<div id="minfo">
+		<!-- IF MBX_CUR_QNEW -->
+		<img src="/extmail/default/images/unread.gif">
+		<%your_storage6%><span class="newnum"><%MBX_CUR_QNEW%></span>
+		<%your_storage5%>
+		<!-- ELSE MBX_CUR_QNEW -->
+		<%nomail%>
+		<!-- END MBX_CUR_QNEW -->
+		</div>
+		<div style="padding-left: 5px;padding-right:5px">
+		<div class="panelout" id="etnews_div">
+		<div class="paneltit">&nbsp;ExtMail Project News</div>
+		<div class="panelin" id="etnews_container">
+		</div>
+		</div>
+		<script type="text/javascript">
+			etnews_init();
+		</script>
+		</div>
+	</TD>
+	<TD  width=230px valign=top style="">
+		<div class="panelout" id="coolweather_div">
+			<div class="paneltit">&nbsp;<%weatherinfo%></div>
+			<div class="panelin" id="coolweather_container">
+			</div>
+			<script type="text/javascript">
+				coolweather_iconspath = '/extmail/plugins/coolweather/icons/';
+				coolweather_init();
+			</script>
+		</div>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+<script language=javascript>
+/*
+ * this js will enable frame correctly display
+ * top.document.getElementsByTagName("FRAMESET")[0].rows="100%,0";
+ */
+try { top.document.getElementsByTagName("FRAMESET")[0].rows="100%,0" }
+catch(e) {}
+</script>
+</BODY>
+</HTML>

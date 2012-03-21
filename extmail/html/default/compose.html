@@ -1,0 +1,515 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<link rel="stylesheet" href="/extmail/default/css/autocomplete.css" type="text/css">
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<script language="javascript">
+setTitle('<%meta_title%>');
+<!-- INCLUDE multifile_new.inc -->
+</script>
+<script language=javascript>
+
+var allowsubmit = false;
+var issending = false;
+var issaving = false;
+var currentNav = 'nav_compose';
+
+var postminchars = parseInt('8');
+var postmaxchars = parseInt('50000');
+var disablepostctrl = parseInt('0');
+var typerequired = parseInt('');
+var bbinsert = parseInt('1');
+
+function rfc822_sanity() {
+	var Recips = new Array();
+	Recips = ['to', 'cc', 'bcc'];
+	for (i=0; i<Recips.length;i++) {
+		var str = document.getElementById(Recips[i]);
+		// with checking str , Firefox will refuse to work
+		if (str == null || str == undefined)
+			continue;
+		str = str.value;
+		str = str.replace("'", '').replace('/', '').replace('\\', '');
+		str = str.replace('^', '').replace('*', '').replace('[', '');
+		str = str.replace(']', '').replace('?', '').replace('~', '');
+		str = str.replace(/;|；|，/g,","); // compatible with Outlook
+		document.getElementById(Recips[i]).value = str;
+	}
+}
+
+function escapeHTML(str)
+{
+	str = str.replace(/&/g,'&amp;');
+	str = str.replace(/'/g, '&#039;');
+	str = str.replace(/"/g, '&quot;');
+	str = str.replace(/>/g, '&gt;');
+	str = str.replace(/</g, '&lt;');
+	str = str.replace(/ /g, '&nbsp;');
+	str = str.replace(/\r*\n/g, "<br>\n");
+	/* the following line is buggy
+	   str = str.replace(/\s*\d\.([^\r\n]+)/g, "<li>$1</li>");
+	*/
+	return str;
+}
+
+function showerror(err) {
+	var tab = $('warntab');
+	tab.innerHTML = err;
+	tab.style.display = 'block';
+
+	issending = false;
+	issaving = false;
+	$('LoadingStatus').style.display = "none";
+	allowsubmit = true;
+	$('btnsend1').disabled = false;
+	$('btnsend2').disabled = false;
+	$('btnsave1').disabled = false;
+	$('btnsave2').disabled = false;
+}
+
+function unescapeHTML(str)
+{
+	//var div = document.createElement('div');
+	str = str.replace(/\r*\n\s*/g, "");
+	str = str.replace(/<\/div>/gi, "#nl#");
+	str = str.replace(/<\/li>/gi,"#nl#");
+	str = str.replace(/<\/P>/gi,"#nl#");
+	str = str.replace(/<\s*\/?\s*BR\s*\/?\s*>/gi,"#nl#");
+	str = str.replace(/<script[^>]*?>.*?<\/script>/gi,"");
+	str = str.replace(/<[^!]*?[^<>]*?>/gi,"");
+	//str = str.replace(/([\r\n])\s+/g, "$1");
+	str = str.replace(/&(quot|#34);/gi, '"');
+	str = str.replace(/&(amp|#38);/gi, '&');
+	str = str.replace(/&(lt|#60);/gi, '<');
+	str = str.replace(/&(gt|#62);/gi, '>');
+	str = str.replace(/&(nbsp|#160);/gi, " ");
+	str = str.replace(/&(iexcl|#161);/gi, String.fromCharCode(161));
+	str = str.replace(/&(cent|#162);/gi, String.fromCharCode(162));
+	str = str.replace(/&(pound|#163);/gi, String.fromCharCode(163));
+	str = str.replace(/&(copy|#169);/gi, String.fromCharCode(169));
+	str = str.replace(/&#(\d+);/gi, String.fromCharCode("$1"));
+	str = str.replace(/#nl#/gi, "\r\n");
+	return str;
+}
+
+String.prototype.inc=function(k1,k2){return k2==null?this.indexOf(k1)>-1?true:false:(k2+this+k2).indexOf(k2+k1+k2)>-1?true:false}
+String.prototype.trim=function(){return this.replace(/(^[\s]*)|([\s]*$)/g, "")}
+String.prototype._slice="".slice
+String.prototype.slice=function(n1,n2){var v,b1=typeof(n1)=="number",b2=typeof(n2)=="number";if(!b1||typeof(n2)=="string"){v=eval("this._slice("+(b1?n1:this.indexOf(n1)+(n2==null?1:0)+(this.indexOf(n1)==-1?this.length:0))+(n2==null?"":(b2?n2:(this.indexOf(n2)==-1?"":","+this.indexOf(n2))))+")")}else{v=isIE5&&n1<0&&n2==null?this._slice(this.length-1):eval("this._slice(n1"+(n2==null?"":","+n2)+")")}return v}
+String.prototype.css=function(key,def){var n1,n2,l=this;if(key=="")return "";if((";"+l+";").indexOf(";"+key+";")>-1)return true;n1=(";"+l+":").indexOf(";"+key+":");if(n1==-1)return def==null?"":def;n1+=(key+":").length;n2=(";"+l+";").indexOf(";",n1+1);return l.slice(n1,n2-1)}
+String.prototype.qv=function(key){var l=this.replace("?","&")+"&",n1,n2;n1=l.indexOf("&"+key+"=");if(n1==-1)return "";n1=l.indexOf("=",n1)+1;n2=l.indexOf("&",n1);return l.slice(n1,n2)}
+String.prototype.toArray=function(key){var l=this,v;if(key==null)key="|";v=key;if(key=="n"){l=l.replace(/\r/g,"");v="\n"};l=l.replace(new RegExp("(\\"+key+")+","g"),v).replace(new RegExp("^[\\"+key+"]*|[\\"+key+"]+$","g"),"");return l==""?new Array():l.split(v)}
+Array.prototype.add=function(key){this[this.length]=key}
+
+function fm_chk(fm)
+{
+		var a,i,l,name,rule;
+		for(i=0;i<fm.length;i++)
+		{
+			name=fm[i].getAttribute("chkName");
+			rule=fm[i].getAttribute("chkRule");
+			if(name==null)
+				continue;
+			l="";
+			if(rule.inc("cpwd","/")==true&&fm[i].value!=fm[i-1].value)
+				l=name+"<%fmchk_js_1%>";
+			if(rule.inc(">=4","/")==true&&fm[i].value.length<4)
+				l=name+"<%fmchk_js_2%>";
+			if(rule.inc("<=255","/")==true&&fm[i].value.length>255)
+				l=name+"<%fmchk_js_3%>";
+			if(rule.inc("中a1_","/")==true&&!new RegExp("^[_a-zA-Z0-9\\u4E00-\\u9FA5\\uF900-\\uFA2D]*$","g").test(fm[i].value))
+				l=name+"<%fmchk_js_4%>"
+			if(rule.inc("a1","/")==true&&!new RegExp("^[a-zA-Z0-9]*$","g").test(fm[i].value))
+				l=name+"<%fmchk_js_5%>";
+			if(rule.inc("mobile","/")==true&&!new RegExp("^13(\\d{9})+$").test(fm[i].value))
+				l="<%fmchk_js_6%>";
+			if(rule.inc("mobiles","/")==true&&fm[i].value.replace(/，/g,",").replace(/(,|^)13\d{9}/g,"").replace(/\,/g,"")!="")
+				l="<%fmchk_js_6%>";
+			if(rule.inc("eml","/")==true&&!new RegExp("^[\\w._]+@\\w+\.(\\w+\.){0,3}\\w{2,4}$","g").test(fm[i].value.replace(/-|\//g,""))&&fm[i].value!="")
+				l=name+"<%fmchk_js_7%>";
+			if(rule.inc("emls","/")==true&&fm[i].value!="")
+				if(fm[i].value.replace(/ |-|\//g,"").replace(/;|；|，/g,",").replace(/(,|^)(.|)+<([\w._]+@\w+\.(\w+\.){0,3}\w{2,4})>|(\,|^)([\w+._]+@\w+\.(\w+\.){0,3}\w{2,4})/g,"").replace(/\,/,"")!="")
+					l=name+"<%fmchk_js_7%>";
+			if(rule.inc("eml_nickname","/")==true&&new RegExp("[,|;|<|>]","g").test(fm[i].value))
+				l=name+"<%fmchk_js_8%>";
+			if(rule.inc("notnull","/")==true&&fm[i].value.replace(/ /g,"")=="")
+				l=name+"<%fmchk_js_9%>";
+			if(l!=""){
+				//msg(l,"parent.document."+fm.name+"["+i+"].focus()")
+				alert(l);
+				return false;
+			}
+		}
+		//glb.echo=fm.getAttribute("echo")
+		//if(fm.target==null||fm.target=="")
+		//{
+		//	fm.target="wData"
+			//fm.action=glb.svPath+fm.action.replace(/.+\//g,"")
+		//}
+		return true;
+	}
+
+function chkMailTo()
+{
+	var l,a
+	l=document.postform.to.value+","+document.postform.cc.value+","+document.postform.bcc.value
+	l=l.replace(/;/g,",").replace(/[\,]+/g,",")
+	a=l.split(",")
+	if(a.length><%_maxrcpt%>){
+		alert("<%overrcpt%>")
+		return false
+	}
+	else
+		return true
+}
+
+function chk()
+{
+	if (!allowsubmit)
+	{
+		allowsubmit = false;
+		return false;
+	}
+	var FR = document.forms['postform'];
+	return fm_chk(FR);
+}
+
+function showWaiting()
+{
+	$('LoadingStatus').innerHTML = '<img src="/extmail/default/images/toploading.gif" align="absmiddle">&nbsp;'+(document.postform.issend.value==1?"<%issending%>":"<%issaving%>")+'...';
+	$('LoadingStatus').style.display = "block";
+}
+
+function DoSave() {
+	if (issending)
+	{
+		alert('<%issaving%>');
+		return false;
+	}
+	if (issaving)
+	{
+		alert('<%issending%>');
+		return false;
+	}
+	allowsubmit = true;
+	var FR = document.forms['postform'];
+	FR.issend.value = "";
+
+	rfc822_sanity();
+
+	showWaiting();
+	FR.dosave.value = '<%save%>';
+	FR.dosend.value = '';
+	if (wysiwyg)
+	{
+		FR.html.value=true;
+		document.postform.body.value = getEditorContents();
+	}
+	else
+	{
+		FR.html.value="";
+		document.postform.body.value = getEditorContents();
+	}
+	FR.subchk.value = "1";
+	FR.target = "proframe";
+	/* FR.target = '_blank'; */
+	attchk();
+	FR.submit();
+	FR.subchk.value = "";
+	issaving = true;
+	allowsubmit = false;
+}
+
+function DoSend() {
+	if (issending)
+	{
+		alert('<%issending%>');
+		return false;
+	}
+	if (issaving)
+	{
+		alert('<%issaving%>');
+		return false;
+	}
+
+	allowsubmit = true;
+	var FR = document.forms['postform'];
+	FR.dosave.value = '';
+	FR.issend.value = "1";
+
+	rfc822_sanity();
+
+	var isPass=fm_chk(FR);
+	if(isPass&&chkMailTo()){showWaiting()}else{allowsubmit = false;return false}
+	//v=(isIE5&&!isIE5_5)||!isIE?glb.hte_win.document.body.innerHTML:glb.hte_win.innerHTML
+	//document.fmRun.body.value="<style>p{margin:0}img{border:0}</style>\n<font style='font-size:12px'>"+v+"</font>"
+
+	if (wysiwyg)
+	{
+		FR.html.value=true;
+		document.postform.body.value = getEditorContents();
+	}
+	else
+	{
+		FR.html.value="";
+		document.postform.body.value = getEditorContents();
+	}
+
+	FR.target = "proframe";
+	attchk();
+	$('btnsend1').disabled = true;
+	$('btnsend2').disabled = true;
+	$('btnsave1').disabled = true;
+	$('btnsave2').disabled = true;
+	postSubmited = true;
+	FR.dosend.value = '<%send%>';
+	FR.subchk.value = "1";
+	FR.submit();
+	issending = true;
+	FR.subchk.value = "";
+	allowsubmit = false;
+}
+
+function DoWarn(str)
+{
+	var tab = $('warntab');
+	tab.innerHTML = str;
+	tab.style.display = 'block';
+
+	issending = false;
+	issaving = false;
+	$('LoadingStatus').style.display = "none";
+	allowsubmit = true;
+	$('btnsend1').disabled = false;
+	$('btnsend2').disabled = false;
+	$('btnsave1').disabled = false;
+	$('btnsave2').disabled = false;
+}
+
+function attachok(arrATT)
+{
+
+	var FR = document.forms['postform'];
+	var str = "";
+	for (var i=1; i<=arrATT.length-1; i++)
+	{
+			str += '<li><input type=checkbox checked name="REMOVE-'+arrATT[i][0]+'"> '+ arrATT[i][1] + ' (' + arrATT[i][2] + ')</li>';
+	}
+	$('divAttach').innerHTML = '<ul id=ulAttach>' + str + '</ul>';
+	FR.draft.value = arrATT[0][2];
+	$('tdtAttach').innerHTML = '<input id="my_file_element" type="file" name="file_1"><div id="files_list" style="font-size: 12px;padding-top: 10px; line-height: 140%"></div>';
+	var multi_selector = new MultiSelector( document.getElementById( 'files_list' ), 10 );
+	multi_selector.addElement( document.getElementById( 'my_file_element' ) );
+}
+
+function attchk()
+{
+	var FR = document.forms['postform'];
+	for (var i=0;i<FR.elements.length;i++)
+	{
+		var e = FR.elements[i];
+		if  ((e.type=='checkbox')
+			&& (e.name!='ccsent')
+			&& (e.name!='priority')
+			&& (e.name!='notification'))
+		{
+			e.checked = !e.checked;
+			//e.style.display = "none";
+			//e.disabled = true;
+		}
+	}
+}
+
+function sendok(str){
+	$('warntab').style.display = 'none';
+	//alert(str); // this str will be alert() by sendok/saveok html
+	if(document.postform.issend.value==1)
+	{
+		$('LoadingStatus').innerHTML = "<%msgsent%>";
+		window.location.href='folders.cgi?__mode=messages_list&sid=<%SID%>&folder=Inbox';
+	}
+	else{
+		$('LoadingStatus').innerHTML = "<%draftsaved%>";
+		issaving = false;
+	}
+}
+
+function showInput(key){
+	if(key=="cc"){
+		$("acc").style.display="none"
+		$("trcc").style.display=""
+	}
+	else{
+		$("abcc").style.display="none"
+		$("trbcc").style.display=""
+	}
+	if($("acc").style.display=="none"&&$("abcc").style.display=="none")
+		$("tbMain").deleteRow(1)
+}
+
+</script>
+</HEAD>
+
+<BODY onkeydown="if(event.keyCode==27) return false;">
+
+<div id="LoadingStatus" style="position:absolute; right:0px; top:0px; background:#CC0000; height:18px; color:#fff;padding:2px 10px 1px 10px;display:none;"><img src="/extmail/default/images/toploading.gif" align="absmiddle">&nbsp;<%loading%></div>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main">
+<form id="postform" name="postform" method=post action="compose.cgi" enctype="multipart/form-data" onSubmit="return chk();">
+<TABLE width=100% cellpadding=0 cellspacing=0>
+<TR>
+	<TD width=170px valign=top id="MainLeft">
+<!-- INCLUDE 'MAIN_LEFT.html' -->
+	</TD>
+	<TD class=td1px width=1px></TD>
+	<TD valign=top class=tdmain>
+		<TABLE width=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit><span style="float:left;left:0px;"><span class="pl10 b"><%compose%></span> <span></span></span>
+
+			</TD>
+		</TR>
+		<TR>
+		<TD class=tdmain_in_topopt>
+			<table><tr><td>
+			<SPAN  class=navtbl>
+			<input id="btnsend1" type=button value="<%send%>" onclick="DoSend();">
+			<input id="btnsave1" type=button value=<%save%> onclick="DoSave();">
+			</SPAN>
+			</td>
+			<td>
+			<span id="warntab" style="display: none; background: #FFD363;padding: 2px; padding-left: 5px; padding-right: 5px; margin-left: 30px">
+			</span>
+			<!-- IF ERRMSG -->
+			<script language="javascript">
+				DoWarn('<%ERRMSG%>');
+			</script>
+			<!-- END ERRMSG -->
+			</td>
+			</tr></table>
+			<TD>
+		</TR>
+		<textarea name=body style=width:100%;height:200;overflow:auto;display:none></textarea>
+		<input type=hidden name=subchk value="">
+		<input type=hidden name=atag value="1">
+		<input type=hidden name=sid value=<%SID%>>
+		<input type=hidden name=attachmgr value="">
+		<input type=hidden name=dosave value="">
+		<input type=hidden name=dosend value="">
+		<input type=hidden name=__mode value=edit_drafts>
+		<input type=hidden name=draft value="<!-- IF HAVE_DRAFT --><%DRAFT%><!-- END HAVE_DRAFT -->">
+		<input type=hidden name=html id=html value="<!-- IF BODY_IS_HTML -->true<!-- ELSE BODY_IS_HTML --><!-- END BODY_IS_HTML -->">
+		<input type=hidden name=doattach value="1">
+		<input type=hidden name=issend value="1">
+
+		<TR>
+			<TD style="padding-top:5px;">
+			<table width=95% cellpadding=0 cellspacing=2 id="tbMain">
+				<tr id=trto>
+				<td align=right style=width:80><span class="bold">
+				<%to%>:
+				</span></td>
+				<td class="altbg2">
+				<textarea type="text" id=to name=to chkName=<%to%> chkRule=notnull/emls rows="2" style="width:100%;height:36" class="ACtype" tabindex="1" onKeyDown="ctlent(event);"><%TO%></textarea>
+				</td>
+				</tr>
+				<tr id=trBtcc bgcolor=#F6F6F6 style=height:22>
+					<td style=width:80>&nbsp;</td>
+					<td><a id=acc class=br tabindex="2" title="" href=javascript:showInput('cc')><%cc%></a> <a id=abcc class=br tabindex="3" title="" href=javascript:showInput('bcc')><%bcc%></a>　　　　&nbsp;<FONT color=#808080><%autocomplete_hint%></FONT></td>
+				</tr>
+				<tr id=trcc bgcolor=#F6F6F6 style=display:none>
+					<td align=right style=width:80><%cc%>:</td>
+					<td><textarea id=cc name=cc chkName=<%cc%> chkRule=emls style="width:100%;height:36" class=ACtype tabindex="4" onKeyDown="ctlent(event);"><%CC%></textarea></td>
+				</tr>
+				<tr id=trbcc bgcolor=#F6F6F6 style=display:none>
+					<td align=right style=width:80><%bcc%>:</td>
+					<td><textarea id=bcc name=bcc chkName=<%bcc%> chkRule=emls style="width:100%;height:36" class=ACtype tabindex="5" onKeyDown="ctlent(event);"><%BCC%></textarea></td>
+				</tr>
+				<tr style=height:28>
+					<td align=right style=width:80><span class="bold">
+					<%subject%>:
+					</span></td>
+					<td class="altbg2"><input type="text" name="subject" id="subject" style="width:100%" value="<%SUBJECT%>" onKeyDown="ctlent(event);" tabindex="6"></td>
+				</tr>
+				<tr bgcolor=#F6F6F6 style=height:27>
+					<td align=right style="width:80">&nbsp;</td>
+					<td style="padding-right:10">
+					<input tabindex="7" type=checkbox name=ccsent <!-- IF CCSENT -->checked<!-- END CCSENT -->> <%ccsent%>
+					<input tabindex="8" type=checkbox name=priority <!-- IF X_PRIORITY -->checked<!-- END X_PRIORITY -->> <%priority%>
+					<input tabindex="9" type=checkbox name=notification <!-- IF NEED_NOTIFICATION -->checked<!-- END NEED_NOTIFICATION -->><%req_notification%>
+					</td>
+				</tr>
+				</table>
+			</TD>
+		</TR>
+		<TR>
+			<TD bgcolor=#EFEFEF style="padding:5px 0px 5px 0px;border-top:1px solid #E1E1E1;">
+				<TABLE>
+				<tr>
+					<td align=right valign=top style="width:80;padding-top:3px;"><%attach%>:&nbsp;<img src="/extmail/default/images/paperclip.gif" align="absmiddle">&nbsp;</td>
+					<td id="tdAttach">
+					<div width=200 style="border-bottom: 0px solid #aaa" id="divAttach">
+						<ul id=ulAttach>
+					<!-- IF LIST_ATTACH -->
+						<!-- BEGIN LOOP_ATTACH -->
+						<li><input type=checkbox checked name=REMOVE-<%CNT%>> <%NAME%> (<%HSIZE%>)</li>
+						<!-- END LOOP_ATTACH -->
+					<!-- END LIST_ATTACH -->
+					</ul></div>
+						<div id=tdtAttach>
+							<input id="my_file_element" type="file" name="file_1">
+							<!-- Multifiles upload secion -->
+							<div id="files_list" style="font-size: 11px;padding-top: 10px; line-height: 140%"></div>
+							<script>
+							var multi_selector = new MultiSelector( document.getElementById( 'files_list' ), 10 );
+							multi_selector.addElement( document.getElementById( 'my_file_element' ) );
+							</script>
+							<!-- end of Multiflies upload -->
+						</div>
+					</td>
+				</tr>
+				</TABLE>
+			</TD>
+		</TR>
+		<TR>
+			<TD class=tdmain_in_editor>
+		<!-- INCLUDE 'editor.html' -->
+			</TD>
+		</TR>
+		<TR>
+			<TD>
+				<span class=navsbl>
+				<input id="btnsend2" type=button value="<%send%>" onclick="DoSend();" tabindex=110>
+				<input id="btnsave2" type=button value=<%save%> onclick="DoSave();" tabindex=111>
+				</span>
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</form>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+<iframe id="proframe" name="proframe" style="border:0px;width:0px;height:0px;"></iframe>
+</BODY>
+</HTML>

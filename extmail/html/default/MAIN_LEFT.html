@@ -1,0 +1,53 @@
+<script language="javascript">
+function CheckMail() {
+var url = '/extmail/cgi/folders.cgi?__mode=folders_list';
+url += '&chkpop=true&sid=<%SID%>&screen=welcome.html';
+window.location = url;
+}
+
+function Compose() {
+window.location.href="compose.cgi?sid=<%SID%>&atag=1";
+}
+
+function LM_OCTRL(CLSNAME)
+{
+	var obj = document.getElementById(CLSNAME);
+	if (obj.style.display=="none")
+	{
+		obj.style.display = "block";
+		document.getElementById(CLSNAME + "_CTRLIMG").src = "/extmail/default/images/lo.gif";
+	}
+	else
+	{
+		obj.style.display = "none";
+		document.getElementById(CLSNAME + "_CTRLIMG").src = "/extmail/default/images/lc.gif";
+	}
+}
+
+</script>
+<div style="text-align:center;">
+			<input type="button" class="lnbtn" id=ckbtn value="<%chkmail%>" onclick=CheckMail()>&nbsp;
+			<input type="button" class="lnbtn" id=cmbtn value="<%compose%>" onclick=Compose()>
+		</div>
+<div id="DivSysFolder" style="clear:both;margin-top:0px;">
+					<div style="height:20px;display:block;margin-top:5px;">
+						<div onclick="LM_OCTRL('LM_SYSFD');" style="float:left;padding-left:5px; padding-top:2px; color:#3B107B; font-weight:bold;cursor:pointer;"><span><img id="LM_SYSFD_CTRLIMG" src="/extmail/default/images/lo.gif"></span> <%sysfolder%></div>
+						<div class="btnlm"></div>
+					</div>
+					<div id="LM_SYSFD"><ul id="LM_SYSFD_UL">
+<!-- BEGIN LOOP_SYSFD_LIST -->
+<li class="fdnav"><!-- IF NEW --><span class="lfnew">(<%NEW%>)</span><!-- END NEW --><a href="folders.cgi?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER%>">&nbsp;<span class=lfld><%FOLDER_NAME%></span></a></li>
+<!-- END LOOP_SYSFD_LIST -->
+					</ul></div>
+				</div>
+<div id="DivSysFolder" style="clear:both;margin-top:0px;">
+					<div style="height:20px;display:block;margin-top:5px;">
+						<div onclick="LM_OCTRL('LM_USRFD');" style="font-size:12px;float:left;padding-left:5px; padding-top:2px; color:#3B107B; font-weight:bold;cursor:pointer;"><span><img id="LM_USRFD_CTRLIMG" src="/extmail/default/images/lo.gif"></span> <%myfolder%> </div>
+						<div class="btnlm" style="font-size:12px;float:right;padding-right:10px; padding-top:2px; color:#3B107B; font-weight:normal;"><a href="folders.cgi?__mode=folders_list&sid=<%SID%>">[<%foldermgr%>]</a></div>
+					</div>
+					<div id="LM_USRFD"><ul id="LM_SYSFD_UL">
+<!-- BEGIN LOOP_USRFD_LIST -->
+<li class="fdnav"><!-- IF NEW --><span class="lfnew">(<%NEW%>)</span><!-- END NEW --><a href="folders.cgi?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER%>" style="white-space:nowrap;">&nbsp;<span class=lfld title='<%FOLDER_NAME%>'><%FOLDER_NAME%></span></a></li>
+<!-- END LOOP_USRFD_LIST -->
+					</ul></div>
+				</div>

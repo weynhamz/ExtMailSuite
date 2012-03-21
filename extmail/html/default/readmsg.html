@@ -1,0 +1,385 @@
+<HTML>
+<HEAD>
+<TITLE><%SUBJECT%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+
+<script language=javascript>
+var currentNav = 'nav_mail';
+
+setTitle('<%meta_title%>');
+
+function Do(action)
+{
+	switch (action)
+	{
+		case 'rpl':
+			window.location.href='compose.cgi?__mode=edit_reply&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>';
+			break;
+		case "rplall":
+			window.location.href='compose.cgi?__mode=edit_reply&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>&replyall=1';
+			break;
+		case "fwd":
+			window.location.href='compose.cgi?__mode=edit_forward&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>';
+			break;
+		case "fwdatt":
+			window.location.href='compose.cgi?__mode=edit_forward&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>&asattach=1';
+			break;
+		case "detail":
+			window.location.href='readmsg.cgi?__mode=readmsg_sum&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>&detail=1';
+			break;
+		case "nodetail":
+			window.location.href='readmsg.cgi?__mode=readmsg_sum&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>';
+			break;
+		case "del":
+			if (confirm("<%cfm_delete%>")) {
+				var url = '?__mode=delete&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>';
+				window.location.href = url;
+			}
+			break;
+		case "print":
+			var url = "?__mode=readmsg_sum&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>";
+			url += '&screen=print.html';
+			var hWnd = window.open(url,"","width=550,height=450,resizable=yes,status=yes,scrollbars=yes");
+			if ((document.window != null) && (!hWnd.opener))
+				hWnd.opener = document.window;
+			break;
+		case "rawdata":
+			window.open('readmsg.cgi?__mode=readmsg_rawdt&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>');
+			break;
+		case "header":
+			window.open('readmsg.cgi?__mode=readmsg_header&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>');
+			break;
+		case "top":
+			window.location.href='folders.cgi?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER%>&page=<%PAGE%>';
+			break;
+		case "prev":
+			window.location.href='readmsg.cgi?__mode=readmsg_sum&sid=<%SID%>&folder=<%FOLDER%>&pos=<%PREV%>';
+			break;
+		case "next":
+			window.location.href='readmsg.cgi?__mode=readmsg_sum&sid=<%SID%>&folder=<%FOLDER%>&pos=<%NEXT%>';
+			break;
+		case "report":
+			window.location.href='readmsg.cgi?__mode=report&sid=<%SID%>&folder=<%FOLDER%>&pos=<%POS%>&msgid=<%MSGID%>';
+			break;
+	}
+}
+
+function ChgEnc(enc) {
+	var url ='readmsg.cgi?__mode=readmsg_sum&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>';
+	window.location.href= url + '&charset=' + enc;
+}
+
+function eURL(str) {
+var rv = ' '; // not '' for a NS bug!
+for (i=0; i < str.length; i++) {
+aChar=str.substring(i, i+1);
+switch(aChar) {
+case '=': rv += "%3D"; break;
+case '?': rv += "%3F"; break;
+case '&': rv += "%26"; break;
+default: rv += aChar;
+}
+}
+return rv.substring(1, rv.length);
+}
+
+/* AddressBook */
+function html2txt(s) {
+        s = s.replace(/&amp;/g, '&').replace(/&qute;/g,'"');
+	s = s.replace(/&nbsp;/g, ' '); /* replace all space ? */
+        s = s.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        return s;
+}
+
+function getaddr(obj) {
+	var txt = html2txt(obj.innerHTML);
+	var re = /\s*['\"]*\s*([^\'\"]*)\s*[\'\"]*(\s+|^)<*([a-z0-9A-Z\-_\.]+@[a-z0-9A-Z-\_.]+)>*/;
+	if (re.test(txt)) {
+		return RegExp.$3;
+	}
+	return false;
+}
+
+<!-- INCLUDE UTF8.inc -->
+
+function Add_Contact(obj) {
+	var txt = html2txt(obj.innerHTML);
+	var re = /\s*['\"]*\s*([^\'\"]*)\s*[\'\"]*(\s+|^)<*([a-z0-9A-Z\-_\.]+@[a-z0-9A-Z-\_.]+)>*/;
+	if(re.test(txt)) {
+		var url ='abook.cgi?sid=<%SID%>&__mode=abook_show&screen=abook_edit.html';
+		var name = RegExp.$1;
+		var addr = RegExp.$3;
+
+		if(name == "") {
+			var re2 = /([^@]+)@(.*)/;
+			if(re2.test(addr)) {
+				name = RegExp.$1;
+			}else {
+				name = addr; /* fallback to addr */
+			}
+		}
+		/* convert & to ; to advoid request error, dist programe should do url
+		   convertion and recovery the url parameter */
+
+		url += '&name='+escape(utf8_encode(name))+'&mail='+addr;
+		url += '&url='+eURL('/extmail/cgi/readmsg.cgi?sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>');
+		document.location.href= url;
+	}else {
+		alert('Error on parsing sender! Abort');
+	}
+}
+
+function DoDelete() {
+if (confirm("<%cfm_delete%>")) {
+	var url = '?__mode=delete&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>';
+	document.location.href = url;
+}
+}
+
+function DoPrint() {
+var url = "?__mode=readmsg_sum&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>";
+url += '&screen=print.html';
+var hWnd = window.open(url,"","width=550,height=450,resizable=yes,status=yes,scrollbars=yes");
+if ((document.window != null) && (!hWnd.opener))
+	hWnd.opener = document.window;
+}
+
+</script>
+</HEAD>
+
+<BODY>
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main">
+<TABLE width=100% cellpadding=0 cellspacing=0>
+<TR>
+	<TD width=170px valign=top id="MainLeft">
+<!-- INCLUDE 'MAIN_LEFT.html' -->
+	</TD>
+	<TD class=td1px></TD>
+	<TD valign=top class=tdmain>
+		<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit style="white-space:wrap;"><span class=navstl><span class="pl10 b"><%subject%></span> <span><%SUBJECT%></span></span>
+			<SPAN class=navstr>
+			<!-- IF CAN_REPORT_SPAM -->
+			<!-- IF REPORT_AS_SPAM -->
+			<span onclick="Do('report')" class="report_as_spam"><%report_as_spam%></span> |
+			<!-- END REPORT_AS_SPAM -->
+			<!-- IF REPORT_AS_NONSPAM -->
+			<span onclick="Do('report')" class="report_as_nonspam"><%report_as_nonspam%></span> |
+			<!-- END REPORT_AS_NONSPAM -->
+			<!-- END CAN_REPORT_SPAM -->
+			<span onclick="Do('rpl')" class="mopspan"><%reply%></span><span id=m_reply><img src="/extmail/default/images/sl.gif"><script type="text/javascript">menuregister(true, "m_reply")</script></span>
+			| <span onclick="Do('fwd')" class="mopspan"><%forward%></span><span id=m_fwd><img src="/extmail/default/images/sl.gif"><script type="text/javascript">menuregister(true, "m_fwd")</script></span>
+			| <span id=m_char><%sel_charset%><img src="/extmail/default/images/sl.gif"><script type="text/javascript">menuregister(true, "m_char")</script></span>
+			| <span onclick="Do('del')" class="mopspan"><%delete%></span>
+			<!-- IF HAVE_PREV -->
+			| <span onclick="Do('prev')" class="mopspan"><img alt="<%prev%>" src="/extmail/default/images/prevpg.gif"></span>
+			<!-- END HAVE_PREV -->
+			<!-- IF HAVE_NEXT -->
+			&nbsp;<span onclick="Do('next')" class="mopspan"><img alt="<%next%>" src="/extmail/default/images/nextpg.gif"></span>
+			<!-- END HAVE_NEXT -->
+			| <span id=m_more><%dm_moreoptions_hint%><img src="/extmail/default/images/sl.gif"><script type="text/javascript">menuregister(true, "m_more")</script></span>
+			</SPAN>
+			</TD>
+		</TR>
+		<TR>
+			<TD class=tdmain_in_con_mt>
+<!-- IF DETAIL -->
+<div style="padding-left: 5px; padding-right: 5px; border: 1px solid #ccc">
+	<div style="padding: 5px; font-weight: bold; border-bottom: 1px solid #ccc">
+	<%detail_tips%> | <a href="readmsg.cgi?__mode=readmsg_sum&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>"><%no_detail%></a>
+	</div>
+<div style="padding-top: 5px;"><%PARTS%></div>
+</div>
+<!-- END DETAIL -->
+
+				<div style="height:18px;line-height:18px;" class="pl10">
+				<span><b><%from%></b></span> <span id="from"><%FROM%></span>
+				<!-- UNLESS FROMCONTACT -->
+				<img style="vertical-align: bottom" src="/extmail/default/images/contact.gif">
+				<a href="javascript:Add_Contact(from)" title="<%addsender_hint%>">
+				<%addsender_hint%>
+				</a><!-- END FROMCONTACT -->
+
+				<script language="javascript">
+					function add2list(type) {
+						var addr = getaddr(document.getElementById('from'));
+						var FR = document.forms['lform'];
+
+						if (type == 'black') {
+							FR.black.value = 1;
+							FR.white.value = 0;
+						} else {
+							FR.white.value = 1;
+							FR.black.value = 0;
+						}
+						FR.target = 'lframe';
+						FR.addr.value = addr;
+						FR.submit();
+					}
+					function add2listok() {
+						alert("<%notify_ok%>");
+					}
+				</script>
+				<img style="vertical-align: bottom" src="/extmail/default/images/edit.gif">
+				<a href="javascript:add2list('white')"><%add2list_white%></a>
+				<img style="vertical-align: bottom" src="/extmail/default/images/delete.gif">
+				<a href="javascript:add2list('black')"><%add2list_black%></a>
+
+				<form id="lform" name="lform" method=post action="filter.cgi">
+				<input type=hidden name=__mode value="add2list">
+				<input type=hidden name=sid value="<%SID%>">
+				<input type=hidden name=addr value="">
+				<input type=hidden name=screen value="add2list.html">
+				<input type=hidden name=white value="">
+				<input type=hidden name=black value="">
+				</form>
+				<iframe id="lframe" name="lframe" style="border:0px;width:0px;height:0px;"></iframe>
+
+				</div>
+				<div class="pl10">
+					<span><b><%to%></b></span> <span><%TO%></span>
+				</div>
+				<!-- IF CC -->
+				<div class="pl10">
+					<span><b><%cc%></b></span> <span><%CC%></span>
+				</div>
+				<!-- END CC -->
+				<!-- IF BCC -->
+				<div class="pl10">
+					<span><b><%bcc%></b></span> <span><%BCC%></span>
+				</div>
+				<!-- END BCC -->
+				<div style="height:18px;line-height:18px;" class="pl10">
+					<span><b><%date%></b></span> <span><%DATE%></span>
+				</div>
+
+				<!-- IF ATTACHMENT -->
+				<div style="line-height:18px;padding-top:2px;" class="pl10">
+				<table border=0 cellspacing=0 cellpadding=0>
+				<tr><td style="vertical-align: top;"><b><%attach_list%></b></td>
+				<td id="attachment_list">
+				<table border=0 cellspacing=0 cellpadding=0>
+				<!-- BEGIN LOOP_ATTACH -->
+				<tr><td style="padding-bottom: 2px"><a title="<%NAME%> <%HSIZE%>" href="readmsg.cgi?__mode=download&sid=<%SID%>&folder=<%FOLDER%>&pos=<%POS%>&msgid=<%MSGID%>&mimeid=<%CNT%>"><%NAME%> (<%HSIZE%>)</a> </td>
+				<!-- IF NETDISK_ON -->
+				<td style="padding-left: 10px; padding-top:2px"><span id=m_ndisk_<%CNT%>><%att2ndisk%><script type="text/javascript">menuregister(true, "m_ndisk_<%CNT%>")</script></span></td>
+				<!-- END NETDISK_ON -->
+				</tr>
+				<!-- END LOOP_ATTACH -->
+				</table>
+				</td></tr>
+				</table>
+				</span>
+				</div>
+				<!-- END ATTACHMENT -->
+				<!-- IF NOTIFY_TO -->
+				<div style="height:18px;line-height:18px;display: block" class="pl10" id=tab_notify name=tab_notify>
+					<script>
+						function notify(to) {
+							var msgid = '<%MSGID%>';
+							var pos = '<%POS%>';
+							var FR = document.forms['ntform'];
+							FR.target = 'nframe';
+							FR.submit();
+						}
+						function notifyok() {
+							alert("<%notify_ok%>");
+							$('tab_notify').style.display = 'none';
+						}
+					</script>
+					<span><img src="/extmail/default/images/common/xml.gif">
+						&nbsp;<b><a href="javascript:notify('<%NOTIFY_TO%>');">&gt;&gt;<%notify_tab%></a></b></span>
+					<form id="ntform" name="ntform" method=post action="readmsg.cgi">
+						<input type=hidden name=__mode value="send_notify">
+						<input type=hidden name=pos value="<%POS%>">
+						<input type=hidden name=msgid value="<%MSGID%>">
+						<input type=hidden name=sid value="<%SID%>">
+						<input type=hidden name=notifyto value="<%NOTIFY_TO%>">
+						<input type=hidden name=screen value="notify.html">
+					</form>
+					<iframe id="nframe" name="nframe" style="border:0px;width:0px;height:0px;"></iframe>
+				</div>
+				<!-- END NOTIFY_TO -->
+			<TD>
+		</TR>
+		<TR>
+			<TD style="border-bottom:0px solid #D6E0E9;padding:20px;" class=mailbody>
+			<table width=100% style="table-layout: fixed">
+				<tr><td style="overflow:hidden">
+				<%BODY%></td>
+				</tr>
+			</table>
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+<div class="headermenu_popup" id="m_reply_menu" style="display: none;">
+		<table cellpadding="4" cellspacing="0" border="0">
+		<tr><td class="popupmenu_option" onclick="Do('rpl');"><%reply%></td></tr>
+		<tr><td class="popupmenu_option" onclick="Do('rplall');"><%replyall%></td></tr>
+		</table>
+	</div>
+<div class="headermenu_popup" id="m_fwd_menu" style="display: none;">
+		<table cellpadding="4" cellspacing="0" border="0">
+		<tr><td class="popupmenu_option" onclick="Do('fwd');"><%forward%></td></tr>
+		<tr><td class="popupmenu_option" onclick="Do('fwdatt');"><%forward_asattach%></td></tr>
+		</table>
+	</div>
+<div class="headermenu_popup" id="m_char_menu" style="display: none;">
+		<table cellpadding="4" cellspacing="0" border="0">
+		<!-- IF SEL_CHARSET_LOOP -->
+		<!-- BEGIN SEL_CHARSET_LOOP -->
+		<tr><td class="popupmenu_option" <!-- IF CHECKED -->style="background: #ccc;"<!-- END CHECKED --> onclick='ChgEnc("<%SRC_CHARSET%>")'><%SRC_CHARSET%></td></tr>
+		<!-- END SEL_CHARSET_LOOP -->
+		<!-- END SEL_CHARSET_LOOP -->
+	</table>
+	</div>
+
+<div class="headermenu_popup" id="m_more_menu" style="display: none;">
+		<table cellpadding="4" cellspacing="0" border="0">
+		<!-- IF DETAIL -->
+		<tr><td class="popupmenu_option" onclick="Do('nodetail')"><%no_detail%></td></tr>
+		<!-- ELSE DETAIL -->
+		<tr><td class="popupmenu_option" onclick="Do('detail')"><%detail%></td></tr>
+		<!-- END DETAIL -->
+		<tr><td class="popupmenu_option" onclick="Do('rawdata')"><%rawdata%></td></tr>
+		<tr><td class="popupmenu_option" onclick="Do('print')"><%print%></td></tr>
+		<tr><td class="popupmenu_option" onclick="Do('top')"><%top%></td></tr>
+		<tr><td class="popupmenu_option" onclick="Do('header')"><%header%></td></tr>
+		</table>
+	</div>
+<!-- BEGIN LOOP_ATTACH -->
+<!-- IF NETDISK_ON -->
+<div class="headermenu_popup" id="m_ndisk_<%CNT%>_menu" style="display: none;">
+		<table cellpadding="4" cellspacing="0" border="0">
+		<tr class=MLTR_HEAD><td><%att2ndisk_hint%></td></tr>
+		<tr><td>
+		<iframe id=ndiskfolder_<%CNT%> name=ndiskfolder_<%CNT%> width=200 height=250 style="border:0px" src="netdisk.cgi?__mode=att2ndisk&sid=<%SID%>&folder=<%FOLDER%>&msgid=<%MSGID%>&pos=<%POS%>&mimeid=<%CNT%>"></iframe>
+		</td></tr>
+		</table>
+	</div>
+<!-- END NETDISK_ON -->
+<!-- END LOOP_ATTACH -->
+
+</BODY>
+</HTML>

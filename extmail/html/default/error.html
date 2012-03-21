@@ -1,0 +1,50 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_error_title%></title>
+<!-- IF REDIRECT -->
+<!-- IF FOLDER -->
+<meta http-equiv="refresh" content="0;url=/extmail/cgi/folders.cgi?__mode=messages_list&sid=<%SID%>&folder=<%FOLDER%>">
+<!-- ELSE FOLDER -->
+<meta http-equiv="refresh" content="0;url=/extmail/cgi/folders.cgi?__mode=folders_list&sid=<%SID%>&screen=welcome.html">
+<!-- END FOLDER -->
+</head>
+</html>
+<!-- ELSE REDIRECT -->
+<link rel="stylesheet" href="/extmail/default/css/newstyle.css" type="text/css">
+</head>
+<script language="javascript">
+setTitle('<%meta_error_title%>');
+try {
+	parent.window.showerror('<%JSERR%>');
+	/* history.go(-1); */
+}
+catch(e) {}
+</script>
+
+<body>
+
+<div align="center" style="margin-top:150px">
+<table class="error" cellspacing=10 cellpadding=0>
+<tr><td align=center><img src="/extmail/default/images/logo.gif"></td></tr>
+<tr><td align=center>
+<!-- IF ERR -->
+<%hint_errinfo%>
+<!-- END ERR -->
+</td></tr>
+<tr><td><center>
+<b>
+	<!-- IF REFERER -->
+	<a href="<%REFERER%>"><%goback%></a>&nbsp;&nbsp;&nbsp;
+	<!-- ELSE REFERER -->
+	<a href="javascript:history.go(-1)"><%goback%></a>&nbsp;&nbsp;&nbsp;
+	<!-- END REFERER -->
+ <a href="/extmail/cgi/index.cgi" target=_parent><b><%relogin%></b></a></center>
+</td></tr>
+</table>
+</div>
+<div align=center style="padding:10px;border:1px solid #ccc;background:#FFFFCC;font-family:Arial;">
+<%ERR%>
+</body>
+</html>
+<!-- END REDIRECT -->

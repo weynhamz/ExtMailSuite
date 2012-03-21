@@ -1,0 +1,256 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+</HEAD>
+
+<BODY>
+<script language=Javascript>
+var currentNav = 'nav_ndisk';
+
+setTitle('<%meta_title%>');
+
+function CA()
+{
+	var form = document.netdisk;
+	for (var i=0;i<form.elements.length;i++)
+	{
+		var e = form.elements[i];
+		if ((e.name != 'SELECTALL') && (e.type=='checkbox'))
+		{
+			e.checked = form.SELECTALL.checked;
+			/*if(e.checked)
+				hL(e);
+			else
+				dL(e);*/
+		}
+	}
+}
+
+function Compose()
+{
+	var ofrm = document.netdisk;
+	var nfrm = document.compose;
+	var checked = 0;
+	for (var i=0;i<ofrm.elements.length;i++) {
+		var e = ofrm.elements[i];
+		if ((e.name != 'SELECTALL') && (e.type=='checkbox') && (e.checked))
+		{
+			var edit = document.createElement("input");
+			edit.name = e.name;
+			edit.value = e.value;
+			edit.type = 'hidden';
+			nfrm.appendChild(edit);
+			//alert(edit.value);
+			if (!checked) checked = 1;
+		}
+	}
+
+	if (!checked)
+		return false;
+	nfrm.submit();
+}
+
+function showBar() {
+	var obj = document.getElementById('uploadbar');
+	obj.style.display = '';
+}
+</script>
+
+<script language="javascript">
+        <!-- INCLUDE multifile_new.inc -->
+</script>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main">
+<!-- IF FILES_LIST -->
+<form method=post action='compose.cgi' name=compose>
+<input type=hidden name=sid value="<%SID%>">
+<input type=hidden name=__mode value="edit_import">
+<input type=hidden name=type value=netdisk>
+<input type=hidden name=base value="<%BASE_DIR%>">
+</form>
+<form method=post action='netdisk.cgi' enctype="multipart/form-data" name=netdisk>
+<input type=hidden name="sid" value="<%SID%>">
+
+<TABLE width=100% cellpadding=0 cellspacing=0>
+<TR>
+	<TD width=230px valign=top id="MainLeft">
+<!----beginleft-->
+			<input type=hidden name=base value="<%BASE_DIR%>">
+	<div id="dquota">
+	<table cellspacing=2 cellpadding=0>
+        <TR>
+        <!-- IF NDK_QUOTA_SIZE -->
+        <td nowrap width=200 class="quotapc" colspan=3>
+        </td></tr>
+        <tr style="padding-bottom: 3px"><TD class="quotapc" WIDTH=3%>0</TD><TD WIDTH=140>
+                <table class="quotabar" cellSpacing="0" cellPadding="0" width="100%" border="0">
+                <tr><td width="100%" style="border:1px solid #C7C8CB;padding:1px;">
+                <div class="<!-- IF NDK_OVERQUOTA -->quotapc_over<!-- ELSE NDK_OVERQUOTA -->quotapc_normal<!-- END NDK_OVERQUOTA -->" style="FONT-SIZE: 7px; WIDTH: <%NDK_QUOTA_PC%>%; HEIGHT: 7px;">
+                </div>
+                </td></tr></table>
+		</TD><TD class="quotapc" ALIGN=left><%NDK_QUOTA_SIZE%></TD>
+        </tr><tr>
+                <!-- END NDK_QUOTA_SIZE -->
+                <!-- IF NDK_OVERQUOTA -->
+                <td class="overquota" colspan=3>
+                        <%NDK_OVERQUOTA_MSG%>
+                </td>
+                <!-- ELSE NDK_OVERQUOTA -->
+                <td class="quotapc" colspan=3>
+		<%storage1%> <%NDK_CUR_QCOUNT%> <%storage2%> <%storage3%> <%NDK_CUR_QSIZE%> ( <%NDK_QUOTA_PC%>% )
+                </td>
+                <!-- END NDK_OVERQUOTA -->
+        </TR>
+	</table>
+	</div>
+	<div id="dinfo">
+	<input name=dir size=15 value=>&nbsp;
+	<input type=submit name=mkdir value="<%mkdir%>">
+	</div>
+
+	<!-- IF ERRMSG -->
+	<div id="dfail"><%ERRMSG%>
+	</div>
+	<!-- END ERRMSG -->
+
+<!----endleft-->
+
+	</TD>
+	<TD class=td1px></TD>
+	<TD valign=top class=tdmain>
+		<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit><span style="float:left;left:0px;">
+			<span class="pl10 b"><%navigator%>
+			<!-- BEGIN LOOP_NAV -->
+			<!-- IF HAVE_NEXT -->
+			&gt;
+			<!-- END HAVE_NEXT -->
+			[ <a href="?__mode=list_dir&sid=<%SID%>&base=<%NAV%>"><%NAV_NAME%></a> ]
+			<!-- END LOOP_NAV -->
+			</span>
+			<span></span></span>
+					<SPAN style="float:right;padding-right:10px;">
+			</SPAN>
+			</TD>
+		</TR>
+		<TR>
+			<TD class=tdmain_in_con>
+
+<table cellpadding=0px cellspacing=0px style="background:#FFF;width:100%;font-size:12px;">
+<!-- IF LOOP_LIST -->
+<tr class="MLTR_HEAD"><td><%list_file%></td><td><%list_size%></td>
+<td><%list_mtime%></td><td><input type=checkbox name=SELECTALL onclick="CA()"><%list_check%></tr>
+<!-- BEGIN LOOP_LIST -->
+<tr class="MLTR">
+  <td>
+  <!-- IF IS_DIR -->
+  <a href="?__mode=list_dir&sid=<%SID%>&base=<%FILE%>"><img src="/extmail/images/file/dir.gif" border=0 align=absmiddle></a>
+  <!-- IF IS_EDITING -->
+  <input type=hidden name=fromname value="<%FILE%>">
+  <input name=toname value="<%FILE_NAME%>" class="chname_in">
+  <input type=submit name="rename" value="<%rename%>" class="chname_bt">
+  <!-- ELSE IS_EDITING -->
+  <a href="?__mode=list_dir&sid=<%SID%>&base=<%FILE%>"><%FILE_NAME%></a>
+  <!-- END IS_EDITING -->
+  <!-- ELSE IS_DIR -->
+  <a href="?__mode=download&sid=<%SID%>&base=<%BASE_DIR%>&file=<%FILE%>"><img src="/extmail/images/file/<%ICON%>.gif" border=0 align=absmiddle></a>
+  <!-- IF IS_EDITING -->
+  <input type=hidden name=fromname value="<%FILE%>">
+  <input name=toname value="<%FILE_NAME%>" class="chname_in">
+  <input type=submit name="rename" value="<%rename%>" class="chname_bt">
+  <!-- ELSE IS_EDITING -->
+  <a href="?__mode=download&sid=<%SID%>&base=<%BASE_DIR%>&file=<%FILE%>"><%FILE_NAME%></a>
+  <!-- END IS_EDITING -->
+  <!-- END IS_DIR -->
+
+  </td>
+  <td><%SIZE%></td>
+  <td><%MTIME%></td>
+  <td><!-- IF IS_DIR --><input type=checkbox name=DIR-<%FID%> value="<%FILE%>">
+  <!-- ELSE IS_DIR --><input type=checkbox name=FILE-<%FID%> value="<%FILE%>"><!-- END IS_DIR -->
+  <a href="?__mode=list_dir&sid=<%SID%>&base=<%BASE_DIR%>&edit_filename=<%FILE_BASENAME%>">
+  <img src="/extmail/default/images/edit.gif" alt="<%rename%>"></a>
+  </td>
+</tr>
+<!-- END LOOP_LIST -->
+
+<!-- ELSE LOOP_LIST -->
+<tr><td colspan=4>
+<div style="padding: 10px; font-size: 14px;">
+<%dirnull%>
+</div>
+</td></tr>
+<!-- END LOOP_LIST -->
+</table>
+
+			</TD>
+		</TR>
+		<TR>
+			<TD height=28px>
+<div class="foldermgr" style="padding:5px;">
+	<div>
+	<input type=submit name="delete" value="<%delete%>">
+	<input type=button name="compose" value="<%mail%>" onclick="Compose()">
+	<input type=submit name="moveto" value="<%moveto%>">
+	<select name="distdir">
+	<option value=""><%hint_moveto%></option>
+	<!-- BEGIN LOOP_DIRLIST -->
+	<option value="<%DIR%>"><%DIRNAME%></option>
+
+	<!-- END LOOP_DIRLIST -->
+	</select>
+	</div>
+
+	<div name="uploadbar" id="uploadbar" style="display: none; padding: 3px">
+	<b><%uploadbar%></b>
+	</div>
+
+	<div style="padding-top: 5px">
+	<input id="my_file_element" type="file" name="file_1">
+	<input type=submit name=upload value="<%upload%>" onclick="javascript:showBar()">
+	<!-- Multifiles upload secion -->
+	<div id="files_list" style="font-size: 12px;padding-top: 10px; line-height: 140%"></div>
+	<script>
+	<!-- Create an instance of the multiSelector class, pass it the output target and the max number of files -->
+	var multi_selector = new MultiSelector( document.getElementById( 'files_list' ), 10 );
+	<!-- Pass in the file element -->
+	multi_selector.addElement( document.getElementById( 'my_file_element' ) );
+	</script>
+	<!-- end of Multiflies upload -->
+	</div>
+</div>
+<input type=hidden name="__mode" value="file_mgr">
+
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</form>
+<!-- END FILES_LIST -->
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+</BODY>
+</HTML>

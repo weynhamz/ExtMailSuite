@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<script language=javascript>
+var currentNav = "nav_option";
+setTitle('<%meta_title%>');
+function Return() {
+	var url = 'filter.cgi?__mode=filter_list&sid=<%SID%>';
+	document.location.href = url;
+}
+</script>
+</HEAD>
+<BODY>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main" style="background:#fff;">
+
+<TABLE width=100% cellpadding=0 cellspacing=0 back>
+<TR>
+	<TD width=170px valign=top id="MainLeft">
+<!-- INCLUDE 'OPTION_NAV.html' -->
+	</TD>
+	<!--<TD class=td1px></TD> -->
+	<TD valign=top class=tdmain_ab>
+	<form method="post" name="preferences" action="filter.cgi" onsubmit="buildAllLists('black');" AUTOCOMPLETE="Off">
+		<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit>
+			<span style="float:left;left:0px;">
+			<span class="pl10 b"><%edit%><%blacklist%></span>
+			<span></span>
+			</span>
+			<SPAN style="float:right;padding-right:10px;"><!-- IF ERRMSG --><span class="fail"><%ERRMSG%></span><!-- END ERRMSG -->
+<!-- IF OKMSG --><span class="ok"><%OKMSG%></span><!-- END OKMSG -->
+</SPAN>
+			</TD>
+		</TR>
+		<tr><td>
+			<div style="padding:3px">
+				<span><%hint_enable%></span>
+				<input type="radio" name="blenable" value="enable" <!-- IF BLACKLIST_ON -->checked="checked"<!-- END BLACKLIST_ON -->><%enable%>
+				<input type="radio" name="blenable" value="disable" <!-- UNLESS BLACKLIST_ON -->checked="checked"<!-- END BLACKLIST_ON -->><%disable%>
+			</div>
+		</td></tr>
+		<TR>
+			<TD class=tdmain_in_con align=center>
+<input type="hidden" name="__mode" value="edit_list">
+<input type="hidden" name="sid" value="<%SID%>">
+<input type="hidden" name="blacklists">
+<input type="hidden" name="screen" value="blacklist.html">
+<input type="hidden" name="black" value="true">
+<table width=100% cellspacing=10>
+			<tr>
+				<td style="padding:5px;border:1px solid #ccc;">
+				<div class=optiontit><%hint_blacklist%></div>
+					<table width="50%" cellspacing="4" cellpadding="0" align=center>
+					<tr>
+					<td><%hint_input%></td>
+					<td></td>
+					<td style="padding-left:4px;"><b><%blacklist%></b></td>
+					</tr>
+					<tr valign="top">
+					<td style="padding:3px;">
+					<input ID="srcList" onkeypress="return noEnterKey();" name="srcList" size=30 type="text" maxlength="100">
+					</td>
+					<td align="center">
+					<table cellspacing="0" cellpadding="0">
+					<tr>
+					<td style="padding:3px;">
+					<input type="button" style="width: 70px;" class="A" value="<%add%> &gt;&gt;" name="Add" onClick="addToTheList(true);">
+					</td>
+					</tr>
+					<tr>
+					<td style="padding:3px;">
+					<input type="button" style="width: 70px;" class="B" value="&lt;&lt; <%remove%>" name="Remove" disabled onClick="removeFromTheList();">
+					</td>
+					</tr>
+					</table>
+					</td>
+					<td style="padding:3px;">
+					<select ID="destList" width=200 name="destList" onChange="bttnRemove_refreshState();" size=10 style="width: 200px;" MULTIPLE>
+						<!-- BEGIN BLACKLIST_LOOP -->
+						<option value="<%ADD%>"><%ADDR%></option>
+						<!-- END BLACKLIST_LOOP -->
+					</select>
+					</td>
+					</tr>
+					<tr><td style="height:35px;" align=left colspan=3><input type=submit value="<%confirm%>" name="save">
+					<input type=button value="<%return%>" onclick="Return()"></td></tr>
+					</table>
+				</td>
+			</tr>
+</table>
+
+<SCRIPT language="javascript">
+<!-- INCLUDE lists.inc -->
+</SCRIPT>
+			</TD>
+		</TR>
+		</TABLE>
+	</form>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+</BODY>
+</HTML>

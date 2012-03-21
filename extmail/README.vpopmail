@@ -1,0 +1,66 @@
+Introduction
+============
+
+Since 0.23-20060124, an experimental feature added into extmail
+source code - vpopmail support.
+
+Currently only support MySQL driver, many users in a table or
+per domain a table schema, changing SYS_AUTH_SCHEMA to vpopmail1
+or vpopmail2 to archive the goal.
+
+How to config webmail.cf
+========================
+
+* SYS_AUTH_SCHEMA=vpopmail1
+
+This authentication schema will support all users with different
+domain in a table, just like other normal postfix setup.
+
+the following parameters need to config:
+
+# SYS_MAILDIR_BASE = /home/domains <--- must be commented out
+SYS_CRYPT_TYPE = crypt             <--- must set to crypt
+SYS_MYSQL_USER = root              <--- fill the username
+SYS_MYSQL_PASS = ExtMail           <--- fill the password
+SYS_MYSQL_DB = vpopmail
+SYS_MYSQL_HOST = localhost
+SYS_MYSQL_SOCKET = /tmp/mysql.sock <--- full path of mysql socket
+
+SYS_MYSQL_TABLE = vpopmail
+SYS_MYSQL_ATTR_USERNAME = pw_name
+SYS_MYSQL_ATTR_DOMAIN = pw_domain
+SYS_MYSQL_ATTR_PASSWD = pw_passwd
+SYS_MYSQL_ATTR_CLEARPW = pw_clear_passwd
+SYS_MYSQL_ATTR_QUOTA = pw_shell
+SYS_MYSQL_ATTR_HOME = pw_dir
+# SYS_MYSQL_ATTR_MAILDIR = maildir <--- must be commented out!
+
+after saving the change to webmail.cf, configure web server to
+make extmail can be excuted as vpopmail:vchkpw, by using Suexec
+or changing running UID/GID, please refer to INSTALL for detail.
+
+* SYS_AUTH_SCHEMA=vpopmail2
+
+This authentication schema will support per domain a table to
+store user accounts capability.
+
+the following parameters need to config:
+
+# SYS_MAILDIR_BASE = /home/domains <--- must be commented out
+SYS_CRYPT_TYPE = crypt             <--- must set to crypt
+SYS_MYSQL_USER = root              <--- fill the username
+SYS_MYSQL_PASS = ExtMail           <--- fill the password
+SYS_MYSQL_DB = vpopmail
+SYS_MYSQL_HOST = localhost
+SYS_MYSQL_SOCKET = /tmp/mysql.sock <--- full path of mysql socket
+
+SYS_MYSQL_TABLE = vpopmail         <--- meaningless under vpopmail2 schema
+SYS_MYSQL_ATTR_USERNAME = pw_name
+SYS_MYSQL_ATTR_DOMAIN = pw_domain
+SYS_MYSQL_ATTR_PASSWD = pw_passwd
+SYS_MYSQL_ATTR_CLEARPW = pw_clear_passwd
+SYS_MYSQL_ATTR_QUOTA = pw_shell
+SYS_MYSQL_ATTR_HOME = pw_dir
+# SYS_MYSQL_ATTR_MAILDIR = maildir <--- must be commented out!
+
+Same requirement to the above configuration.

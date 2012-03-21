@@ -1,0 +1,46 @@
+.text-overflow {
+    width:100%;
+}
+
+.text-overflow div {
+    width: 100%;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -moz-binding:url(moz-text-overflow.xml#XBLDocument);
+}
+
+.text-overflow div ins {
+    font-family:Verdana;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 1.5em;
+    text-align: right;
+    min-width: 41px;
+    text-decoration: none;
+    background: url(text-fade.png) repeat-y;
+    display: none;
+}
+
+.text-overflow div._textUnderflow {
+    overflow: auto
+}
+
+.text-overflow div._textUnderflow ins {
+    display: none;
+}
+
+.text-overflow div._textOverflow {
+    overflow: hidden;
+}
+
+.text-overflow div._textOverflow ins {
+    display: block;
+}
+
+table.text-overflow {
+   table-layout: fixed;
+}

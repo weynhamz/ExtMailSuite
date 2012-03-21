@@ -1,0 +1,52 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<style>
+body {margin: 5px;border:0px;background:#fff;}
+</style>
+<script language=Javascript>
+</script>
+
+</head>
+<body>
+<!-- IF FILES_LIST -->
+<form method=post action='netdisk.cgi' enctype="multipart/form-data" name=netdisk>
+	<input type=hidden name="sid" value="<%SID%>">
+	<input type=hidden name="folder" value="<%FOLDER%>">
+	<input type=hidden name="pos" value="<%POS%>">
+	<input type=hidden name="msgid" value="<%MSGID%>">
+	<input type=hidden name="mimeid" value="<%MIMEID%>">
+<table cellspacing=0 cellpadding=0 border=0 width=100%><tr>
+<td valign=top align=center>
+	<table width=100%>
+	<tr><td colspan=4>
+	<div style="padding-bottom: 10px; font-size: 12px;font-family:Verdana;">
+	 <!-- BEGIN LOOP_DIRLIST -->
+	 <input type=radio name=dst_folder value="<%DIR%>"><%DIRNAME%></br>
+	 <!-- END LOOP_DIRLIST -->
+	</div>
+	</td></tr>
+	</table>
+</td>
+</tr>
+<tr><td align=center style="border-top:1px solid #ccc;padding-top:5px;">
+<input type=submit name="docopy" value="<%docopy%>">
+</td></tr>
+<input type=hidden name="__mode" value="att2ndisk">
+</table>
+</form>
+<!-- ELSE FILES_LIST -->
+
+<p style="padding-top: 20px;padding-left:10px;padding-right:10px;">
+<!-- IF ERRMSG -->
+<div class="fail"> <%cp_msg1%> <font color="#000000"><b><%FILENAME%></b></font> <%cp_msg2%> <font color="#000000"><%DISTDIR%></font> <%cp_msg_fail%> : <%ERROR%>
+<!-- ELSE ERRMSG -->
+<div class="ok"> <%cp_msg1%> <font color="#000000"><b><%FILENAME%></b></font> <%cp_msg2%> <font color="#000000"><b><%DISTDIR%></b></font> <%cp_msg_ok%>
+<!-- END ERRMSG -->
+</div>
+</p>
+<!-- END FILES_LIST -->
+</body>
+</html>

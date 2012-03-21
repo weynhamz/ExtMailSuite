@@ -1,0 +1,498 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<title><%meta_title%></title>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<LINK media=screen href="/extmail/default/css/text-overflow.css" type=text/css rel=stylesheet>
+<script type="text/javascript" src="/extmail/default/js/moz-text-overflow.js"></script>
+<style>
+.tbl{width: 100%; border:0}
+.tbl td {line-height: 200%}
+.smtr td { border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; background: #efefef}
+.td_left {text-align:left;}
+.td_right {padding:6px 0 0 35px;}
+</style>
+
+<script language=Javascript>
+var currentNav = 'nav_mail';
+
+setTitle('<%meta_title%>');
+
+function CA(form)
+{
+        for (var i=0;i<form.elements.length;i++)
+        {
+                var e = form.elements[i];
+                if ((e.name != 'SELECTALL') && (e.type=='checkbox'))
+                {
+                        e.checked = form.SELECTALL.checked;
+                        /*if(e.checked)
+                                hL(e);
+                        else
+                                dL(e);*/
+                }
+        }
+}
+
+function item_selected(f){
+        for (var i=0;i<f.elements.length;i++)
+        {
+                var e = f.elements[i];
+                if ((e.name != 'SELECTALL') && (e.type=='checkbox'))
+                {
+                        if (e.checked){
+                                //has_check=1;
+                                return true;
+                        }
+                }
+        }
+        return false;
+
+}
+
+function Move(sel)
+{
+        var f=document.getElementById('msgslist');
+        if (item_selected(f))
+        {
+                document.getElementById('deletemsg').value='';
+		document.getElementById('movemsg').value='<%move%>';
+		$("distfolder").value = $(sel).value;
+                f.submit();
+        }
+        else{
+                alert("<%nomsg_selected%>");
+                return;
+        }
+
+}
+
+function Delete()
+{
+        var f=document.getElementById('msgslist');
+	if (item_selected(f) == false)
+	{
+                alert("<%nomsg_selected%>");
+                return;
+	}
+
+	<!-- IF HINT_PURGE -->
+	var msg = '<%cfm_purge%>';
+	<!-- ELSE HINT_PURGE -->
+	var msg = '<%cfm_delete%>';
+	<!-- END HINT_PURGE -->
+
+        if(confirm(msg))
+        {
+                document.getElementById('deletemsg').value='<%delete%>';
+                document.getElementById('movemsg').value='';
+                f.submit();
+        }
+}
+
+function msgaction()
+{
+	var f=document.getElementById('msgslist');
+	if (item_selected(f) == false) {
+		alert('<%nomsg_selected%>');
+		return false;
+	}
+
+	$("setmsg").value=1;
+	$("msgslist").submit();
+	return true;
+}
+
+function OnSearch() {
+        var f = document.getElementById("searchmailForm");
+	if(f.keyword.value.match(/^\s*$/)){
+		alert('<%key_is_null%>');return false;
+	}
+        return true;
+}
+
+</script>
+
+</head>
+
+<body <!-- IF SHOW_SEARCH -->onload="$('keyword').focus();"<!-- END SHOW_SEARCH -->>
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main">
+<TABLE width=100% cellpadding=0 cellspacing=0>
+<TR>
+	<TD width=170px valign=top id="MainLeft">
+	<!-- INCLUDE 'MAIN_LEFT.html' -->
+        </TD>
+        <TD class=td1px></TD>
+	<TD class=tdmain valign=top>
+
+<!-- IF SHOW_SEARCH -->
+<form action="search.cgi" name="searchmailForm" id="searchmailForm"  onsubmit="return OnSearch()" method=POST>
+	<input type="hidden" name="new_search" value="1"/>
+	<input type="hidden" name="is_advance" value="1"/>
+        <input type="hidden" name="sid" value="<%SID%>" />
+        <input type="hidden" name="__mode" value="search"/>
+	<input type="hidden" name="screen" value="search.html"/>
+<br/>
+<table class="tbl" align="center" cellspacing=0 cellpadding=0>
+        <tr>
+                <td nowrap class="td_right"width="100">
+                        <%keyword%>
+                </td>
+
+                <td nowrap class="td_left">
+                     <input type="text" name="keyword" id="keyword" value="" size="32" />
+                </td>
+        </tr>
+
+        <tr>
+                <td class="td_right">
+                        <%search_folder%>
+                </td>
+                <td nowrap class="td_left">
+		<select name=sel_folder class="txt">
+		<option value=""><%all_folder%></option>
+                <!-- BEGIN LOOP_FOLDERS -->
+		<option value="<%DISTFOLDER%>"><%DISTNAME%></option>
+                <!-- END LOOP_FOLDERS -->
+                </select>
+                </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>
+			<input type=checkbox checked name=insubject><%insubject%><br />
+			<input type=checkbox checked name=inheader><%inheader%><br />
+		</td>
+	</tr>
+        <tr>
+                <td nowrap class="td_right"width="100">
+                        <%date_range%>:
+                </td>
+
+                <td nowrap class="td_left">
+                        <select name=daterange class="txt">
+                                <option value="1"><%one_day%></option>
+                                <option value="3"><%three_days%></option>
+                                <option value="7"><%one_week%></option>
+                                <option value="14"><%two_week%></option>
+                                <option value="30"><%one_month%></option>
+                                <option value="90"><%three_month%></option>
+                                <option value="180"><%six_month%></option>
+                                <option value="365"><%one_year%></option>
+                                <option selected="" value="-1"><%unlimit%></option>
+                        </select>
+                </td>
+        </tr>
+        <tr>
+                <td nowrap class="td_right"width="100">
+                        <%in_att_ornot%>:
+                </td>
+
+                <td nowrap class="td_left">
+                        <select id=attach name="attach" class="txt">
+                                <option value="" selected><%unlimit%></option>
+                                <option value="attach" ><%in_att%></option>
+                                <option value="~attach" ><%ex_att%></option>
+                        </select>
+                </td>
+
+	</tr>
+	<tr><td colspan=2>&nbsp;</td></tr>
+        <tr class="smtr">
+                <td nowrap class="td_right"width="100">
+                        &nbsp;
+                </td>
+                <td>
+                        <input type="submit" value="<%submit%>" class="btn" tabindex="2" />
+                        <input type="button" value="<%cancel%>" class="btn" onclick="history.back(-1)" tabindex="3"/>
+
+                </td>
+        </tr>
+</table>
+</form>
+
+<!-- END SHOW_SEARCH -->
+
+<!-- IF SEARCH_MESSAGES_LIST -->
+<form id=msgslist name=msgslist method=post action='search.cgi'>
+	<input type="hidden" name="screen" value="search.html"/>
+	<input type="hidden" name="distfolder" id=distfolder value="">
+
+<table cellspacing="0" cellpadding="0" width=100% height=100%>
+<tr>
+	<td class=tdmain_in_tit height="22px">
+	<span class="navstl">
+		&nbsp;<b><%sort_order%> : <%SORT_ORDER%></span>
+	</span>
+	<span class="navstr">
+	<b><%search_result%><span style="color:#6DA6D1"><%TOTALCOUNT%></span>&nbsp;
+	<%keyword%><span style="color:#6DA6D1"><%KEYWORD%></span></b>
+	</span>
+	</td>
+</tr>
+
+<tr><td class=tdmain_in_tit>
+	<span class="navsbl" style="padding-left: 2px; padding-top: 0px">
+		<input type=button onclick="javascript:Delete()" value="<%delete%>">
+		<input type=button onclick="javascript:Move('distfolder1')" value="<%move%>">
+		<select name=distfolder1 id=distfolder1>
+			<!-- BEGIN LOOP_FOLDERS -->
+			<option value="<%DISTFOLDER%>"><%DISTNAME%></option>
+			<!-- END LOOP_FOLDERS -->
+		</select>
+		<input type=button name=btn_flag value="<%msgaction%>" onclick="msgaction()">
+		<select name=msgflag id=msgflag>
+			<option value="Seen"><%seen%></option>
+			<option value="Unseen"><%unseen%></option>
+		</select>
+	</span>
+
+        <span class="navsbr" style="padding-top: 0px">
+        <!-- IF HAVE_FIRST -->
+        <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%FIRST%>">
+        <img class="FirstPageGlyph"  src="/extmail/default/images/firstpg.gif" alt=<%first%> >
+        <!-- ELSE HAVE_FIRST -->
+        <img class="FirstPageGlyph" src="/extmail/default/images/firstpg.d.gif" alt=<%first%>>
+	<!-- END HAVE_FIRST -->
+	&nbsp;
+        <!-- IF HAVE_PREV -->
+        <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%PREV%>">
+        <img class="PrevPageGlyph" src="/extmail/default/images/prevpg.gif" alt=<%prev%>>
+        <!-- ELSE HAVE_PREV -->
+        <img class="PrevPageGlyph" src="/extmail/default/images/prevpg.d.gif" alt=<%prev%>>
+        <!-- END HAVE_PREV -->
+        <!-- IF HAVE_PREV -->
+        </a>
+	<!-- END HAVE_PREV-->
+	&nbsp;
+        <!-- IF HAVE_NEXT -->
+        <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%NEXT%>">
+        <img class="NextPageGlyph" src="/extmail/default/images/nextpg.gif" alt=<%next%>>
+        <!-- ELSE HAVE_NEXT -->
+        <img class="NextPageGlyph" src="/extmail/default/images/nextpg.d.gif" alt=<%next%>>
+        <!-- END HAVE_NEXT -->
+        <!-- IF HAVE_NEXT -->
+        </a>
+	<!-- END HAVE_NEXT -->
+	&nbsp;
+        <!-- IF HAVE_LAST -->
+        <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%LAST%>">
+        <img class="LastPageGlyph" src="/extmail/default/images/lastpg.gif" alt=<%last%>>
+        <!-- ELSE HAVE_LAST -->
+        <img class="LastPageGlyph" src="/extmail/default/images/lastpg.d.gif" alt=<%last%>>
+        <!-- END HAVE_LAST -->
+        <!-- IF HAVE_LAST -->
+        </a>
+	<!-- END HAVE_LAST -->
+	<%page_index%>
+	<select name=pageindex onChange="document.location.href='search.cgi?__mode=search&screen=search.html&sid=<%SID%>&page='+this[this.selectedIndex].value;" >
+	<!-- BEGIN LOOP_PAGES -->
+	<option value="<%PAGE_VALUE%>" <!-- IF IS_SELECTED -->SELECTED<!-- END IS_SELECTED-->><%PAGE_TEXT%></option>
+	<!-- END LOOP_PAGES -->
+	</select>
+	</span>
+</td></tr>
+
+<tr><td>
+<!-- IF HAVEMSGLIST -->
+<table class="text-overflow" cellspacing="0" cellpadding="0" width=100%>
+	<colgroup>
+		<col style="width: 24px;">
+		<col style="width: 20px;">
+		<col style="width: 27ex;">
+		<col style="width: 2ex;">
+		<col>
+		<col style="width: 14ex;">
+		<col style="width: 10px;">
+		<col style="width: 14ex;">
+  </colgroup>
+    <tr class="MLTR_HEAD">
+	<td align="right"><input type=checkbox name="SELECTALL" onclick="CA(this.form)" title="<%select_all%>"></td>
+	<td>&nbsp;</td>
+	<td>
+	    <!-- IF flag_by_from -->
+	    <!-- IF flag_by_from_rev -->
+	    <img src="/extmail/default/images/sort_asc.gif" border=0>
+	    <!-- ELSE flag_by_from_rev -->
+	    <img src="/extmail/default/images/sort_desc.gif" border=0>
+	    <!-- END flag_by_from_rev -->
+	    <!-- END flag_by_from -->
+	    <!-- IF flag_by_from_rev -->
+            <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%CURPAGE%>&resort=by_from">
+            <!-- ELSE flag_by_from_rev -->
+            <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%CURPAGE%>&resort=by_from_rev">
+            <!-- END flag_by_from_rev -->
+	    <!-- IF REV_FROM --><%nav_to%><!-- ELSE REV_FROM --><%nav_from%><!-- END REV_FROM --></a>
+	</td>
+	<td>&nbsp;</td>
+	<td>
+	    <!-- IF flag_by_subject -->
+	    <!-- IF flag_by_subject_rev -->
+	    <img src="/extmail/default/images/sort_asc.gif" border=0>
+	    <!-- ELSE flag_by_subject_rev -->
+	    <img src="/extmail/default/images/sort_desc.gif" border=0>
+	    <!-- END flag_by_subject_rev -->
+	    <!-- END flag_by_subject -->
+
+            <!-- IF flag_by_subject_rev -->
+            <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%CURPAGE%>&resort=by_subject">
+            <!-- ELSE flag_by_subject_rev -->
+            <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%CURPAGE%>&resort=by_subject_rev">
+            <!-- END flag_by_subject_rev -->
+	    <%nav_subject%></a>
+	</td>
+	<td>
+	    <!-- IF flag_by_size -->
+	    <!-- IF flag_by_size_rev -->
+	    <img src="/extmail/default/images/sort_asc.gif" border=0>
+	    <!-- ELSE flag_by_size_rev -->
+	    <img src="/extmail/default/images/sort_desc.gif" border=0>
+	    <!-- END flag_by_size_rev -->
+	    <!-- END flag_by_size -->
+
+	    <!-- IF flag_by_size_rev -->
+	    <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%CURPAGE%>&resort=by_size">
+	    <!-- ELSE flag_by_size_rev -->
+	    <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%CURPAGE%>&resort=by_size_rev">
+	    <!-- END flag_by_size_rev -->
+	    <%nav_size%></a>
+	</td>
+	<td>&nbsp;</td>
+	<td>
+	    <!-- IF flag_by_date -->
+	    <!-- IF flag_by_date_rev -->
+	    <img src="/extmail/default/images/sort_asc.gif" border=0>
+	    <!-- ELSE flag_by_date_rev -->
+	    <img src="/extmail/default/images/sort_desc.gif" border=0>
+	    <!-- END flag_by_date_rev -->
+	    <!-- END flag_by_date -->
+
+	    <!-- IF flag_by_date_rev -->
+	    <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%CURPAGE%>&resort=by_date">
+	    <!-- ELSE flag_by_date_rev -->
+	    <a href="?__mode=search&screen=search.html&sid=<%SID%>&page=<%CURPAGE%>&resort=by_date_rev">
+	    <!-- END flag_by_date_rev -->
+	    <%nav_date%></a>
+	</td>
+     </tr>
+
+<!-- BEGIN LOOP_SUBLIST -->
+    <tr class="<!-- IF FNEW -->MLTR_N<!-- ELSE FNEW -->MLTR<!-- END FNEW -->">
+	<td align="right" style="padding-left:5px;">
+		<input type=checkbox name="<%FOLDER%>-MOVE-<%POS%>-SER-POS-<%SER_POS%>" value="<%FILE%>">
+	</td>
+	<td class="sc t"><!-- IF FATT --><img src="/extmail/default/images/attach.gif" alt="<%attach%>"><!-- ELSE FATT -->&nbsp;<!-- END FATT --></td>
+	<td><div><%FROM%></div></td>
+	<td>&nbsp;</td>
+	<td><div><span class=f12 title="<%SUBJECT%>">
+<!-- IF FOLDER_DRAFTS -->
+        <a href="compose.cgi?__mode=edit_drafts&sid=<%SID%>&folder=<%FOLDER%>&draft=<%FILE%>"><%SUBJECT%></a>
+<!-- ELSE FOLDER_DRAFTS -->
+	<A href="readmsg.cgi?__mode=readmsg_sum&sid=<%SID%>&folder=<%FOLDER%>&pos=<%POS%>&msgid=<%FILE%>"><%SUBJECT%></a>
+<!-- END FOLDER_DRAFTS -->
+	</div>
+	</td>
+	<td><%SIZE%></td>
+	<td>&nbsp;</td>
+        <td nowrap><span title="Date:<%DATE%>  Size:<%SIZE%>" style="cursor:default;"><%SHORTDATE%></span></td>
+    </tr>
+<!-- END LOOP_SUBLIST -->
+</table>
+</td></tr>
+<tr><td>
+	<span class="navsbl" style="padding-left: 2px; padding-top: 2px">
+		<input type=button onclick="javascript:Delete()" value="<%delete%>">
+		<input type=button onclick="javascript:Move('distfolder2')" value="<%move%>">
+		<select name=distfolder2 id=distfolder2>
+			<!-- BEGIN LOOP_FOLDERS -->
+			<option value="<%DISTFOLDER%>"><%DISTNAME%></option>
+			<!-- END LOOP_FOLDERS -->
+		</select>
+	</span>
+
+	<span class="navsbr" style="padding-top: 2px">
+	<!-- IF HAVE_FIRST -->
+        <a href="search.cgi?__mode=search&screen=search.html&sid=<%SID%>&page=<%FIRST%>">
+        <img class="FirstPageGlyph"  src="/extmail/default/images/firstpg.gif" alt=<%first%> >
+        <!-- ELSE HAVE_FIRST -->
+        <img class="FirstPageGlyph" src="/extmail/default/images/firstpg.d.gif" alt=<%first%>>
+	<!-- END HAVE_FIRST -->
+	&nbsp;
+        <!-- IF HAVE_PREV -->
+        <a href="search.cgi?__mode=search&screen=search.html&sid=<%SID%>&page=<%PREV%>">
+        <img class="PrevPageGlyph" src="/extmail/default/images/prevpg.gif" alt=<%prev%>>
+        <!-- ELSE HAVE_PREV -->
+        <img class="PrevPageGlyph" src="/extmail/default/images/prevpg.d.gif" alt=<%prev%>>
+        <!-- END HAVE_PREV -->
+        <!-- IF HAVE_PREV -->
+        </a>
+	<!-- END HAVE_PREV-->
+	&nbsp;
+        <!-- IF HAVE_NEXT -->
+        <a href="search.cgi?__mode=search&screen=search.html&sid=<%SID%>&page=<%NEXT%>">
+        <img class="NextPageGlyph" src="/extmail/default/images/nextpg.gif" alt=<%next%>>
+        <!-- ELSE HAVE_NEXT -->
+        <img class="NextPageGlyph" src="/extmail/default/images/nextpg.d.gif" alt=<%next%>>
+        <!-- END HAVE_NEXT -->
+        <!-- IF HAVE_NEXT -->
+        </a>
+        <!-- END HAVE_NEXT -->
+        &nbsp;
+        <!-- IF HAVE_LAST -->
+        <a href="search.cgi?__mode=search&screen=search.html&sid=<%SID%>&page=<%LAST%>">
+        <img class="LastPageGlyph" src="/extmail/default/images/lastpg.gif" alt=<%last%>>
+        <!-- ELSE HAVE_LAST -->
+        <img class="LastPageGlyph" src="/extmail/default/images/lastpg.d.gif" alt=<%last%>>
+        <!-- END HAVE_LAST -->
+        <!-- IF HAVE_LAST -->
+        </a>
+	<!-- END HAVE_LAST -->
+
+	<%page_index%>
+	<select name=pageindex onChange="document.location.href='search.cgi?__mode=search&screen=search.html&sid=<%SID%>&page='+this[this.selectedIndex].value;" >
+	<!-- BEGIN LOOP_PAGES -->
+	<option value="<%PAGE_VALUE%>" <!-- IF IS_SELECTED -->SELECTED<!-- END IS_SELECTED-->><%PAGE_TEXT%></option>
+	<!-- END LOOP_PAGES -->
+	</select>
+	</span>
+	<!-- ELSE HAVEMSGLIST -->
+	<table cellpadding=0px cellspacing=0px width=100%>
+		<col style="width: 1000ex;">
+		<tr><td height="150px" align=center width=100% bgcolor="#ffffff"><b><%nomails%></b></td></tr>
+	</table>
+	<!-- END HAVEMSGLIST -->
+</td></tr>
+</table>
+
+<input type=hidden name=deletemsg id=deletemsg value="">
+<input type=hidden name=movemsg id=movemsg value="">
+<input type=hidden id="setmsg" name="setmsg" value="">
+<input type=hidden name=__mode value="messages_mgr">
+<input type=hidden name=sid value="<%SID%>">
+<input type=hidden name=folder value="<%R_FOLDER%>">
+<input type=hidden name=page value="<%CURPAGE%>">
+
+</form>
+<!-- END SEARCH_MESSAGES_LIST -->
+
+	</TD>
+        <TD width=10px></TD>
+</TR>
+</TABLE>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+</BODY>
+</HTML>

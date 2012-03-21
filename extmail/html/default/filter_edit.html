@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<script language=javascript>
+var currentNav = "nav_option";
+setTitle('<%meta_title%>');
+</script>
+</HEAD>
+<BODY>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main" style="background:#fff;">
+
+<form name="filter_form" method="post" action="filter.cgi">
+<input type=hidden name="__mode" value="rule_save">
+<input type=hidden name="sid" value="<%SID%>">
+<!-- IF NEWADD -->
+<input type=hidden name="newadd" value="true">
+<!-- ELSE NEWADD -->
+<input type=hidden name="fid" value="<%FID%>">
+<!-- END NEWADD -->
+
+<TABLE width=100% cellpadding=0 cellspacing=0 back>
+<TR>
+	<TD width=170px valign=top id="MainLeft">
+<!-- INCLUDE 'OPTION_NAV.html' -->
+	</TD>
+	<!--<TD class=td1px></TD> -->
+	<TD valign=top  class=tdmain_ab>
+		<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit>
+			<span style="float:left;left:0px;">
+			<span class="pl10 b"><%filteredit_title%></span>
+			<span></span>
+			</span>
+			<SPAN style="float:right;padding-right:10px;"></SPAN>
+			</TD>
+		</TR>
+		<TR>
+			<TD class=tdmain_in_con align=center>
+		<table width=95% cellspacing=10>
+			<tr><td style="height:30px;"><%rule_name%></td><td><input type="text" size="40" name="rulename" value="<%RULE_NAME%>"></td></tr>
+			<tr>
+			<td><%condition%></td>
+				<td colspan=5 style="padding:5px;border:1px solid #ccc;">
+					<table cellpadding=5 cellspacing=5 width=100%>
+					<tr><td><%From%></td><td><input type=text name=from size=40 value="<%FROM%>"></td>
+						<td><%To%></td><td><input type=text name=to size=40 value="<%TO%>"></td></tr>
+					<tr><td><%Subject%></td><td><input type=text name=subject size=40 value="<%SUBJECT%>"></td>
+						<td>&nbsp;</td><td><input type=checkbox name=hasattach <!-- IF HASATTACH -->checked<!-- END HASATTACH -->><%hasattach%></td></tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td><%action%></td>
+				<td colspan=5 style="padding:5px;border:1px solid #ccc;">
+					<table cellpadding=5 cellspacing=5 width=100%>
+					<col style="width: 200px;">
+					<col>
+					<tr><td>
+					<input type=checkbox name=saveto <!-- IF SAVETO -->checked<!-- END SAVETO -->><%saveto%></td>
+					<td><select name="savefolder">
+					 <!-- BEGIN FOLDER_LIST_LOOP -->
+					 <option value="<%FOLDER%>" <!-- IF FOLDER_THIS_CHECK -->selected<!-- END FOLDER_THIS_CHECK -->><%FOLDER_NAME%></option>
+					 <!-- END FOLDER_LIST_LOOP -->
+					 </select>
+					</td></tr>
+					<tr><td>
+					<input type="checkbox" name="forwardto" <!-- IF FORWARDTO -->checked<!-- END FORWARDTO -->><%forwardto%></td><td>
+					<input size="20" name="forwardaddr" value="<%FORWARD_VALUE%>">
+					</td></tr>
+					<tr><td colspan=2><input type="checkbox" name="delete"<!-- IF DELETE -->checked<!-- END DELETE -->><%delete%></td></tr>
+					<tr><td><input type="checkbox" name="bounce" <!-- IF BOUNCE -->checked<!-- END BOUNCE -->><%reject%></td><td>
+					<input size="40" name="bouncemsg" value="<%REJECT_VALUE%>"></td></tr>
+					</table>
+				</td>
+			</tr>
+			<tr><td style="height:35px;">&nbsp;</td><td><input type="submit" value="<%confirm%>" name="submit">
+	<input type="button" value="<%cancel%>" onclick="history.back();"></td></tr>
+		</table>
+
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</form>
+
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+</BODY>
+</HTML>

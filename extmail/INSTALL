@@ -1,0 +1,123 @@
+Prerequisites
+=============
+
+see README
+
+INSTALL steps
+===============
+
+This is the second version of INSTALL, it's simple and crude, only conver
+how to setup a CGI version extmail. Please follow the steps describe here,
+hope it would make sense. If you want a faster solution, please refer to
+README.fcgi, it provide flexible FCGI acceleration guide, with FCGI you
+will get 10-100 times performance improvment, and it will turn extmail
+to a high performance web application :-)
+
+Step1 - Download
+================
+
+Get the latest source from the official ExtMail website:
+http://www.extmail.org/download/
+
+unpack the source tar.gz and copy to /var/www/extsuite/, rename the
+extmail-1.xxx to extmail
+
+Step2 - Configure
+=================
+Before you begin to config apache and extmail, make sure that apache build
+with at least mod_cgi support. Refer to apache manual for cgi information
+in detail.
+
+Here we only conver the standard cgi configuration;
+
+please put the following cgi script to /path/to/cgi-bin/ of your apache
+installation, chmod +x to it and point browser to the script, if it works
+then cgi module is ok.
+
+#!/usr/bin/perl
+print "Content-type: text/html\n\n";
+print "Hello world!\n";
+
+You should see Hello world! if mod_cgi enabled and configured properly.
+
+*) Apache + Suexec
+Currently we recommend and *only* support apache + suexec installation,
+for maximum flexibility and facility reason.
+
+Make sure your apache build in Suexec, generally common Linux or BSD-like
+OS will come with some pre-complie apache packages, eg RPM or PKG.
+
+Most of them have suexec builtin. If you build apache manualy, please en-
+sure that suexec activated and works correctly, refer to suexec manual for
+more information and configration.
+
+1)Add a new virtual host to apache, example configuration is:
+
+NameVirtualHost *:80
+<VirtualHost *:80>
+ServerName mail.example.com
+DocumentRoot /var/www/extsuite/extmail/html/
+ScriptAlias /extmail/cgi /var/www/extsuite/extmail/cgi
+Alias /extmail /var/www/extsuite/extmail/html
+SuexecUserGroup vuser vgroup
+</VirtualHost>
+
+The SuexecUserGroup derective contain user/group that suexec will su to.
+Make sure that your email system MDA will deliver email as that uid/gid,
+or will cause permission problem.
+
+2)Then chown the uid/gid of /var/www/extsuite/extmail/cgi/ to vuser/vgrop,
+including the direcotry. Su to root:
+
+# chown -R vuser.vgroup /var/www/extsuite/extmail/cgi/
+
+*)Apache + uid/gid change
+
+This is another way to run extmail with less security problem. Configuration
+is easy, change User and Group directives in httpd.conf to the uid/gid of
+maildir, for example your maildir own by vuser/vgroup, then change User and
+Group to:
+
+# vi /etc/httpd/conf/httpd.conf
+
+User vuser
+Group vgroup
+
+Save httpd.conf
+
+Config extmail
+==============
+1)Restart apache, and try to access http://mail.example.com/, your browser
+will be redirected to /extmail/cgi/index.cgi if everything works fine.
+
+2)Configure /var/www/extsuite/extmail/webmail.cf
+
+copy the webmail.cf.default as webmail.cf, then edit webmail.cf
+
+Change SYS_AUTH_TYPE to your favorite type, ldap or mysql, and fill out
+SYS_MYSQL_* parameters if you chose mysql, the same as ldap.
+
+Please read webmail.cf for parameters explanation in detail.
+
+3)Try to login with your existing account and password.
+
+Step3 - Debug
+=============
+
+* openLDAP
+
+Su to root and shutdown slapd, then run:
+/usr/sbin/slapd -d 256
+
+This command will invoke slapd in debug mode, then try to login webmail
+to see how the searh procedure is happening.
+
+* MySQL
+
+Edit /etc/my.cnf and add the following:
+
+[mysqld]
+log=/var/lib/mysql/sql.log
+
+Then all SQL statement will be written to /var/lib/mysql/sql.log, check
+this log and see whether the SQL is correct or not.

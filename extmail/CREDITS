@@ -1,0 +1,27 @@
+Jklin <jk@jklin.com>: add good paging code and template cleanup,
+enhance date sorting, merge DateTime.pm from openwebmail, give
+me very helpful suggestion about index/cache design :-)
+
+Shepherd <sheerli@gmail.com>: report Config.pm bug
+
+Huzi <huzi1977@msn.com>: fix MailFilter rules bug, fix another
+bug in SHA1 authentication module.
+
+Benyu <bbenyu@gmail.com>: report login bugs
+
+pch957 <pch957@163.com>: fix install documentation bug
+
+Wang ming da <wangmd0217@hotmail.com>: suggest adding Cc/Bcc
+header display capability for reading message.
+
+njblue2004 <njblue2004@yahoo.com.cn>: report i18n problem
+
+hmilycbz <hmilycbz@sina.com>: fix virtual host configuration bug
+in INSTALL.
+
+Condar <condar@163.com>: report critical bug when login with upper
+case username or domain name.
+
+ye_niu_zlg@hotmail.com: report translation missing problem
+
+Fei <fei@bj.tom.com>: report userconfig initialization bug

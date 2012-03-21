@@ -1,0 +1,214 @@
+# sys_config, the config file and webmail programe root
+SYS_CONFIG = /var/www/extsuite/extmail/
+
+# sys_langdir, the i18n dir
+SYS_LANGDIR = /var/www/extsuite/extmail/lang
+
+# sys_templdir, the template dir
+SYS_TEMPLDIR = /var/www/extsuite/extmail/html
+
+# sys_http_cache, a switch to enable or disable http cache via http header
+SYS_HTTP_CACHE = 0
+
+# sys_smtp_host
+SYS_SMTP_HOST = 127.0.0.1
+
+# sys_smtp_port
+SYS_SMTP_PORT = 25
+
+# sys_smtp_timeout
+SYS_SMTP_TIMEOUT = 5
+
+# sys_spam_report_on = 1 | 0 - enable spam reporting or not
+SYS_SPAM_REPORT_ON = 0
+
+# sys_spam_report_type = dspam | spamassassin - spam reporting type
+SYS_SPAM_REPORT_TYPE = dspam
+
+# sys_warn, show system warning or not, default to yes
+SYS_SHOW_WARN = 0
+
+# sys_ip_security_on = 1 | 0 - enable login ip security or not
+SYS_IP_SECURITY_ON = 1
+
+# sys_permit_noquota, permit an account without qouta?
+SYS_PERMIT_NOQUOTA = 1
+
+# sys_sess_dir, the session dir
+SYS_SESS_DIR = /tmp
+
+# sys_upload_tmpdir, the temp directory for file uploading
+SYS_UPLOAD_TMPDIR = /tmp
+
+# sys_log_on = 1 | 0 - enable logging or not
+SYS_LOG_ON = 1
+
+# sys_log_type = file|syslog|nsyslog, syslog will save login
+# or error info into mail.*, nsyslog is a replacement to syslog
+# that will send log message to network syslogd
+SYS_LOG_TYPE = syslog
+
+# sys_log_file - path to log file, if sys_log_type = file
+SYS_LOG_FILE = /var/log/extmail.log
+
+# sys_sess_timeout, session timeout, default 3 hours (3h) format:
+# number+(s|m|h|d|M|y); or only number, the 0 means that the
+# session will last for 0 seconds, but if you specify the
+# sys_sess_cookie_only = 1 then it means the session will expire
+# after you close your browser :)
+SYS_SESS_TIMEOUT = 0
+
+# sys_sess_cookie_only = 0|1 use cookie only or include cgi "sid"
+# parameter ? if set to true(1), the session will be expired after
+# sys_sess_timeout if there is no any active request from browser
+SYS_SESS_COOKIE_ONLY = 1
+
+# sys_user_psize, user default page_size
+SYS_USER_PSIZE = 10
+
+# sys_user_tsize, user mail subject truncate size, valid type:
+# auto    => full text
+# screen1 => 800x600
+# screen2 => 1024x768
+# screen3 => 1280x1024
+SYS_USER_SCREEN = auto
+
+# sys_user_lang, user default language
+SYS_USER_LANG = en_US
+
+# sys_app_type, the app type: WebMail or ExtMan? It must be the same
+# as prefix part of language package name, eg: WebMail::en_US
+SYS_APP_TYPE = WebMail
+
+# sys_user_template, user default template
+SYS_USER_TEMPLATE = default
+
+# sys_user_charset, user default charset
+SYS_USER_CHARSET = utf-8
+
+# sys_user_trylocal, user default outgoing encoding mechanism
+SYS_USER_TRYLOCAL = 1
+
+# sys_user_timezone, user default timezone
+SYS_USER_TIMEZONE = +0800
+
+# sys_user_* default parameters
+SYS_USER_CCSENT = 1
+SYS_USER_SHOW_HTML = 1
+SYS_USER_COMPOSE_HTML = 1
+SYS_USER_CONV_LINK =1
+SYS_USER_ADDR2ABOOK = 1
+
+# sys_message_size_limit, default message size limit per user
+# count as byte(s), eg: 5242880 means 5MB
+SYS_MESSAGE_SIZE_LIMIT = 5242880
+
+# sys_min_pass_len, minimal password length, default 2
+SYS_MIN_PASS_LEN = 2
+
+# sys_mfilter_on, default is off
+SYS_MFILTER_ON = 1
+
+# sys_netdisk_on, default is off
+SYS_NETDISK_ON = 1
+
+# sys_show_signup, default is on, this feature need extman
+# 0.2.2 or higher version, built with signup serivce
+SYS_SHOW_SIGNUP = 1
+
+# sys_debug_on, default is off
+SYS_DEBUG_ON = 1
+
+# sys auth type, mysql/ldap/authlib
+SYS_AUTH_TYPE = mysql
+
+# maildir_base, the base dir of user maildir, use absolute path
+# if not set.
+SYS_MAILDIR_BASE = /home/domains
+
+# sys_auth_schema, vpopmail1/vpopmail2/virtual
+# vpopmail1 => all user accounts in one table
+# vpopmail2 => accounts in per domain table
+SYS_AUTH_SCHEMA = virtual
+
+# crypt_type, the default encrypt type of password, possible type
+# currently is crypt|cleartext|plain|md5|md5crypt|plain-md5|ldap-md5|sha|sha1
+SYS_CRYPT_TYPE = md5crypt
+
+# if mysql, all relate parameters should prefix as SYS_MYSQL
+SYS_MYSQL_USER = db_user
+SYS_MYSQL_PASS = db_pass
+SYS_MYSQL_DB = extmail
+SYS_MYSQL_HOST = localhost
+SYS_MYSQL_SOCKET = /var/lib/mysql/mysql.sock
+# table name
+SYS_MYSQL_TABLE = mailbox
+SYS_MYSQL_ATTR_USERNAME = username
+SYS_MYSQL_ATTR_DOMAIN = domain
+SYS_MYSQL_ATTR_PASSWD = password
+# sys_mysql_attr_clearpw - attribute to save clear password, useful for
+# postmaster withdraw the original passwd if the end user forgot, but
+# we highly recommend that you don't enable it for security reason
+SYS_MYSQL_ATTR_CLEARPW = clearpwd
+SYS_MYSQL_ATTR_QUOTA = quota
+SYS_MYSQL_ATTR_NDQUOTA = netdiskquota
+SYS_MYSQL_ATTR_HOME = homedir
+SYS_MYSQL_ATTR_MAILDIR = maildir
+# service enable/disable attributes
+# comment them out if you don't want their function
+SYS_MYSQL_ATTR_DISABLEWEBMAIL = disablewebmail
+SYS_MYSQL_ATTR_DISABLENETDISK = disablenetdisk
+SYS_MYSQL_ATTR_DISABLEPWDCHANGE = disablepwdchange
+SYS_MYSQL_ATTR_ACTIVE = active
+# password retrieve attributes
+# comment them out if you don't want such function
+SYS_MYSQL_ATTR_PWD_QUESTION = question
+SYS_MYSQL_ATTR_PWD_ANSWER = answer
+
+# if ldap, all relate parameters should prefix as SYS_LDAP
+SYS_LDAP_BASE = o=extmailAccount,dc=example.com
+SYS_LDAP_RDN = cn=Manager,dc=example.com
+SYS_LDAP_PASS = secret
+SYS_LDAP_HOST = localhost
+# ldif attributes
+SYS_LDAP_ATTR_USERNAME = mail
+SYS_LDAP_ATTR_DOMAIN = virtualDomain
+SYS_LDAP_ATTR_PASSWD = userPassword
+# sys_ldap_attr_clearpw - attribute to save clear password, useful for
+# postmaster withdraw the original passwd if the end user forgot, but
+# we highly recommend that you don't enable it for security reason
+SYS_LDAP_ATTR_CLEARPW = clearPassword
+SYS_LDAP_ATTR_QUOTA = mailQuota
+SYS_LDAP_ATTR_NDQUOTA = netdiskQuota
+SYS_LDAP_ATTR_HOME = homeDirectory
+SYS_LDAP_ATTR_MAILDIR = mailMessageStore
+# service enable/disable attributes
+# comment them out if you don't want their function
+SYS_LDAP_ATTR_DISABLEWEBMAIL = disablewebmail
+SYS_LDAP_ATTR_DISABLENETDISK = disablenetdisk
+SYS_LDAP_ATTR_DISABLEPWDCHANGE = disablePasswdChange
+SYS_LDAP_ATTR_ACTIVE = active
+# password retrieve attributes
+# comment them out if you don't want such function
+SYS_LDAP_ATTR_PWD_QUESTION = question
+SYS_LDAP_ATTR_PWD_ANSWER = answer
+
+# if authlib, all relate parameters should prefix as AUTHLIB
+SYS_AUTHLIB_SOCKET = /var/spool/authdaemon/socket
+
+# Global Abook support
+# sys_g_abook_type, global abook type, valid is ldap|file
+SYS_G_ABOOK_TYPE = file
+
+# if ldap, all relate parameters should prefix as SYS_G_ABOOK_LDAP
+SYS_G_ABOOK_LDAP_HOST = localhost
+SYS_G_ABOOK_LDAP_BASE = ou=AddressBook,dc=example.com
+SYS_G_ABOOK_LDAP_ROOTDN = cn=Manager,dc=example.com
+SYS_G_ABOOK_LDAP_ROOTPW = secret
+SYS_G_ABOOK_LDAP_FILTER = objectClass=OfficePerson
+
+# if file, all relate parameters should prefix as SYS_G_ABOOK_FILE
+SYS_G_ABOOK_FILE_PATH = /var/www/extsuite/extmail/globabook.cf
+SYS_G_ABOOK_FILE_LOCK = 1
+SYS_G_ABOOK_FILE_CONVERT = 0
+SYS_G_ABOOK_FILE_CHARSET = utf-8

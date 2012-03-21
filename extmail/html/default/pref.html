@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE><%meta_title%></TITLE>
+<meta http-equiv="content-type" content="text/html; charset=<%lang_charset%>">
+<META NAME="Author" CONTENT="">
+<META NAME="Keywords" CONTENT="">
+<META NAME="Description" CONTENT="">
+<script type="text/javascript" src="/extmail/default/js/common.js"></script>
+<script type="text/javascript" src="/extmail/default/js/menu.js"></script>
+<LINK media=screen href="/extmail/default/css/newstyle.css" type=text/css rel=stylesheet>
+<style>
+    #tabwin ul{margin:0;padding:0;list-style:none;color:#000;vertical-align: top}
+    #tabwin li{float:left;background:#fff;border-right:1px solid #FFF;padding:3px 8px 3px 8px;cursor: pointer}
+    #tabwin .tab-selected{background:#D9E6F4;margin:0;padding:3px 8px 3px 8px;font-weight: bold}
+    #tabwin .cleard{clear:both;}
+    /* top right bottom left */ /* FireFox and IE will behavor different here, sorry :( */
+    #tabwin .content-tab {margin: 20 10 0 10; width: 98%; border: 1px solid #ccc}
+</style>
+
+<script language=javascript>
+setTitle('<%meta_title%>');
+function Select(tab){
+	for(i=1; i <6; i++){
+		if (i==tab) {
+			document.getElementById("Tab"+i).className="tab-selected";
+			document.getElementById("Content"+i).style.display="block";
+		}else{
+			document.getElementById("Tab"+i).className="";
+			document.getElementById("Content"+i).style.display="none";
+		}
+	}
+}
+
+var currentNav = "nav_option";
+</script>
+</HEAD>
+<BODY>
+
+<DIV id="TopBan">
+<!-- INCLUDE 'TOP_BAN.html' -->
+</DIV>
+
+<DIV id="TopNav">
+<!-- INCLUDE 'TOP_NAV.html' -->
+</DIV>
+
+<DIV id="Main" style="background:#fff;">
+
+<TABLE width=100% cellpadding=0 cellspacing=0 back>
+<TR>
+	<TD width=170px valign=top id="MainLeft">
+<!-- INCLUDE 'OPTION_NAV.html' -->
+	</TD>
+	<TD valign=top class=tdmain_ab>
+		<TABLE width=100%  height=100% cellpadding=0 cellspacing=0>
+		<TR>
+			<TD height=28px class=tdmain_in_tit>
+			<span style="float:left;left:0px;">
+			<span class="pl10 b"><%opt_standard%></span>
+			<span></span>
+			</span>
+			<SPAN style="float:right;padding-right:10px;"></SPAN>
+			</TD>
+		</TR>
+		<TR>
+		<TD class=tdmain_in_con>
+		<DIV id="tabwin" name="tabwin">
+		<ul>
+			<li class="tab-selected" id="Tab1" onclick="Select('1');"><%tab_personal%></li>
+			<li class="tab" id="Tab2" onclick="Select('2');"><%tab_compose%></li>
+			<li class="tab" id="Tab3" onclick="Select('3');"><%tab_readmail%></li>
+			<li class="tab" id="Tab4" onclick="Select('4');"><%tab_pop3%></li>
+			<li class="tab" id="Tab5" onclick="Select('5');"><%tab_options%></li>
+			<div class="cleard"></div>
+		</ul>
+		<form name=pref_save method=post action="pref.cgi">
+			<div id="Content1" class="content">
+			<table cellpadding=5 cellspacing=5 class="content-tab">
+				<tr>
+					<td class=optionkey><%nick%></td>
+					<td><input name=nick_name value="<%NICK_NAME%>"> &nbsp;
+						<span class="tip"><%hint_nick%></span></td></tr>
+				<tr>
+					<td class=optionkey><%change_passwd_oldpw%></td>
+					<td><input name="oldpw" type=password size=30></td>
+					</tr>
+					<tr>
+					<td class=optionkey><%change_passwd_newpw1%></td>
+					<td><input name="newpw1" type=password size=30></td>
+					</tr>
+					<tr>
+					<td class=optionkey><%change_passwd_newpw2%></td>
+					<td><input name="newpw2" type=password size=30></td>
+					</tr>
+					<!-- IF CAN_CHANGE_INFO -->
+					<tr>
+						<td class="optionkey"><%change_info_question%></td>
+						<td><input name="pwd_question" value="<%PWD_QUESTION%>"></td>
+					</tr>
+					<tr>
+						<td class="optionkey"><%change_info_answer%></td>
+						<td><input name="pwd_answer" value="<%PWD_ANSWER%>"></td>
+					</tr>
+					<!-- END CAN_CHANGE_INFO -->
+					<tr><td></td><td><span class="tip"><%change_passwd%></div>
+					<!-- IF CHGPWD_OK --><span class="ok"><%CHGPWD_OK%><span><!-- END CHGPWD_OK -->
+					<!-- IF CHGPWD_FAIL --><span class="fail"><%CHGPWD_FAIL%><span><!-- END CHGPWD_FAIL -->
+					<!-- IF CHGINFO_OK --><span class="ok"><%CHGINFO_OK%><span><!-- END CHGINFO_OK -->
+                                        <!-- IF CHGINFO_FAIL --><span class="fail"><%CHGINFO_FAIL%><span><!-- END CHGINFO_FAIL -->
+					</td>
+				</tr>
+				</table>
+			</div>
+			<div id="Content2" class="content" style="display: none;">
+			<table cellpadding=5 cellspacing=5 class="content-tab">
+				<tr>
+				<td class=optionkey><%fcc%></td>
+					<td><input name=ccsent type=checkbox
+					<!-- IF CCSENT -->checked<!-- END CCSENT -->>
+					<%hint_fcc%>
+					</td>
+				</tr>
+				<tr>
+					<td class=optionkey><%compose_type%></td>
+					<td><input name=compose_html type=checkbox
+					<!-- IF COMPOSE_HTML -->checked<!-- END COMPOSE_HTML -->>
+					<%hint_compose_html%>
+					</td>
+				</tr>
+				<tr>
+					<td class=optionkey><%addr2abook%></td>
+					<td><input name=addr2abook type=checkbox
+					<!-- IF ADDR2ABOOK -->checked<!-- END ADDR2ABOOK -->>
+					<%hint_addr2abook%>
+					</td>
+				</tr>
+				<tr>
+					<td class=optionkey><%outgoenc%></td>
+					<td><input type=radio name=trylocal value="1" <!-- IF TRYLOCAL -->checked<!-- END TRYLOCAL -->><%trylocal%><br />
+					<input type=radio name=trylocal vlaue="0" <!-- UNLESS TRYLOCAL -->checked<!-- END TRYLOCAL -->><%tryutf8%><br />
+					</td>
+			    	</tr>
+				<tr>
+					<td class=optionkey><%signature%></td>
+					<td><textarea name="signature" rows=8 cols=40><%SIGNATURE%></textarea></br>
+					<%hint_signature%>
+					</td>
+				</tr>
+			</table>
+			</div>
+
+			<div id="Content3" class="content" style="display: none;">
+			<table cellpadding=5 cellspacing=5 class="content-tab">
+				<tr>
+					<td class=optionkey><%showhtml%></td>
+					<td><input name=show_html type=checkbox
+					<!-- IF SHOW_HTML -->checked<!-- END SHOW_HTML -->>
+					<%hint_showhtml%>
+					</td>
+				</tr>
+				<tr>
+					<td class=optionkey><%conv_link%></td>
+					<td><input name=conv_link type=checkbox
+					<!-- IF CONV_LINK -->checked<!-- END CONV_LINK -->>
+					<%hint_convlink%>
+					</td>
+				</tr>
+				<tr>
+					<td class=optionkey><%page_size%></td>
+					<td><select name="page_size">
+					<!-- BEGIN LOOP_PAGE_SIZE -->
+					<option <!-- IF PAGE_SIZE_CHK -->selected<!-- END PAGE_SIZE_CHK -->>
+					<%PAGE_SIZE%></option>
+					<!-- END LOOP_PAGE_SIZE -->
+					</select>
+					<%hint_pagesize%>
+					</td>
+				</tr>
+				<tr>
+					<td class=optionkey><%screen_type%></td>
+					<td><select name="screen_type">
+					<!-- BEGIN LOOP_SCREEN -->
+					<option value="<%SCREEN_TYPE%>" <!-- IF SCREEN_CHK -->selected<!-- END SCREEN_CHK -->>
+					<%SCREEN_NAME%></option>
+					<!-- END LOOP_SCREEN -->
+					</select>
+					<%hint_screen_type%>
+				</tr>
+				<tr>
+					<td class=optionkey><%sort_order%></td>
+					<td><select name="sort">
+					<!-- BEGIN LOOP_SORT -->
+					<option <!-- IF SORT_CHK -->selected<!-- END SORT_CHK --> value=<%SORT_VAL%>>
+					<%SORT_NAME%>
+					</option>
+					<!-- END LOOP_SORT -->
+					</select>
+					<%hint_sortorder%>
+					</td>
+				</tr>
+				<tr>
+					<td class=optionkey><%delmode%></td>
+					<td><input type=radio name=delmode value="purge" <!-- IF MAIL_PURGE -->checked<!--END MAIL_PURGE -->><%hint_delmode_purge%><br />
+					<input type=radio name=delmode vlaue="delete" <!-- IF MAIL_DELETE -->checked<!-- END MAIL_DELETE -->><%hint_delmode_delete%><br />
+					</td>
+				</tr>
+			</table>
+			</div>
+
+			<div id="Content4" class="content" style="display: none;">
+			<table cellpadding=5 cellspacing=5 class="content-tab">
+				<tr>
+					<td class=optionkey><%pop_on%></td>
+					<td><input name=pop_on type=checkbox
+					<!-- IF POP_ON -->checked<!-- END POP_ON -->>
+					<%hint_pop3%>
+					</td>
+				</tr>
+				<tr>
+					<td class=optionkey><%pop_timeout%></td>
+					<td><select name="pop_timeout">
+					<!-- BEGIN LOOP_POPTIMEOUT -->>
+					<option <!-- IF TIMEOUT_CHECK -->selected<!-- END TIMEOUT_CHECK -->>
+					<%TIMEOUT%></option>
+					<!-- END LOOP_POPTIMEOUT -->
+					</select> (<%hint_poptimeout%>)
+					</td>
+				</tr>
+				<tr>
+					<td class=optionkey><%pop_files%></td>
+					<td><select name="pop_files">
+					<!-- BEGIN LOOP_POPFILES -->>
+					<option <!-- IF POPFILES_CHECK -->selected<!-- END POPFILES_CHECK -->>
+					<%POPFILES%></option>
+					<!-- END LOOP_POPFILES -->
+					</select> (<%hint_popfiles%>)
+					</td>
+				</tr>
+			</table>
+			</div>
+
+			<div id="Content5" class="content" style="display: none;">
+			<table cellpadding=5 cellspacing=5 class="content-tab">
+				<tr>
+					<td class=optionkey><%timezone%></td>
+					<td><select name="timezone">
+					<!-- BEGIN LOOP_TIMEZONE -->
+					<option <!-- IF TIMEZONE_CHK -->selected<!-- END TIMEZONE_CHK -->
+					value=<%TIMEZONE_VALUE%>>GMT <%TIMEZONE_NAME%> <%hour%></option>
+					<!-- END LOOP_TIMEZONE -->
+					</select>
+					<%hint_timezone%>
+					</td>
+				</tr>
+				<tr>
+					<td class=optionkey><%lang%></td>
+					<td><select name="lang">
+					<!-- BEGIN LOOP_LANG -->
+					<option <!-- IF LANG_CHK -->selected<!-- END LANG_CHK --> value="<%LANG%>">
+					<%LANG_DESC%>
+					</option>
+					<!-- END LOOP_LANG -->
+					</select>
+					<%hint_lang%>
+					</td>
+				</tr>
+				<tr>
+					<td class=optionkey><%template%></td>
+					<td><select name="template">
+					<!-- BEGIN LOOP_THEME -->
+					<option <!-- IF THEME_CHK -->selected<!-- END THEME_CHK --> value="<%THEME%>">
+					<%THEME_DESC%>
+					</option>
+					<!-- END LOOP_THEME -->
+					</select>
+					</td>
+				</tr>
+				</table>
+			</div>
+			</td>
+			<tr>
+			<td style="height:35px;" align=center><input type=submit name="dosave" value="<%save%>"> &nbsp;<input type=hidden name="__mode" value="pref_save"><input type=hidden name="sid" value="<%SID%>">&nbsp;<span class="tip"> <%caution%> </span></td>
+			</tr>
+			</table>
+			</form>
+			</DIV> <! -- end of tab -->
+			</TD>
+		</TR>
+		</TABLE>
+	</TD>
+	<TD width=10px></TD>
+</TR>
+</TABLE>
+</DIV>
+
+<DIV id="Bottom">
+<!-- INCLUDE 'BOTTOM.html' -->
+</DIV>
+</BODY>
+</HTML>

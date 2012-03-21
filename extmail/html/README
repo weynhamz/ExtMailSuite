@@ -1,0 +1,13 @@
+README for html templates of ExtMail
+====================================
+
+There are some special sub directories here, they are:
+
+images - system default images directory, include logo etc.
+standard - system default theme, must be exist
+
+And every theme has the folloing directory structure:
+
+foo/ -> theme name
+foo/README -> theme readme and include i18n description
+foo/images -> images used by this theme only, private

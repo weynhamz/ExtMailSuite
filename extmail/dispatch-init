@@ -1,0 +1,87 @@
+#!/bin/sh
+
+# example init script for dispatch.fcgi server
+#
+# chkconfig: 2345 80 20
+# description: dispatch.fcgi - a remote fastcgi server for
+#              extmail FCGI support
+#
+# processname: dispatch.fcgi
+# pidfile: /var/run/dispatch.pid
+
+# startup parameters
+MAXFORK=10
+MINFORK=2
+MAXREQS=25
+TIMEOUT=360
+PORT=8888
+SU_UID=vuser
+SU_GID=vgroup
+
+PATH=/bin:/usr/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin
+BASE=/var/www/extsuite/extmail
+BIN=dispatch.fcgi
+PID_FILE=/$BASE/$BIN.pid
+
+export PATH=$PATH
+
+case "$1" in
+'start')
+	if [ ! -f $PID_FILE ]; then
+		touch $PID_FILE
+		chown $SU_UID:$SU_GID $PID_FILE
+	else
+		PID=`cat $PID_FILE`;
+		kill -0 $PID
+		if [ "$?" -eq 0 ];then
+			echo "Pid of $PID is running, abort..."
+			exit 255
+		fi
+	fi
+	echo "Starting extmail FCGI server...";
+	nice -19 $BASE/$BIN --port=$PORT --maxserver=$MAXFORK --minspare=$MINFORK --server \
+		--host=127.0.0.1 --uid=$SU_UID --gid=$SU_GID --pid=$PID_FILE \
+		--request=$MAXREQS --timeout=$TIMEOUT --debug --log=/tmp/dispatch.fcgi.log
+	;;
+
+'stop')
+	if [ -f $PID_FILE ]; then
+		echo "Stopping extmail FCGI server...";
+		kill -TERM `cat $PID_FILE`
+		rm $PID_FILE
+	else
+		echo "Extmail FCGI server not running or pid not found";
+	fi
+	;;
+
+'status')
+	if [ ! -f $PID_FILE ];then
+		pid=`ps ax|grep "dispatch.fcgi (master)|awk {'print $1'}"|grep -v grep`
+		if [ "$pid" != "" ];then
+			echo "Pid of $pid is running."
+		else
+			echo "Extmail FCGI server not running and pid not found"
+		fi
+	else
+		PID=`cat $PID_FILE`;
+		kill -0 $PID
+		if [ "$?" -eq 0 ];then
+			echo "Pid of $PID is running."
+		else
+			echo "Pid exist but master process dead."
+		fi
+	fi
+	;;
+
+'restart')
+	$0 stop
+	$0 start
+	;;
+
+*)
+	echo "Usage: $0 { start | restart | status | stop }"
+	exit 1
+	;;
+
+esac
+exit 0
