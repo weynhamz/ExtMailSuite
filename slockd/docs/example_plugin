@@ -1,0 +1,24 @@
+#!perl
+# vim: set cindent expandtab ts=4 sw=4:
+
+# example plugin for APF opensource server
+
+sub init { 'initialize something' }
+
+sub pre_hook { return 'DUNNO' }
+
+sub hook {
+    my $self = shift;
+    my $ar = $self->ar; # APF resource
+
+    return 'DUNNO';
+}
+
+sub post_hook {
+    my $self = shift;
+    my $tr = $self->tr; # Net::Server object
+
+    return 'DUNNO';
+}
+
+sub cleanup { 'do some cleanup here' }

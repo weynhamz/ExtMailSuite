@@ -1,0 +1,93 @@
+#!perl
+# vim: set cindent expandtab ts=4 sw=4:
+
+# greylist      greylist plugin
+#
+# description: this plugin derive from postfix demo greylisting
+#              policy perl script, fix some locking bug.
+use strict;
+use DB_File;
+use Fcntl qw(:flock);
+
+sub init {
+    my $self = shift;
+    my $config = $self->config;
+
+    $self->{plugin_name} = 'Greylist';
+
+    $self->{dbpath} = $config->{greylist_db} || '/var/lib/greylist.db';
+    $self->{delay} = $config->{greylist_delay} || 60;
+}
+
+sub pre_hook {
+    my $self = shift;
+    my $ar = $self->ar;
+    my($key, $time_stamp, $now);
+
+    $self->lock;
+    $self->init_db;
+
+    # Lookup the time stamp for this client/sender/recipient.
+    $key = lc "$ar->{client_address}/$ar->{sender}/$ar->{recipient}";
+    $time_stamp = $self->lookup($key) || 0;
+    $now = time();
+
+    # If this is a new request add this client/sender/recipient to db
+    if ($time_stamp == 0) {
+        $time_stamp = $now;
+        $self->update($key, $time_stamp);
+    }
+    $self->unlock;
+
+    if ($now - $time_stamp > $self->{delay}) {
+        return "DUNNO";
+    } else {
+        return "defer_if_permit Try again, see http://bl.extmail.org/cgi/why?greylist";
+    }
+}
+
+sub init_db {
+    my $self = shift;
+    my %db_hash;
+
+    my $db = tie(%db_hash, 'DB_File', $self->{dbpath},
+                O_CREAT|O_RDWR, 0644, $DB_BTREE) or
+        die "Can't create $self->{dbpath}, $!\n";
+
+    $self->{db} = $db;
+    $self->{hash} = \%db_hash;
+}
+
+sub lookup {
+    my $self = shift;
+    my $key = shift;
+    $self->{hash}->{$key};
+}
+
+sub update {
+    my $self = shift;
+    my($key, $value) = @_;
+    $self->{hash}->{$key} = $value;
+    $self->{db}->sync() && die "Can't update: $!";
+}
+
+sub lock {
+    my $self = shift;
+    my $lock_file = $self->{dbpath}.'.lck';
+
+    open (my $fh, ">$lock_file") or die "Can't write $lock_file, $!\n";
+    flock ($fh, LOCK_EX) || die "LOCK_EX: $!\n";
+    $self->{lock_fh} = $fh;
+}
+
+sub unlock {
+    my $self = shift;
+    my $fh = $self->{lock_fh};
+    return unless $fh;
+
+    flock($fh, LOCK_UN);
+    close $fh;
+    undef $self->{lock_fh};
+}
+
+1;

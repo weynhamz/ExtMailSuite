@@ -1,0 +1,66 @@
+#!/usr/bin/perl
+#
+# policy_test.pl: output strings with color in console.
+#      Copyright: 1998-2004 (c) He zhiqiang<hzqbbc@jagmail.cn>
+#       Features: (*) use Socket to talk to acl/policy server
+#                 (*) can easily add more test suites
+#                 (*) output testing purpose and result in colorful
+#                     format :-) just like BBS or IRC.
+#                 (*) currently support Postfix only
+#                 (*) can be easily modified to adapt qmail/sendmail
+#
+#    Last update: 18:36 Sun 7 Mar, 2004
+
+use strict;
+use IO::Socket;
+
+&usage() if ( $#ARGV < 3 );
+
+my($remote_host, $remote_port, $socket);
+my($ip, $helo, $cli_name, $from, $recip);
+my $argv;
+
+while( $argv = shift @ARGV ) {
+$remote_host = shift @ARGV if ( $argv eq "-h" );
+$remote_port = shift @ARGV if ( $argv eq "-p" );
+$ip = shift @ARGV if ($argv eq '--ip');
+$helo = shift @ARGV if ($argv eq '--helo');
+$from = shift @ARGV if ($argv eq '--from');
+$recip = shift @ARGV if ($argv eq '--to');
+$cli_name = shift @ARGV if ($argv eq '--cli');
+}
+
+&main();
+
+sub usage {
+	print "$0 -h [ hostname ] -p [ port ] --ip [ client_ip ] --cli [ client_name ] --helo [ fqdn ] --from [ sender ] --to [ recipient ]\n";
+	exit(255);
+}
+
+sub main {
+	$socket = IO::Socket::INET->new(PeerAddr => $remote_host,
+                                PeerPort => $remote_port,
+                                Proto    => "tcp",
+                                Type     => SOCK_STREAM)
+	or die "Couldn't connect to $remote_host:$remote_port : $@\n";
+
+	my $buf = '';
+	$buf = "request=smtpd_access_policy\n"
+	      ."protocol_state=RCPT\n"
+	      ."protocol_name=ESMTP\n"
+	      ."client_address=$ip\n"
+	      ."client_name=$cli_name\n"
+	      ."helo_name=$helo\n"
+	      ."sender=$from\n"
+	      ."recipient=$recip\n"
+	      ."queue_id=\n";
+
+	print $socket "$buf\n";
+	my $response = undef;
+	while(<$socket>) {
+		$response = $response . $_ if ( $_ ne "\n" );
+		last if ( $_ eq "\n" );
+	}
+	print $response;
+	close($socket);
+}

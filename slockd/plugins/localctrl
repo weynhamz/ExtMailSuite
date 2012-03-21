@@ -1,0 +1,137 @@
+#!perl
+# vim: set cindent expandtab ts=4 sw=4:
+
+# localctrl     local control plugin
+#
+# description: including whitelist and blacklist, can easily integrade
+#              with postfix, currently only support plain text format
+use strict;
+use Data::Dumper;
+
+sub init {
+    my $self = shift;
+    my $config = $self->config;
+
+    $self->{plugin_name} = 'Localctrl';
+
+    $self->read_ip_ctrl('white', $config->{localctrl_wl});
+    $self->read_ip_ctrl('black', $config->{localctrl_bl});
+    $self->read_sr_ctrl('white_senders', $config->{localctrl_sender_wl});
+    $self->read_sr_ctrl('black_senders', $config->{localctrl_sender_bl});
+    $self->read_sr_ctrl('white_recips', $config->{localctrl_recip_wl});
+    $self->read_sr_ctrl('black_recips', $config->{localctrl_recip_bl});
+}
+
+sub pre_hook {
+    my $self = shift;
+    my $ip = $self->ar->{client_address};
+    my $cli = $self->ar->{client_name};
+    my $sender = $self->ar->{sender};
+    my $recip = $self->ar->{recipient};
+
+    # white list for sender
+    for my $w (@{$self->{white_senders}}) {
+        return 'OK' if $sender =~ $w;
+    }
+
+    # white list for recipient
+    for my $w (@{$self->{white_recips}}) {
+        return 'OK' if $recip =~ $w;
+    }
+
+    # white list for PTR
+    for my $w (@{$self->{white_clients}}) {
+        return 'OK' if $cli =~ $w;
+    }
+
+    # white list for ipaddrs
+    for my $w (@{$self->{white_ips}}) {
+        return 'OK' if $ip =~ $w;
+    }
+
+    # black list for sender
+    for my $b (@{$self->{black_senders}}) {
+        return '504 blocked by localctrl, '.
+               ' see http://bl.extmail.org/cgi/why?localctrl',
+               if ($sender =~ $b);
+    }
+
+    # black list for recipient
+    for my $b (@{$self->{black_recips}}) {
+        return '504 blocked by localctrl, '.
+               ' see http://bl.extmail.org/cgi/why?localctrl',
+               if ($recip =~ $b);
+    }
+
+    # black list for PTR
+    for my $b (@{$self->{black_clients}}) {
+        return '504 blocked by localctrl, '.
+               'see http://bl.extmail.org/cgi/why?localctrl',
+               if ($cli =~ $b);
+    }
+
+    # black list for ipaddrs
+    for my $b (@{$self->{black_ips}}) {
+        return '504 blocked by localctrl, '.
+               'see http://bl.extmail.org/cgi/why?localctrl',
+               if ($ip =~ $b);
+    }
+    'DUNNO';
+}
+
+# code from postgrey - http://isg.ee.ethz.ch/tools/postgrey/
+sub read_ip_ctrl {
+    my ($self, $type, $file) = @_;
+    my (@clients, @ips);
+
+    return unless (-r $file);
+
+    # the $/ must set to "\n" or "\r\n", or you must
+    # turn the following line on by your hand
+    # local $/ = "\n";
+    open (FH, $file) or return;
+    while (<FH>) {
+        s/#.*$//; s/^\s+//; s/\s+$//; next if $_ eq '';
+        if(/^\/(\S+)\/$/) {
+            # regular expression
+            push @clients, qr{$1}i;
+        } elsif(/^\d{1,3}(?:\.\d{1,3}){0,3}$/) {
+            # IP address or part of it
+            push @ips, qr{^$_};
+        } elsif(/^.*\:.*\:.*$/) {
+            # IPv6
+            push @ips, qr{^$_};
+        } elsif(/^\S+$/) {
+            # note: we had ^[^\s\/]+$ but it triggers a bug in perl 5.8.0
+            push @clients, qr{\Q$_\E$}i;
+        } else {
+            $self->debug(1,"WARNING: $file line $.: unlike a hostname");
+        }
+    }
+    close FH;
+
+    $self->{$type.'_clients'} = \@clients;
+    $self->{$type.'_ips'}     = \@ips;
+}
+
+# sender/recipient white/black list parsing.
+sub read_sr_ctrl {
+    my ($self, $type, $file) = @_;
+    my @array;
+
+    return unless (-r $file);
+    open (FH, $file) or return;
+    while (<FH>) {
+        s/#.*$//; s/^\s+//; s/\s+$//; next if $_ eq '';
+        if(/^\/(\S+)\/$/) {
+            push @array, qr{$1}i;
+        } elsif(/^\S+$/) {
+            push @array, qr{\Q$_\E$}i;
+        } else {
+            $self->debug(1, "WARNING: $file line $.: unlike a mail address");
+        }
+    }
+    close FH;
+    $self->{$type} = \@array;
+}
+

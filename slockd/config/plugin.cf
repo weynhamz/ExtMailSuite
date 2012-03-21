@@ -1,0 +1,84 @@
+# plugins configuration
+#
+# Author: He zhiqiang <hzqbbc@hzqbbc.com>
+# License: GPL v2
+# Date: 2009-05-14
+
+#----------------------#
+# global configuration #
+#----------------------#
+
+# debug or not?
+debug = yes
+debug_level = 1
+debug_method = stderr
+
+# Async DNS setting
+dns_max_retry = 3
+dns_max_resend = 3
+dns_timeout = 5
+
+# Policy action type, valid: policy|header|learn
+#
+# policy - will cause MTA to send DSN code to client
+# header - will cause MTA append a line to email header, it's for
+#          debug purpose only.
+# learn  - will redirect message to a spam filter to retrain
+action_type = policy
+
+# Action for Spam/Ham, this two parameters can setup a lot of
+# magic task for your content filter/bayes filtering system, or act
+# as standard policy server
+
+# action_spam - action to which identified as spam
+# action_spam = FILTER retrain:spam
+# action_ham  - action to which identified as ham
+# action_ham = FILTER retrain:innocent
+
+#---------------#
+# plugin config #
+#---------------#
+
+# localctrl plugin - for white/black list
+localctrl_plugin = yes
+localctrl_bl = config/blacklist
+localctrl_wl = config/whitelist
+localctrl_sender_bl = config/sender_blacklist
+localctrl_sender_wl = config/sender_whitelist
+localctrl_recip_bl = config/recip_blacklist
+localctrl_recip_wl = config/recip_whitelist
+
+# the per user black/white list plugin
+peruserctrl_plugin = yes
+# the authlib socket path, use it if authlib enabled
+peruserctrl_sockpath = /var/spool/authdaemon/socket
+# the module to get user maildir path
+peruesrctrl_module = authlib
+
+# the SPF plugin
+spf_plugin = yes
+# set soft_reject to yes will reject the client with 450 instead
+# off 5xx smtp error code
+spf_soft_reject = no
+# default action to clients that neither fail nor pass
+spf_default_action = DUNNO
+
+# the RBL lookup plugin
+dnsbl_plugin = yes
+# set soft_reject to yes will reject the client with 450 instead
+# off 5xx smtp error code
+dnsbl_soft_reject = no
+# rbl server list, using postfix style configuration
+# hints: trying dul.dnsbl.sorbs.net may block those dynamic IPs
+dnsbl_server_list =
+  zen.spamhaus.org,
+  bl.spamcop.net,
+  cbl.anti-spam.org.cn,
+  dnsbl.sorbs.net
+
+# the Greaylist implemention plugin
+greylist_plugin = yes
+# the greylist db full path, eg: (hash|btree):/path/to/greaylist.db
+greylist_db = /var/lib/greylist.db
+# the greylist delay time in seconds, default 300
+greylist_delay = 60

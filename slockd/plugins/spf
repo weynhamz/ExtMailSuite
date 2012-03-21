@@ -1,0 +1,57 @@
+#!perl
+# vim: set cindent expandtab ts=4 sw=4:
+
+# spf          Sender permited framework
+#
+# description: a simple SPF implemention, it do normal spf check
+use strict;
+use Mail::SPF::Query;
+
+sub init {
+    my $self = shift;
+    my $config = $self->config;
+    my $reject = $config->{spf_soft_reject} || 'no';
+    my $defact = $config->{spf_default_action} || 'DUNNO';
+
+    $self->{plugin_name} = 'SPF';
+    $self->{reject_code} = $reject eq 'yes' ? '450' : '551';
+    $self->{default_act} = $defact;
+}
+
+sub pre_hook {
+    my $self = shift;
+    my $ar = $self->ar;
+
+    return $self->sender_permitted_from($ar);
+}
+
+sub sender_permitted_from {
+  my $self = shift;
+  my %attr = (ref $_[0] eq 'HASH' ? %{$_[0]} : () );
+  my $query = eval { new Mail::SPF::Query (
+          ip    => $attr{client_address},
+          sender=> $attr{sender},
+          helo  => $attr{helo_name},
+          debug  => 0,)
+  };
+
+  if ($@) {
+      warn "Found error at ", __LINE__, ": $@\n";
+      return "DUNNO";
+  }
+
+  my ($result, $smtp_comment, $header_comment) = $query->result();
+  my $code = $self->{reject_code};
+
+  # we reject sender with softfail, according RFC4408(SPF v1) email server
+  # should just send 451 to the sender the first time, accept the next time
+  # but with this action a lot of spammer will easily send as hotmail.com
+  # or gmail. so we always send 451 to it, will not do greylisting
+
+  if    ($result eq "pass")     { return "DUNNO" }
+  elsif ($result eq "fail")     { return "$code see http://bl.extmail.org/cgi/why?spf=$attr{sender}"; }
+  elsif ($result eq "softfail") { return "451 see http://bl.extmail.org/cgi/why?spf=$attr{sender}"; }
+  elsif ($result eq "error")    { return "450 temporary failure: $smtp_comment"; }
+  else                          { return $self->{default_act} }
+  # unknown, neutral and none all return DUNNO
+}

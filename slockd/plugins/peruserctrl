@@ -1,0 +1,97 @@
+#!perl
+# vim: set cindent expandtab ts=4 sw=4:
+
+# peruserctrl   per user control plugin
+#
+# description: a plugin that retrieve user land whitelist and blacklist
+#              to bypass or block smtp request base on sender, currently
+#              only support extmail.
+#
+#      status: experimental
+use strict;
+use Data::Dumper;
+
+sub init {
+    my $self = shift;
+    my $config = $self->config;
+
+    $self->{plugin_name} = 'Userctrl';
+
+    $self->{sockpath} = $config->{peruserctrl_sockpath} || '/var/spool/authdaemon/socket';
+    $self->{module} = $config->{peruserctrl_module} || 'authlib';
+}
+
+sub pre_hook {
+    my $self = shift;
+    my $sender = $self->ar->{sender};
+    my $recip = lc $self->ar->{recipient};
+    my $info = $self->get_info_authlib($recip);
+
+    return 'DUNNO' unless $info;
+
+    my $maildir = $info->{MAILDIR};
+
+    return 'DUNNO' unless $maildir;
+
+    $self->debug(4, "$recip maildir = $maildir");
+
+    my $bl = get_senderlist($maildir, 'blacklist');
+    my $wl = get_senderlist($maildir, 'whitelist');
+
+    # white list for ipaddrs
+    for my $w (@{$wl}) {
+        return 'OK' if $sender =~ /^$w$/i;
+    }
+
+    # black list for sender
+    for my $b (@{$bl}) {
+        return "504 blocked by $recip,".
+               ' see http://bl.extmail.org/cgi/why?peruserctrl',
+               if $sender =~ /^$b$/i;
+    }
+
+    'DUNNO';
+}
+
+sub get_info_authlib {
+    my ($self, $user) = @_;
+    my $socket_path = $self->{sockpath};
+
+    my $sock = IO::Socket::UNIX->new($socket_path);
+
+    if (!$sock) {
+       $self->debug(0, "socket error: $!");
+       return;
+    }
+
+    my ($serv, $type) = ('authdaemond', 'login');
+    printf($sock "PRE . %s %s\n", $serv, $user);
+    my $bb = '';
+    $bb .= $_ while (<$sock>);
+    return parse_info_authlib($bb);
+}
+
+sub parse_info_authlib {
+    my $buf = shift;
+    my %hash = ();
+    for my $line (split (/\n+/, $buf)) {
+        $line =~ m!^([^=]+)=(.*)!;
+        $hash{$1} = $2;
+    }
+    \%hash;
+}
+
+sub get_senderlist {
+    my $maildir = shift;
+    my $type = shift || 'blacklist';
+    my $file = "$maildir/$type.cf";
+    my @lists;
+
+    return unless -r $file;
+    open (FD, "< $file"); # des not need to die :)
+    while (<FD>) {
+        chomp;
+        push @lists, $_;
+    }
+    \@lists;
+}

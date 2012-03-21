@@ -1,0 +1,11 @@
+# the blacklist that will be rejected any won't be process by any
+# other plugins, borrow from postgrey project, thanks the author!
+
+# the sample blacklist domain
+#@sexme.com
+# the sample blacklist domain in regexp
+#/^\@xxx\.com$/
+# the sample blacklist sender
+#webmaster@sex.com
+# the sample blacklist sender in regexp
+#/^\john@sex\.com$/

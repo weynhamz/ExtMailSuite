@@ -1,0 +1,53 @@
+#!/usr/bin/perl -w
+# vim: set et ci ts=4 sw=4:
+#
+# log-rotate   - a very simple perl script to do slockd log rotation
+#                you can put it in crontab, or call it manually
+#
+#      Author: He zhiqiang <hzqbbc@hzqbbc.com>
+# Last update: Fri Feb 23 2007, 10:55:37
+#
+# $Id$
+use vars qw($DIR);
+my $path = $0;
+
+die "You must call log-rotate in full path.\n"unless $path =~ m#^/#;
+
+$path =~m#^(/.*)/tools/log-rotate$#;
+$DIR = $1;
+
+my $log_file;
+my $log_dir;
+my $log_name;
+my $cmd_gzip = shift || '/usr/bin/gzip';
+
+open (FD, "< $DIR/config/main.cf") or die "Can't read main.cf: $!\n";
+while (<FD>) {
+    chomp;
+    if (/^\s*log_file\s*(\S+)/) {
+        $log_file = $1;
+        last;
+    }
+}
+close FD;
+
+$log_dir = $log_file;
+$log_dir =~ s/\/([^\/]+)$//;
+$log_name = $1;
+
+if (-d $log_dir and -r $log_file) {
+    opendir DIR, $log_dir;
+    my @list = grep { m/^$log_name.*$/i } readdir DIR;
+    closedir DIR;
+    my $count = scalar @list;
+
+    rename("$log_file", "$log_file.$count") or die "$!\n";
+    my $rv = system("$cmd_gzip -9 $log_file.$count");
+    warn "gzip fail: $rv\n" if ($rv != 0);
+} else {
+    die "Read $log_dir or $log_file failed, abort!\n";
+}
+
+print "DONE! Please restart slockd to take effect!\n";
+
+exit 0;

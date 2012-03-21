@@ -1,0 +1,63 @@
+#!/bin/sh
+
+# example init script for slockd
+#
+# chkconfig: 2345 80 20
+# description: Spam locker daemon - a policy server
+#
+# processname: slockd
+# pidfile: /var/run/slockd.pid
+
+
+PATH=/bin:/usr/bin
+BASE=/usr/local/slockd
+BIN=$BASE/slockd
+PID_FILE=/var/run/slockd.pid
+
+cd $BASE
+
+case "$1" in
+'start')
+	echo "Starting spam locker daemon: slockd";
+	nice -19 $BIN
+	;;
+
+'stop')
+	echo "Stopping spam locker daemon: slockd";
+	if [ -f $PID_FILE ]; then
+		kill `cat $PID_FILE`
+		rm $PID_FILE
+	else
+		echo "slockd not running";
+	fi
+	;;
+'status')
+	if [ -f $PID_FILE ]; then
+		pid=`cat $PID_FILE`
+		kill -0 $pid >/dev/null 2>&1
+		if [ "$?" == 0 ];then
+			echo "Spam locker daemon master($pid) is running..."
+		else
+			echo "Spam locker daemon is dead but pid_file there"
+		fi
+	else
+		pid=`ps ax|grep slockd|grep master |grep -v grep|awk {'print $1'}`
+		if [ "$pid" != "" ];then
+			echo "Spam locker daemon master($pid) is running...(pid_file missed)"
+		else
+			echo "slockd not running"
+		fi
+	fi
+	;;
+'restart')
+	$0 stop
+	$0 start
+	;;
+
+*)
+	echo "Usage: $0 { start | status | restart | stop }"
+	exit 1
+	;;
+
+esac
+exit 0

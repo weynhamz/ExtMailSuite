@@ -1,0 +1,11 @@
+# the whitelist that won't be reject and process by any plugin
+# borrow from postgrey project, thanks the author!
+
+# the sample whitelist domain
+#@extmail.net
+# the sample whitelist domain in regexp
+#/^\@extmail\.org$/
+# the sample whitelist sender
+#abuse@hzqbbc.com
+# the sample whitelist sender in regexp
+#/^\abuse\@hzqbbc\.com$/

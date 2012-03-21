@@ -1,0 +1,10 @@
+--- Server.pm.old	2006-04-11 14:46:08.207761728 +0800
++++ Server.pm	2006-04-11 14:49:42.636163656 +0800
+@@ -1255,6 +1255,7 @@
+                syslog_logopt syslog_facility
+                no_close_by_child
+                no_client_stdout
++               plugin_dir plugin_conf
+                ) ){
+     $ref->{$_} = \$prop->{$_};
+   }

@@ -1,0 +1,187 @@
+Prerequisites
+=============
+
+Linux 2.4+ or BSD 4+
+perl 5.6+ (5.8 is recommend)
+CPAN
+gcc
+make
+development tools
+
+Perl modules
+------------
+Net::DNS
+POSIX
+Fcntl
+Digest::MD5
+Digest::SHA1
+Digest::HMAC
+Net::IP
+
+Step by Step installation
+=========================
+
+1) download tar ball
+
+Go to http://www.extmail.org/download/ to get the latest version
+source tar ball.
+
+2) unpack tar ball
+
+Unpack source tar ball and rename to slockd, replace the {version}
+to the latest version number, eg:
+
+$ tar xfz slockd-{version}.tar.gz
+$ mv slockd-{version} slockd
+
+move slockd source to /usr/local/slockd, first su to root, then
+execute mv command:
+
+$ su root
+# mv slockd /usr/local
+
+3) install perl module
+
+Slock greatly depend on DNS operation, you must install the latest
+Net::DNS module, since 0.5x Net::DNS need Net::IP module, and also
+need Digest::HMAC and MD5/SHA1 module.
+
+Download the following module from http://search.cpan.org
+
+Net-DNS
+Digest-HMAC
+Digest-MD5
+Digest-SHA1
+Net-IP
+
+Unpack source tar ball, then do:
+
+$ cd Digest-MD5-xxx
+$ perl MakeFile.PL
+$ make
+$ make test
+$ su
+# make install
+
+After successfully install MD5 module, you need to install SHA1
+and HMAC as the same way.
+
+4) install Net::DNS
+
+Before install the Net-DNS module, you must install Net-IP module
+first, please refer to 3) if you don't know how to install it.
+
+After Net-IP installation, it's the right time to install Net-DNS
+
+$ tar xfz Net-DNS-0.5x.tar.gz
+$ cd Net-DNS-0.5x
+$ perl MakeFile.PL
+$ make
+$ make install
+
+When perl is generating Makefile for you, you will be prompt to
+enable or disable test, type no.
+
+5) Config slockd
+
+# cd /usr/local/slockd
+
+Edit config/main.cf, you will see the main configuration for
+slockd, every config parameter has comment on it, read them
+carefully before any change.
+
+Slockd will listen to only the localhost, port 10030, and throw
+any infomation to the STDERR.
+
+The minimal change should take is to change the pid_file and
+log_file path to appropriate place, eg:
+
+pid_file   /var/run/slockd.pid
+log_file   /var/log/slockd.log
+
+6) Config your resolv.conf
+
+Edit your /etc/resolv.conf and make sure you have a fast dns
+server, if possible install a local cache dns server will gain
+great performance.
+
+7) Startup and test
+
+Run it on command line:
+
+# ./slockd
+
+It will startup and accept connection, debug infomation will
+throw to the stderr, on another console or terminal, enter
+tools directory and run the following command:
+
+perl policy_sig -h localhost -p 10030 --helo FOOBAR \
+--ip 192.168.0.1 --from test@163.com --to test@bar.com
+
+If the programe return:
+
+action=551 see http://bl.extmail.org/cgi/why?spf=test@163.com
+
+it means slockd works.
+
+You can do more test by replacing --helo, --ip, --from and --to
+to other value to see what will retrun from slockd.
+
+8) Config Postfix or other MTA
+
+Currently according apf plugin/patches, slockd can serve Postfix,
+sendmail and qmail.
+
+This document only cover how to config the Postfix mta, other
+config for sendmail and qmail coming soon.
+
+Edit /path/to/postfix/main.cf
+
+Add "check_policy_service inet:127.0.0.1:10030" entry to the
+smtpd_recipient_restrictions, the following is recommand setting:
+
+smtpd_recipient_restrictions =
+  permit_mynetworks,
+  permit_sasl_authenticated,
+  reject_non_fqdn_hostname,
+  reject_non_fqdn_sender,
+  reject_non_fqdn_recipient,
+  reject_unauth_destination,
+  reject_unauth_pipelining,
+  reject_invalid_hostname,
+  check_policy_service inet:127.0.0.1:10030
+
+9) Reload Postfix
+
+Reload postfix, wait and monitor the maillog, to see whether the
+Postfix query slockd and reject UCE.
+
+10) Daemonize slockd
+
+After you make sure that slockd works well, you can config it
+as a background daemon.
+
+Edit config/main.cf, uncomment log_file and config to a suitable
+path, eg: /var/log/slockd.log, uncomment setsid then set to 1:
+
+setsid	1
+
+then call slockd in command line:
+
+./slockd
+
+The slockd will startup and run in background.
+
+11) Initialize script
+
+There is a simple initialize script for slockd to start , stop and
+restart, at the top of slockd source tree. run it as:
+
+./slockd-init start
+./slockd-init stop
+./slockd-init restart
+./slockd-init status
+
+You can add the following line into /etc/rc.d/rc.local
+
+/usr/local/slockd/slockd-init start

@@ -1,0 +1,105 @@
+#!perl
+# vim: set cindent expandtab ts=4 sw=4:
+
+# dnsbl        realtime DNS blacklist plugin
+#
+# description: a plugin that do paralle rbl lookups
+use strict;
+use Net::DNS;
+use IO::Select;
+use Data::Dumper;
+
+# the RBL plugin for Spam Locker
+
+sub init {
+    my $self = shift;
+    my $config = $self->config;
+    my @rbls = @{$config->{dnsbl_server_list}};
+
+    $self->{plugin_name} = 'Dnsbl';
+
+    $self->{max_resend} = $config->{dns_max_resend} || 3;
+    $self->{max_retry} = $config->{dns_max_retry} || 3;
+    $self->{timeout} = $config->{dns_timeout} || 4;
+
+    die "Please specific at least one rbl server\n" unless @rbls;
+    $self->{rbls} = \@rbls;
+
+    my $res = new Net::DNS::Resolver;
+    $res->tcp_timeout($self->{timeout});
+    $res->udp_timeout($self->{timeout});
+
+    my $sel = IO::Select->new;
+    $self->{res} = $res;
+    $self->{sel} = $sel;
+
+    my $rbls = $self->{rbls};
+    my $ar = $self->ar;
+
+    $self->send_rbl_req($ar->{client_address}, $rbls);
+}
+
+sub pre_hook {
+    my $self = shift;
+    my $config = $self->config;
+    my $code = ($config->{dnsbl_soft_reject} eq 'yes' ? '450' : '554');
+    my ($bl, $listip) = $self->handle_dns;
+    return "$code blocked using $bl, see http://bl.extmail.org/cgi/rbl?$listip", if $bl;
+    'DUNNO';
+}
+
+sub hook { 'DUNNO' }
+
+sub post_hook { 'DUNNO' }
+
+sub send_rbl_req {
+    my $self = shift;
+    my ($ip, $rbls) = @_;
+    my ($res, $sel) = ($self->{res}, $self->{sel});
+    my $revip = join('.', reverse split(/\./, $ip));
+
+    my ($bl, $listing_ip);
+    foreach $bl (@$rbls) {
+        $self->debug(3,"querying $bl with $revip.$bl");
+
+        $sel->add($res->bgsend("$revip.$bl", 'A'));
+        # $sel->add($res->bgsend("$revip.$bl", 'TXT'));
+    }
+}
+
+# key to handle_dns, we only need to know whether it's blocked
+# by a specific rblserver, then direct the mail client to the
+# official explanation site: http://bl.extmail.org/cgi/rbl?ip
+sub handle_dns {
+    my $self = shift;
+    my $sel = $self->{sel};
+    my $res = $self->{res};
+
+    my @ready = $sel->can_read($self->{timeout});
+
+    @ready or return (undef, undef);
+
+    for my $socket (@ready) {
+        my $p = $res->bgread($socket);
+        $sel->remove($socket);
+        undef $socket;
+
+        next unless ($p && $p->answer);
+
+        my ($rblname, $revip);
+        my $name = ($p->answer)[0]->name;
+
+        # IPV4 address only {4}
+        $name =~ m/((?:\d+\.){4})(.*)/;
+        $rblname = $2;
+        $revip = $1;
+        if ($rblname && $revip) {
+            delete $self->{sel};
+            return ($rblname, join('.', reverse split(/\./, $revip)));
+        }
+    }
+
+    return $self->handle_dns if ($sel->count);
+    # delete $self->{sel};
+    return (undef, undef);
+}

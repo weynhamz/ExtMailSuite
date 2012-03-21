@@ -1,0 +1,32 @@
+#!/usr/bin/perl
+# vim: set cindent expandtab ts=4 sw=4:
+# Spam locker - the lightweight antispam policy server using APF
+#               technology, license under the term of GPL v2
+#
+# It can support Postfix natively, qmail and Sendmail need additional
+# patches and plugins, please refer to apf-qmail and apf-sendmail
+#
+# Author: He zhiqiang <hzqbbc@hzqbbc.com>
+# Date: 2006-04-08
+BEGIN {
+    use vars qw($DIR);
+    my $path = $0;
+    if ($path =~ m#^/#) {
+        $path =~m#^(/.*)/slockd$#;
+        $DIR = $1;
+    } else {
+        $DIR = '.';
+    }
+}
+
+use lib "$DIR/lib";
+use vars qw($VERSION);
+use base qw(APF::Server);
+
+$VERSION = '0.2.0';
+
+__PACKAGE__->run(
+    conf_file => 'config/main.cf',
+);
+
+exit;

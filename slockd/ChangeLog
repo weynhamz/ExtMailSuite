@@ -1,0 +1,133 @@
+0.99
+
+Thu May 14 2009 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Redesign spam locker filtering rules and processing flow
+	* Version upgrade to 0.99, very close to 1.0
+	* Plan tp use new version control release, odd number is for
+	  development or beta, even number is bug fix and stable.
+	* Remove anvil, fqdn, hostname, tarpit plugin, only keep localctrl,
+	  peruserctrl, spf(rename msbl to spf), dnsbl, greylist.
+	* All modules will not return 'OK' unless the localctrl
+	* All rules design is refered to "The ExtMail Server Design"
+	* Fix bug in debug code that cause slockd corrupt under debug=0
+	* Redesign spf plugin, add spf_soft_reject and spf_default_action
+	* Add action_type to select default action type, policy to client
+	  or add header to debug
+	* Set softfail action to 45x unstead of return DUNNO, this will
+	  block those spammer want to forge gmail(?all) or hotmail(~all)
+	* add more options to plugin that control spam/ham handling.
+	* Blacklist/Whitelist is waiting for rewrite, may learn from Dynastop
+	* Update INSTALL README README.plugin
+
+0.2.0
+
+Fri Feb 23 2007 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add log-rotate script to do logging rotation
+	* Fix path bug in log-rotate, move it to tools/
+	* update slockd startup perl script
+
+0.2beta1
+
+Fri Nov 17 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Since 0.2beta1 version will grow by 0.1 step size
+	* Fix hostname plugin that return wrong mx ip array
+	* Added an experimental plugin for per user blacklist and whitelist
+	  base on sender, for extmail only! sorry!
+	* Fix bug in tools/policy_sig
+	* Add CML plugin - contributed by galaxy, thanks!
+
+0.10
+
+Thu Sep 14 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add sender/recip black/white list
+	* Add sender/recip ACL format description in config/*_*list
+	* Add chk_mx_range for hostname plugin, it is useful for domains
+	  without SPF or PTR but need to send mail from servers that not
+	  listed as MX hosts, using CIDR range need Net::CIDR::Lite
+	* Update config/whitelist, add most of china MSP ptr records
+
+0.09
+
+Tue May 30 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add ptr checks for hostname
+	* Fix helo checks bug hostname plugin
+
+0.08
+
+Sat Apr 15 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Update INSTALL
+	* Fix some DNS operation bug in plugin/hostname
+	* Fix slockd-init bug if we use relative path
+	* Change log format
+
+0.07
+
+Fri Apr 14 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Redesign dns process algorithm for hostname plugin
+	  speed up and do more retry/resend, more stable
+	* Add dns_* configuration to plugin.cf
+	* Update README
+	* Add INSTALL and README.plugin
+	* Do some code cleanup
+	* Add slockd-init script
+
+0.06
+
+Thu Apr 13 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add mx checking feature to hostname plugin
+	* Complete hostname plugin and fix some bugs
+	* Redesign logging function, add loglevel capability
+	* Add cleanup hook for plugin
+	* Add a block scope to hook handling code, and
+	  temperary set $/ to "\n" to advoid problem
+	  with plugin that need to do I/O
+
+0.05
+
+Wed Apr 12 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Backport my old color.pl to APF::Color, a very
+	  funny module that can output colorful message
+	* Do more test !
+	* Bug fix hostname plugin
+
+0.04
+
+Tue Apr 11 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Patch Mail::SPF::Query module, to adapt it for
+	  MSPF algorithm ( modified SPF )
+	* Patch Net::Server default template set, add two
+	  parameter, plugin_dir and plugin_conf
+	* Add localctrl plugin, the local white/black list
+	  the read_ctrl() is borrowed from postgrey.
+	* Add tarpit plugin, a very simple sleepy module
+	* Bug fix flock problem in greylist, use transaction
+	  mechanism instead of operation locking
+	* Begin to write hostname plugin, to block those
+	  client address not match the helo command
+
+0.03
+
+Mon Apr 10 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add dnsbl plugin, using Async DNS technology to
+	  reduce over head of Net::DNS module
+	* Add greylist module, it derive from the greylist
+	  policy script ship with postfix package
+	* Add msbl module, compatible with SPF
+	* Fix bug in anvil
+	* Add plugin configration
+
+0.02
+
+Sun Apr 09 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* Add some child/parent hooks at APF::Server to support
+	  connection frequency statstics for anvil
+	* Add fqdn plugin
+	* Fix communication bug in *_child() and *_parent
+
+0.01
+
+Sat Apr 08 2006 He zhiqiang <hzqbbc@hzqbbc.com>
+	* started APF opensource server
+	* use Net::Server::PreFork as server control
+	* Completely rewrite the whole process flow
+	* Add experimental plugin support

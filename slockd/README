@@ -1,0 +1,43 @@
+About Spam Locker
+=================
+
+The spam locker is a rewrite to the commerical APF Server, base
+on APF (Antispam Policy Framework) and MSPF technology, license
+under the term of GPL v2. It use Net::Server to simplify process
+management and gain stability.
+
+But the spam locker is not suitable for very high volume traffic
+system. If your mail server need to handle over 1000k messages
+per day, you had better try other policy server written in C for
+efficency, or move spam locker to a dedicated server with large
+memory.
+
+Feature
+=======
+
+o Global IP/Sender/Recipient whitelist/blacklist
+
+o Per user Whitelist/Blacklist base (Only for ExtMail)
+
+o Simple but powerful Greylist
+
+o Multiple RBL client capability
+
+o SPF checking from SPF modules
+
+More feature and rules is under development
+
+Notes
+=====
+
+This software is a complete rewrite, we don't provide any guarantee
+
+Directories
+===========
+
+config  - config files
+docs    - protocol and example plugin
+lib     - programe libarary
+patch   - patches to standard perl module
+plugins - plugin container
+tools   - db dumper and test tools

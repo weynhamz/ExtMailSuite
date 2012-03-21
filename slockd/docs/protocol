@@ -1,0 +1,51 @@
+Protocol introduce
+==================
+
+Author: He zhiqiang <hzqbbc@hzqbbc.com>
+Date: 2006-04-11
+
+Currently, APF protocol is derive from Postfix Policy protocol, and
+they are almost the same under Postfix MTA.
+
+Under qmail and sendmail, only some of the attributes listed below
+are available, they are:
+
+   request
+   protocol_state
+   protocol_name
+   helo_name
+   sender
+   recipient
+   client_address
+
+No more attributes supported across different MTA. If you need more
+control over SMTP session, please merge to the Postfix MTA :-)
+
+Protocol detail
+===============
+
+Each query is a bunch of attributes. Order does not matter, and
+the demo script uses only a few of all the attributes shown below:
+
+   request=smtpd_access_policy
+   protocol_state=RCPT
+   protocol_name=SMTP
+   helo_name=some.domain.tld
+   queue_id=8045F2AB23
+   sender=foo@bar.tld
+   recipient=bar@foo.tld
+   client_address=1.2.3.4
+   client_name=another.domain.tld
+   instance=123.456.7
+   sasl_method=plain
+   sasl_username=you
+   sasl_sender=
+   size=12345
+   [empty line]
+
+The policy server script will answer in the same style, with an
+attribute list followed by a empty line:
+
+   action=dunno
+   [empty line]
+

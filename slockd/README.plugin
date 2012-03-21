@@ -1,0 +1,17 @@
+Plugins for slockd
+==================
+
+This document will conver the available plugins for slockd,
+including the algorithm and mechanism to block spam.
+
+Offical plugin list:
+
+o localctrl - local black/whitelist
+
+o peruserctrl - per user black/white list control
+
+o greylist - greylisting implemention
+
+o dnsbl - querying multiple RBL server
+
+o spf - SPF algorithm matching

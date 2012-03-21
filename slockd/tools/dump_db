@@ -1,0 +1,13 @@
+#!/usr/bin/perl
+use DB_File;
+use Data::Dumper;
+
+die "$0 /path/to/greylist.db\n" unless $#ARGV>=0;
+
+my $db = tie(%db_hash, 'DB_File', $ARGV[0],
+    O_RDONLY, 0644, $DB_BTREE) or
+    die "Can't open $ARGV[0], $!\n";
+
+print Dumper(\%db_hash);
+
+exit (0);
