@@ -11,7 +11,7 @@
 # mailgraph - by hzqbbc <hzqbbc@hzqbbc.com>
 
 PATH=/bin:/usr/bin
-BASEDIR=/usr/local/mailgraph
+BASEDIR=/var/www/extsuite/extman/daemon/mailgraph
 MAILGRAPH_PL=$BASEDIR/mailgraph.pl
 QMONITOR_PL=$BASEDIR/qmonitor.pl
 MAIL_LOG=/var/log/maillog

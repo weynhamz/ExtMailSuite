@@ -1,0 +1,18 @@
+About daemon
+============
+
+This directory contain daemon scripts for extmail project,
+please read this document carefully and follow the instructions
+
+Daemon detail
+=============
+
+MailGraph
+---------
+
+A RRDtool frontend for Postfix/Sendmail Statistics, originally written
+by David Schweikert <dws@ee.ethz.ch>, now we develop a individial
+queue monitor programe to generate queue graph.
+
+Furthermore, we rewrite the web frontend and integrate into ExtMan.
+Please read README.ext in the source directory for detail.
