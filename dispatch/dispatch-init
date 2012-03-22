@@ -10,17 +10,19 @@
 # pidfile: /var/run/dispatch.pid
 
 # startup parameters
-MAXFORK=10
+PORT=8888
+
 MINFORK=2
+MAXFORK=10
 MAXREQS=25
 TIMEOUT=360
-PORT=8888
+
 SU_UID=vuser
 SU_GID=vgroup
 
-PATH=/bin:/usr/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin
-BASE=/var/www/extsuite/dispatch
 BIN=dispatch.fcgi
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+BASE=/var/www/extsuite/dispatch
 PID_FILE=/$BASE/$BIN.pid
 LOG_FILE=/$BASE/$BIN.log
 
