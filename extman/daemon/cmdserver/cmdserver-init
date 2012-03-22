@@ -1,0 +1,41 @@
+#!/bin/sh
+
+BASEDIR=/var/www/extsuite/extman/daemon/cmdserver
+CMDSERVER=$BASEDIR/cmdserver
+
+SOCKET=/var/run/cmdserver.sock
+PID_FILE=/var/run/cmdserver.pid
+LOG_FILE=/var/log/cmdserver.log
+
+case "$1" in
+'start')
+        echo "Starting cmdserver";
+        nice -19 $CMDSERVER -v -d --listen=$SOCKET \
+                --daemon-pid=$PID_FILE --daemon-log=$LOG_FILE
+        ;;
+
+'stop')
+        echo "Stopping cmdserver";
+        if [ -f $PID_FILE ]; then
+                kill `cat $PID_FILE`
+                rm $PID_FILE
+                if [ -f $SOCKET ]; then
+                        rm $SOCKET
+                fi
+        else
+                echo "Cmdserver not running.";
+        fi
+        ;;
+
+'restart')
+        $0 stop
+        $0 start
+        ;;
+
+*)
+        echo "Usage: $0 { start | restart | stop }"
+        exit 1
+        ;;
+
+esac
+exit 0
