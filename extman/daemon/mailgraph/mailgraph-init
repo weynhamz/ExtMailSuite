@@ -15,6 +15,7 @@ BASEDIR=/var/www/extsuite/extman/daemon/mailgraph
 MAILGRAPH_PL=$BASEDIR/mailgraph.pl
 QMONITOR_PL=$BASEDIR/qmonitor.pl
 MAIL_LOG=/var/log/mail.log
+SYSTEM_LOG=/var/log/everything.log
 MAILGRAPH_PID=/var/run/mailgraph.pid
 MAILGRAPH_LOG=/var/log/mailgraph.log
 QMONITOR_PID=/var/run/qmonitor.pid
@@ -25,7 +26,7 @@ case "$1" in
 'start')
 	# startup for mailgraph
 	echo "Starting mail statistics grapher: mailgraph";
-	nice -19 $MAILGRAPH_PL -v -d -l $MAIL_LOG \
+	nice -19 $MAILGRAPH_PL -v -d -l $SYSTEM_LOG \
 		--daemon-pid=$MAILGRAPH_PID --daemon-log=$MAILGRAPH_LOG --daemon-rrd=$RRD_DIR
 
 	# startup for qmonitor
