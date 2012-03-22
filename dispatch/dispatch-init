@@ -19,7 +19,7 @@ SU_UID=vuser
 SU_GID=vgroup
 
 PATH=/bin:/usr/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin
-BASE=/var/www/extsuite/extmail
+BASE=/var/www/extsuite/dispatch
 BIN=dispatch.fcgi
 PID_FILE=/$BASE/$BIN.pid
 

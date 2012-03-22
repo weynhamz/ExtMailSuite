@@ -3,5 +3,5 @@
 #
 # Author: He zhiqiang <hzqbbc@hzqbbc.com>
 
-BASE=/var/www/extsuite/extmail
+BASE=/var/www/extsuite/dispatch
 $BASE/tools/suid-with -u vuser -g vgroup /usr/bin/perl $BASE/dispatch.fcgi
