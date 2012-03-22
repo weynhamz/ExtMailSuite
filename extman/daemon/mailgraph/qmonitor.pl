@@ -20,7 +20,6 @@ my $points_per_sample = 3;
 my $daemon_logfile = '/var/log/qmonitor.log';
 my $daemon_pidfile = '/var/run/qmonitor.pid';
 my $daemon_rrd_dir = '/var/lib';
-my $rrd_queue = "$daemon_rrd_dir/mailgraph_queue.rrd";
 
 my $this_minute;
 my $rrd_inited=0;
@@ -66,6 +65,7 @@ sub main
     $daemon_pidfile = $opt{daemon_pid} if defined $opt{daemon_pid};
     $daemon_logfile = $opt{daemon_log} if defined $opt{daemon_log};
     $daemon_rrd_dir = $opt{daemon_rrd} if defined $opt{daemon_rrd};
+    $rrd_queue      = "$daemon_rrd_dir/mailgraph_queue.rrd";
     $rrd_queue      = $opt{rrd_name}."_queue.rrd" if defined $opt{rrd_name};
     my $sleep       = $opt{freq} || $opt{f} || 0.05;
 
