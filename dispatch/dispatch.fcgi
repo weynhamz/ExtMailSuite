@@ -44,10 +44,10 @@ BEGIN {
         exit (255);
     }
     $root =~ s#/*[^/]+$##;
-    $root =~ s#/(extmail|extman)$/*$##;
+    $root =~ s#/dispatch$/*$##;
     $root =~ m/^(.*)$/s;
     $root = $1; # untaint
-    unshift @INC, "$1/extmail/libs";
+    unshift @INC, "$1/dispatch/libs";
     require Ext::FCGI;
 }
 
