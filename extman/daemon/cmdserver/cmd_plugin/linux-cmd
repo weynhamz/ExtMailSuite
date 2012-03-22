@@ -31,13 +31,13 @@ print "loaded ok\n";
     sysload => \&sysload,
 );
 
-my $web_init = '/etc/init.d/httpd';
-my $mta_init = '/etc/init.d/postfix';
+my $web_init = '/etc/rc.d/httpd';
+my $mta_init = '/etc/rc.d/postfix';
 my $fcgi_init = '/var/www/extsuite/extmail/dispatch-init';
 my $slockd_init = '/usr/local/slockd/slockd-init';
-my $dspam_init = '/etc/init.d/dspamd';
-my $mysql_init = '/etc/init.d/mysqld';
-my $ldap_init = '/etc/init.d/ldap';
+my $dspam_init = '/etc/rc.d/dspam';
+my $mysql_init = '/etc/rc.d/mysqld';
+my $ldap_init = '/etc/rc.d/slapd';
 
 #####################
 # Web server        #
@@ -46,7 +46,7 @@ my $ldap_init = '/etc/init.d/ldap';
 sub web_status {
     my $ctx = shift;
     my $rc = qx/$web_init status/;
-    if ($rc =~ /running/) {
+    if ($rc =~ /STARTED/) {
         $ctx->set_reply('250', 'up');
     } else {
         $ctx->set_reply('503', 'down');
@@ -71,8 +71,8 @@ sub web_stop {
 
 sub mta_status {
     my $ctx = shift;
-    my $rc = qx/$mta_init status/;
-    if ($rc =~ /running/) {
+    my $rc = qx/ps ax|grep postfix|grep -v grep/;
+    if ($rc =~ /\/usr\/lib\/postfix\/master/) {
         $ctx->set_reply('250', 'up');
     } else {
         $ctx->set_reply('503', 'down');
@@ -149,8 +149,8 @@ sub slockd_stop {
 
 sub dspam_status {
     my $ctx = shift;
-    my $rc = qx/$dspam_init status/;
-    if ($rc =~ /is running/) {
+    my $rc = qx/ps ax|grep dspam|grep -v grep/;
+    if ($rc =~ /\/usr\/bin\/dspam --daemon/) {
         $ctx->set_reply('250', 'up');
     } else {
         $ctx->set_reply('503', 'down');
@@ -175,8 +175,8 @@ sub dspam_stop {
 
 sub mysql_status {
     my $ctx = shift;
-    my $rc = qx/$mysql_init status/;
-    if ($rc =~ /running/) {
+    my $rc = qx/ps ax|grep mysqld_safe|grep -v grep/;
+    if ($rc =~ /\/usr\/bin\/mysqld_safe --user=mysql/) {
         $ctx->set_reply('250', 'up');
     } else {
         $ctx->set_reply('503', 'down');
