@@ -4,14 +4,14 @@
 use vars qw($DIR $VERSION);
 BEGIN {
     my $path = $0;
-    if ($path =~ s/daemon\/([^\/]+)$//) {
+    if ($path =~ s/daemon\/cmdserver\/([^\/]+)$//) {
         if ($path !~ /^\//) {
             $DIR = "./$path";
         } else {
             $DIR = $path;
         }
     } else {
-        $DIR = '../';
+        $DIR = '../../';
     }
     unshift @INC, $DIR .'libs';
 };
@@ -76,7 +76,7 @@ if ($^O =~ /freebsd/i) {
     $os = 'linux';
 }
 
-require "$DIR/daemon/cmd_plugin/$os-cmd";
+require "$DIR/daemon/cmdserver/cmd_plugin/$os-cmd";
 
 $srv->start;
 
