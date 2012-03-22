@@ -16,20 +16,22 @@ MAILGRAPH_PL=$BASEDIR/mailgraph.pl
 QMONITOR_PL=$BASEDIR/qmonitor.pl
 MAIL_LOG=/var/log/maillog
 MAILGRAPH_PID=/var/run/mailgraph.pid
+MAILGRAPH_LOG=/var/log/mailgraph.log
 QMONITOR_PID=/var/run/qmonitor.pid
+QMONITOR_LOG=/var/log/qmonitor.log
 RRD_DIR=/var/lib
 
 case "$1" in
 'start')
 	# startup for mailgraph
 	echo "Starting mail statistics grapher: mailgraph";
-	nice -19 $MAILGRAPH_PL -l $MAIL_LOG -d \
-		--daemon-pid=$MAILGRAPH_PID --daemon-rrd=$RRD_DIR
+	nice -19 $MAILGRAPH_PL -v -d -l $MAIL_LOG \
+		--daemon-pid=$MAILGRAPH_PID --daemon-log=$MAILGRAPH_LOG --daemon-rrd=$RRD_DIR
 
 	# startup for qmonitor
 	echo "Starting queue statistics grapher: qmonitor";
-	nice -19 $QMONITOR_PL -d --daemon-pid=$QMONITOR_PID \
-		--daemon-rrd=$RRD_DIR
+	nice -19 $QMONITOR_PL -v -d \
+		--daemon-pid=$QMONITOR_PID --daemon-log=$QMONITOR_LOG --daemon-rrd=$RRD_DIR
 	;;
 
 'stop')
