@@ -1077,6 +1077,8 @@ sub update($)
 	$sum{deferred}=0;
 	$sum{other}=0;
 	$sum{expired}=0;
+
+	return 2;
 }
 
 main;
