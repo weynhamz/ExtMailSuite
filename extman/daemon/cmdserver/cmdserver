@@ -13,7 +13,7 @@ BEGIN {
     } else {
         $DIR = '../../';
     }
-    unshift @INC, $DIR .'libs';
+    unshift @INC, $DIR . 'libs';
 };
 
 $VERSION = '1.0';
@@ -22,7 +22,7 @@ use Ext::Config;
 use Getopt::Long;
 use Ext::Cmd::Server;
 
-my $obj = Ext::Config->new(file => $DIR . '/webman.cf');
+my $obj = Ext::Config->new(file => $DIR . 'webman.cf');
 my %opt = ();
 my $cfg = $obj->{cfg};
 
@@ -76,7 +76,7 @@ if ($^O =~ /freebsd/i) {
     $os = 'linux';
 }
 
-require "$DIR/daemon/cmdserver/cmd_plugin/$os-cmd";
+require $DIR . "daemon/cmdserver/cmd_plugin/$os-cmd";
 
 $srv->start;
 
