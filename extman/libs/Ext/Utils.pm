@@ -20,7 +20,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
     get_remoteip str2ncr from_to filename2std untaint nl2br
     _index _substr _length time_offset txt2link expire_calc
     human_size txt2html html2txt htmlsanity strsanity
-    foldername_ok myceil
+    foldername_ok myceil name2sort sort2name
 );
 
 @EXPORT_OK = qw(lock unlock haslock);
@@ -188,8 +188,9 @@ sub htmlsanity {
     $html=~s/\/\/-->\s*\/\/-->/\/\/-->/isg;
     $html=~s/<([^\<\>]*?)javascript:([^\<\>]*?)>/<$1disable_javascript:$2>/isg;
 
-    $html =~ m!<body[^<>]*>(.*)</body>!is if ($op eq 'NO_HEAD');
-    $html = $1 || $html;
+    if ($op eq 'NO_HEAD' && $html =~ m!<body[^<>]*>(.*)</body>!is) {
+        $html = $1;
+    }
     $html;
 }
 
@@ -474,6 +475,45 @@ sub foldername_ok {
         return 0 if (length $dir > $len);
     }
     1;
+}
+
+# sorting and paging utils funct*
+sub sort2name {
+    my $method = shift;
+    my %map = (
+        Dt => 'by_date',
+        Ts => 'by_time',
+        Sz => 'by_size',
+        Fr => 'by_from',
+        Sj => 'by_subject',
+        Fs => 'by_status',
+        rDt => 'by_date_rev',
+        rTs => 'by_time_rev',
+        rSz => 'by_size_rev',
+        rFr => 'by_from_rev',
+        rSj => 'by_subject_rev',
+        rFs => 'by_status_rev'
+    );
+    $map{$method} || 'by_time'; # if null, try by_time
+}
+
+sub name2sort {
+    my $name = shift;
+    my %map = (
+        'by_date' => 'Dt',
+        'by_time' => 'Ts',
+        'by_size' => 'Sz',
+        'by_from' => 'Fr',
+        'by_subject' => 'Sj',
+        'by_status' => 'Fs',
+        'by_date_rev' => 'rDt',
+        'by_time_rev' => 'rTs',
+        'by_size_rev' => 'rSz',
+        'by_from_rev' => 'rFr',
+        'by_subject_rev' => 'rSj',
+        'by_status_rev' => 'rFs'
+    );
+    $map{$name} || 'Ts'; # if null, try Ts
 }
 
 1;
