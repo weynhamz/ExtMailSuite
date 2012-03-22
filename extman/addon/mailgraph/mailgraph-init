@@ -1,18 +1,18 @@
 #!/bin/sh
 
-# example init script for mailgraph_ext
+# example init script for mailgraph
 #
 # chkconfig: 2345 82 28
-# description: mailgraph_ext postfix log grapher.
+# description: mailgraph postfix log grapher.
 #
-# processname: mailgraph_ext.pl  qmonitor.pl
+# processname: mailgraph.pl  qmonitor.pl
 # pidfile: /var/run/mailgraph.pid  /var/run/qmonitor.pid
 #
-# mailgraph_ext - by hzqbbc <hzqbbc@hzqbbc.com>
+# mailgraph - by hzqbbc <hzqbbc@hzqbbc.com>
 
 PATH=/bin:/usr/bin
-BASEDIR=/usr/local/mailgraph_ext
-MAILGRAPH_PL=$BASEDIR/mailgraph_ext.pl
+BASEDIR=/usr/local/mailgraph
+MAILGRAPH_PL=$BASEDIR/mailgraph.pl
 QMONITOR_PL=$BASEDIR/qmonitor.pl
 MAIL_LOG=/var/log/maillog
 MAILGRAPH_PID=/var/run/mailgraph.pid
@@ -22,7 +22,7 @@ RRD_DIR=/var/lib
 case "$1" in
 'start')
 	# startup for mailgraph
-	echo "Starting mail statistics grapher: mailgraph_ext";
+	echo "Starting mail statistics grapher: mailgraph";
 	nice -19 $MAILGRAPH_PL -l $MAIL_LOG -d \
 		--daemon-pid=$MAILGRAPH_PID --daemon-rrd=$RRD_DIR
 
@@ -33,12 +33,12 @@ case "$1" in
 	;;
 
 'stop')
-	echo "Stopping mail statistics grapher: mailgraph_ext";
+	echo "Stopping mail statistics grapher: mailgraph";
 	if [ -f $MAILGRAPH_PID ]; then
 		kill `cat $MAILGRAPH_PID`
 		rm $MAILGRAPH_PID
 	else
-		echo "mailgraph_ext not running";
+		echo "mailgraph not running";
 	fi
 
 	echo "Stopping queue statistics grapher: qmonitor";
