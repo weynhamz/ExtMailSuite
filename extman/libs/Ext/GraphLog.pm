@@ -472,25 +472,25 @@ sub graph_webmail {
 
         "LINE1:rwmstat0#$color{wmstat0}:loginok  ",
         'GPRINT:vwmstat0:AVERAGE:total\: %.0lf logins',
-        'GPRINT:rwmstat0:AVERAGE:avg\: %.2lf msgs/min',
+        'GPRINT:rwmstat0:AVERAGE:avg\: %.2lf logins/min',
         'GPRINT:rmwmstat0:MAX:max\: %.0lf logins/min\l',
         'HRULE:0#000000',
 
         "AREA:rwmstat1#$color{wmstat1}:loginfail:STACK",
         'GPRINT:vwmstat1:AVERAGE:total\: %.0lf logins',
-        'GPRINT:rwmstat1:AVERAGE:avg\: %.2lf msgs/min',
+        'GPRINT:rwmstat1:AVERAGE:avg\: %.2lf logins/min',
         'GPRINT:rmwmstat1:MAX:max\: %.0lf logins/min\l',
         'HRULE:0#000000',
 
         "LINE2:rwmstat2#$color{wmstat2}:disabled ",
         'GPRINT:vwmstat2:AVERAGE:total\: %.0lf logins',
-        'GPRINT:rwmstat2:AVERAGE:avg\: %.2lf msgs/min',
+        'GPRINT:rwmstat2:AVERAGE:avg\: %.2lf logins/min',
         'GPRINT:rmwmstat2:MAX:max\: %.0lf logins/min\l',
         'HRULE:0#000000',
 
         "AREA:rwmstat3#$color{wmstat3}:deactive :STACK",
         'GPRINT:vwmstat3:AVERAGE:total\: %.0lf logins',
-        'GPRINT:rwmstat3:AVERAGE:avg\: %.2lf msgs/min',
+        'GPRINT:rwmstat3:AVERAGE:avg\: %.2lf logins/min',
         'GPRINT:rmwmstat3:MAX:max\: %.0lf logins/min\l',
 
         'COMMENT:\s',
