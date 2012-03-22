@@ -40,9 +40,10 @@ case "$1" in
 		fi
 	fi
 	echo "Starting extmail FCGI server...";
-	nice -19 $BASE/$BIN --port=$PORT --maxserver=$MAXFORK --minspare=$MINFORK --server \
-		--host=127.0.0.1 --uid=$SU_UID --gid=$SU_GID --pid=$PID_FILE \
-		--request=$MAXREQS --timeout=$TIMEOUT --debug --log=$LOG_FILE
+	nice -19 $BASE/$BIN --debug --server --host=127.0.0.1 --port=$PORT \
+		--uid=$SU_UID --gid=$SU_GID --pid=$PID_FILE --log=$LOG_FILE \
+		--timeout=$TIMEOUT --request=$MAXREQS \
+		--maxserver=$MAXFORK --minspare=$MINFORK \
 	;;
 
 'stop')
